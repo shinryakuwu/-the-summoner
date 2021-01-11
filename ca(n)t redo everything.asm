@@ -17,6 +17,8 @@ trnsfrmcompare  .rs 1  ; additional variable for main transform subroutine
 cattileslow     .rs 1  ; used to address the needed tile set
 cattileshigh    .rs 1
 staticrender    .rs 1  ; either true(1) or false(0)
+bgpointerlow    .rs 1  ; 16-bit pointer to load all background tiles
+bgpointerhigh   .rs 1
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -95,26 +97,38 @@ LoadSpritesLoop:
   LDA sprites, x        ; load data from address (sprites +  x)
   STA $0200, x          ; store into RAM address ($0200 + x)
   INX                   ; X = X + 1
-  CPX #$18              ; Compare X to hex $20, decimal 32
+  CPX #$28              ; Compare X to hex $20, decimal 32
   BNE LoadSpritesLoop   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
                         ; if compare was equal to 32, keep going down
 
 
-  LoadBackground:
+LoadBackground:
   LDA $2002             ; read PPU status to reset the high/low latch
   LDA #$20
   STA $2006             ; write the high byte of $2000 address
   LDA #$00
   STA $2006             ; write the low byte of $2000 address
-  LDX #$00              ; start out at 0
-LoadBackgroundLoop:
-  LDA background, x     ; load data from address (background + the value in x)
-  STA $2007             ; write to PPU
-  INX                   ; X = X + 1
-  CPX #$80              ; Compare X to hex $80, decimal 128 - copying 128 bytes
-  BNE LoadBackgroundLoop  ; Branch to LoadBackgroundLoop if compare was Not Equal to zero
-                        ; if compare was equal to 128, keep going down
-              
+  LDA #LOW(background)
+  STA bgpointerlow       ; put the low byte of the address of background into pointer
+  LDA #HIGH(background)
+  STA bgpointerhigh      ; put the high byte of the address into pointer
+  
+  LDX #$00            ; start at pointer + 0
+  LDY #$00
+OutsideLoop:
+  
+InsideLoop:
+  LDA [bgpointerlow], y  ; copy one background byte from address in pointer plus Y
+  STA $2007           ; this runs 256 * 4 times
+  INY                 ; inside loop counter
+  CPY #$00
+  BNE InsideLoop      ; run the inside loop 256 times before continuing down
+  
+  INC bgpointerhigh       ; low byte went 0 to 256, so high byte needs to be changed now
+  INX
+  CPX #$04
+  BNE OutsideLoop     ; run the outside loop 256 times before continuing down
+
               
 LoadAttribute:
   LDA $2002             ; read PPU status to reset the high/low latch
@@ -123,19 +137,20 @@ LoadAttribute:
   LDA #$C0
   STA $2006             ; write the low byte of $23C0 address
   LDX #$00              ; start out at 0
+  LDY #$00
 LoadAttributeLoop:
-  LDA attribute, x      ; load data from address (attribute + the value in x)
-  STA $2007             ; write to PPU
-  INX                   ; X = X + 1
-  CPX #$08              ; Compare X to hex $08, decimal 8 - copying 8 bytes
+  ;LDA attribute, x      ; load data from address (attribute + the value in x)
+  STX $2007              ; write to PPU
+  ;INX                   ; X = X + 1
+  INY
+  CPY #$30               ; load 0 to bg attributes 48 times
   BNE LoadAttributeLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
-                        ; if compare was equal to 128, keep going down
            
 
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
   STA $2000
 
-  LDA #%00010000   ; enable sprites
+  LDA #%00011110   ; enable sprites
   STA $2001
 
 Forever:
@@ -153,7 +168,7 @@ NMI:
   ;;This is the PPU clean up section, so rendering the next frame starts properly.
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
   STA $2000
-  LDA #%00010010   ; enable sprites, enable background, no clipping on left side
+  LDA #%00011110   ; enable sprites, enable background, no clipping on left side
   STA $2001
   LDA #$00         ;tell the ppu there is no background scrolling
   STA $2005
@@ -335,9 +350,6 @@ SetRenderParameters2:   ; setting parameters to load all tile attributes into PP
   LDA #$1A
   STA trnsfrmcompare
   LDX #$02
-  ;LDA staticrender
-  ;CMP #$01
-  ;BEQ CatTransformLoop
   LDY #$06
   JMP CatTransformLoop
 
@@ -429,8 +441,8 @@ SetAnimationParametersAlmostDone:
   .bank 1
   .org $E000
 palette:
-  .db $0F,$1C,$24,$33,$34,$35,$36,$37,$38,$24,$3A,$3B,$3C,$3D,$3E,$0F
-  .db $0F,$14,$25,$36,$0F,$14,$25,$36,$0F,$12,$24,$39,$31,$02,$38,$3C
+  .db $0F,$14,$25,$36,$0F,$36,$14,$25,$0F,$13,$2C,$30,$0F,$1C,$2B,$39
+  .db $0F,$14,$25,$36,$0F,$36,$14,$25,$0F,$13,$2C,$30,$0F,$1C,$2B,$39
 
 sprites:
      ;vert tile attr horiz
@@ -440,6 +452,11 @@ sprites:
   .db $88, $10, $40, $88
   .db $90, $20, $00, $80
   .db $90, $04, $40, $88
+
+  .db $B0, $1A, $00, $B0
+  .db $B0, $1A, $40, $B8
+  .db $B8, $2A, $00, $B0
+  .db $B8, $2A, $40, $B8
 
 front:
       ;tiles                        ;attributes                   ;animation
@@ -456,22 +473,80 @@ right:
 
 ; not ready yet
 background:
-  .db $24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24  ;;row 1
-  .db $24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24  ;;all sky
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 1
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
-  .db $24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24  ;;row 2
-  .db $24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24  ;;all sky
+  .db $00,$00,$00,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 2
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
-  .db $24,$24,$24,$24,$45,$45,$24,$24,$45,$45,$45,$45,$45,$45,$24,$24  ;;row 3
-  .db $24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$53,$54,$24,$24  ;;some brick tops
+  .db $00,$00,$00,$01,$00,$00,$00,$03,$00,$00,$00,$AB,$B4,$A4,$00,$00  ;;row 3
+  .db $00,$C0,$C1,$C2,$00,$00,$02,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
-  .db $24,$24,$24,$24,$47,$47,$24,$24,$47,$47,$47,$47,$47,$47,$24,$24  ;;row 4
-  .db $24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$24,$55,$56,$24,$24  ;;brick bottoms
+  .db $00,$00,$00,$01,$00,$00,$03,$00,$A0,$A1,$A2,$A3,$C4,$B8,$B9,$A1  ;;row 4
+  .db $BA,$D0,$D1,$D2,$00,$02,$00,$C0,$C1,$C2,$00,$00,$00,$00,$00,$00
+
+  .db $00,$02,$00,$01,$00,$00,$00,$00,$B0,$B1,$B2,$B3,$C6,$BB,$BC,$B1  ;;row 5
+  .db $BD,$E0,$E1,$E2,$00,$00,$00,$D0,$D1,$D2,$00,$00,$00,$00,$00,$00
+
+  .db $00,$00,$00,$01,$00,$C0,$C1,$C2,$C3,$C9,$CA,$A5,$A6,$A7,$C9,$CA  ;;row 6
+  .db $C8,$00,$F1,$00,$00,$00,$00,$E0,$F0,$E2,$00,$00,$00,$00,$00,$00
+
+  .db $00,$02,$00,$01,$00,$D0,$D1,$D2,$C3,$D9,$DA,$B5,$B6,$B7,$D9,$DA  ;;row 7
+  .db $C8,$00,$00,$00,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
+
+  .db $00,$00,$00,$01,$00,$E0,$E1,$E2,$C3,$00,$00,$C5,$00,$C7,$00,$00  ;;row 8
+  .db $C8,$00,$03,$00,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+
+  .db $00,$00,$00,$01,$00,$00,$F1,$00,$D3,$D4,$D4,$D5,$D6,$D7,$D4,$D4  ;;row 9
+  .db $D8,$02,$00,$00,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+
+  .db $00,$00,$00,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 10
+  .db $00,$00,$00,$02,$01,$00,$00,$F8,$F7,$F6,$F6,$F6,$F6,$F5,$00,$00
+
+  .db $00,$00,$00,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01  ;;row 11
+  .db $01,$01,$01,$01,$01,$00,$F9,$E3,$E4,$E6,$EC,$EF,$00,$F4,$00,$00
+
+  .db $02,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 12
+  .db $01,$01,$00,$00,$00,$FA,$FD,$FC,$E5,$E7,$E6,$EF,$EC,$F4,$03,$00
+
+  .db $00,$00,$00,$00,$AA,$AD,$AD,$AD,$AD,$AD,$AD,$AF,$00,$02,$00,$00  ;;row 13
+  .db $01,$01,$00,$00,$00,$FB,$FC,$ED,$EE,$E5,$E8,$97,$97,$F3,$00,$00
+
+  .db $00,$00,$02,$00,$A9,$F6,$F6,$F6,$F6,$F6,$F6,$BF,$00,$00,$02,$00  ;;row 14
+  .db $01,$01,$00,$F2,$F2,$EB,$EC,$CE,$CF,$EF,$EB,$DC,$DD,$99,$F3,$00
+
+  .db $00,$03,$00,$00,$A8,$CC,$90,$91,$92,$93,$94,$98,$00,$00,$00,$00  ;;row 15
+  .db $01,$01,$00,$F3,$00,$EB,$EF,$DE,$DF,$99,$EB,$00,$00,$99,$F3,$00
+
+  .db $00,$00,$00,$F2,$F4,$CB,$00,$95,$AE,$96,$00,$98,$F2,$F2,$F3,$00  ;;row 16
+  .db $01,$01,$00,$F3,$02,$EB,$00,$99,$E9,$99,$EA,$07,$07,$00,$F3,$00
+
+  .db $00,$00,$00,$F3,$F4,$DB,$00,$C5,$BE,$AC,$CC,$98,$00,$02,$F3,$00  ;;row 17
+  .db $01,$01,$00,$F3,$00,$06,$07,$07,$07,$07,$08,$00,$00,$00,$F3,$00
+
+  .db $00,$00,$00,$F3,$F4,$00,$CC,$C5,$CD,$AC,$00,$98,$00,$00,$F3,$00  ;;row 18
+  .db $01,$01,$00,$F2,$F2,$F2,$F2,$00,$00,$F2,$F2,$F2,$F2,$F2,$F3,$00
+
+  .db $00,$00,$00,$F3,$04,$04,$04,$04,$04,$04,$04,$05,$02,$00,$F3,$00  ;;row 19
+  .db $01,$01,$00,$00,$00,$00,$00,$01,$01,$00,$00,$00,$00,$00,$00,$00
+
+  .db $00,$00,$00,$F2,$F2,$F2,$F2,$00,$01,$00,$F2,$F2,$F2,$F2,$F3,$00  ;;row 20
+  .db $01,$01,$00,$00,$00,$00,$00,$01,$01,$00,$00,$02,$00,$C0,$C1,$C2
+
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$01,$01,$01,$01,$01,$01,$01,$01  ;;row 21
+  .db $01,$01,$01,$01,$01,$01,$01,$01,$01,$00,$02,$00,$00,$D0,$D1,$D2
+
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 22
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$E0,$F0,$E2
+
+  .db $97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97  ;;row 23
+  .db $97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97
+
 
 attribute:
-  .db %00000000, %00010000, %01010000, %00010000, %00000000, %00000000, %00000000, %00110000
+  .db %00000010, %00010000, %01010000, %00010000, %00000000, %00000000, %00000000, %00110000
 
-  .db $24,$24,$24,$24, $47,$47,$24,$24 ,$47,$47,$47,$47, $47,$47,$24,$24 ,$24,$24,$24,$24 ,$24,$24,$24,$24, $24,$24,$24,$24, $55,$56,$24,$24  ;;brick bottoms
+  .db $24,$24,$24,$24, $47,$47,$24,$24 ,$47,$47,$47,$47, $47,$47,$24,$24 ,$24,$24,$24,$24 ,$24,$24,$24,$24, $24,$24,$24,$24, $55,$56,$24,$24
 
 
 
