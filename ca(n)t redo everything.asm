@@ -17,8 +17,14 @@ trnsfrmcompare  .rs 1  ; additional variable for main transform subroutine
 cattileslow     .rs 1  ; used to address the needed tile set
 cattileshigh    .rs 1
 staticrender    .rs 1  ; either true(1) or false(0)
-bgpointerlow    .rs 1  ; 16-bit pointer to load all background tiles
-bgpointerhigh   .rs 1
+currentbglow    .rs 1  ; 16-bit variable to point to current background
+currentbghigh   .rs 1
+passable        .rs 1  ; either passable(1) or not(0)
+multiplier      .rs 1  ; variable for multiplication subroutine
+mathresultlow   .rs 1  ; 16-bit variable for storing multiplication result
+mathresulthigh  .rs 1
+currentXtile    .rs 1  ; variable for determining the bg tile next to the cat
+
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -37,6 +43,30 @@ CATANIMATIONSPEED = $0A
 vblankwait:
   BIT $2002
   BPL vblankwait
+  RTS
+
+LoadBackground:
+  LDA $2002             ; read PPU status to reset the high/low latch
+  LDA #$20
+  STA $2006             ; write the high byte of $2000 address
+  LDA #$00
+  STA $2006             ; write the low byte of $2000 address
+  
+  LDX #$00            ; start at pointer + 0
+  LDY #$00
+OutsideLoop:
+  
+InsideLoop:
+  LDA [currentbglow], y  ; copy one background byte from address in pointer plus Y
+  STA $2007           ; this runs 256 * 4 times
+  INY                 ; inside loop counter
+  CPY #$00
+  BNE InsideLoop      ; run the inside loop 256 times before continuing down
+  
+  INC currentbghigh       ; low byte went 0 to 256, so high byte needs to be changed now
+  INX
+  CPX #$04
+  BNE OutsideLoop     ; run the outside loop 256 times before continuing down
   RTS
 
 RESET:
@@ -101,33 +131,16 @@ LoadSpritesLoop:
   BNE LoadSpritesLoop   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
                         ; if compare was equal to 32, keep going down
 
+SetDefaultBackground:
+  LDA #LOW(village1)
+  STA currentbglow       ; put the low byte of the address of background into pointer
+  LDA #HIGH(village1)
+  STA currentbghigh      ; put the high byte of the address into pointer
+  PHA                    ; save the high byte bg value 
 
-LoadBackground:
-  LDA $2002             ; read PPU status to reset the high/low latch
-  LDA #$20
-  STA $2006             ; write the high byte of $2000 address
-  LDA #$00
-  STA $2006             ; write the low byte of $2000 address
-  LDA #LOW(background)
-  STA bgpointerlow       ; put the low byte of the address of background into pointer
-  LDA #HIGH(background)
-  STA bgpointerhigh      ; put the high byte of the address into pointer
-  
-  LDX #$00            ; start at pointer + 0
-  LDY #$00
-OutsideLoop:
-  
-InsideLoop:
-  LDA [bgpointerlow], y  ; copy one background byte from address in pointer plus Y
-  STA $2007           ; this runs 256 * 4 times
-  INY                 ; inside loop counter
-  CPY #$00
-  BNE InsideLoop      ; run the inside loop 256 times before continuing down
-  
-  INC bgpointerhigh       ; low byte went 0 to 256, so high byte needs to be changed now
-  INX
-  CPX #$04
-  BNE OutsideLoop     ; run the outside loop 256 times before continuing down
+  JSR LoadBackground
+  PLA                    ; restore the high byte bg value 
+  STA currentbghigh
 
               
 LoadAttribute:
@@ -195,20 +208,119 @@ ReadControllerLoop:
   BNE ReadControllerLoop
   RTS
 
+Multiply:            ; a = multiplier 1, x = multiplier 2
+  STA multiplier
+  LDA #$00
+  STA mathresulthigh ; clear this value from previous results
+MultiplyAgain:
+  CLC
+  ADC multiplier
+Multiply16bit:
+  PHA                ; save the value in A by pushing it to stack
+  LDA mathresulthigh
+  ADC #$00            ; add 0 and carry from previous add
+  STA mathresulthigh
+  PLA                ; restore the saved value
+
+  DEX
+  BNE MultiplyAgain
+  STA mathresultlow    ; results of calculation are stored in mathresultlow and optional mathresulthigh
+  RTS
+
+
+
+CheckPassability:
+  LDX $0213          ; load horizontal coordinate of the cat's bottom tile into X
+  STX $55 ;!!!!
+  LDY $0210          ; load vertical coordinate of the cat's bottom tile into Y
+  STY $56 ;!!!!
+  LDA direction
+  CMP #$00
+  BEQ TileBelow
+  CMP #$01
+  BEQ TileAbove
+  CMP #$02
+  BEQ TileLeft
+  CMP #$03
+  BEQ TileRight
+
+TileBelow:            ; do some math to determine the sprite next to the cat based on his direction
+  TYA
+  CLC
+  ADC #$08
+  TAY
+  TXA
+  JMP CalculateBgPointer
+TileAbove:
+  DEY
+  TXA
+  JMP CalculateBgPointer
+TileLeft:
+  DEX
+  TXA
+  JMP CalculateBgPointer
+TileRight:
+  TXA
+  CLC
+  ADC #$10
+
+CalculateBgPointer:    ; vert is stored in Y, horiz is stored in A
+  STA $57 ;!!!
+  STY $58 ;!!!
+  LSR A                ; need to devide both vert and horiz values by 8
+  LSR A 
+  LSR A
+  STA currentXtile
+  STA $59 ;!!!
+  TYA
+  LSR A
+  LSR A
+  LSR A
+  STA $5A ;!!!
+  TAX                  ; preparing values for multiplication subroutine
+  LDA #$20
+  JSR Multiply
+
+AddingYpointerToCurrentBg:
+  LDA currentbglow ;!!!
+  STA $5F ;!!!
+  LDA currentbghigh ;!!!
+  STA $60 ;!!!
+  LDA mathresultlow ;!!!
+  STA $5D ;!!!
+  LDA mathresulthigh ;!!!
+  STA $5E ;!!!
+
+  CLC
+  LDA currentbglow
+  ADC mathresultlow
+  STA mathresultlow
+  STA $5B ;!!!
+  LDA currentbghigh
+  ADC mathresulthigh
+  STA mathresulthigh
+  STA $5C ;!!!
+
+FinallyDefiningPassibilityOfTile:
+  LDY currentXtile
+  LDA [mathresultlow], y
+  STA $61 ;!!!!
+  CMP #$90          ; check if the tile is within the passable tiles in the tiletable (they currently end by address $90 but will change later)
+  BCC TileIsPassable
+  LDA #$00
+  STA passable
+  RTS
+TileIsPassable:
+  LDA #$01
+  STA passable
+  RTS
 
 CheckMovement:
   LDA buttons
   AND #%00001111    ; check only the state of the arrow buttons
   CMP #$00
   BNE CatMoves      ; branch if any button is pressed
-  LDA #$00
-  STA mvcounter     ; set animation counter to 0 when nothing is pressed
-  STA framenum      ; frame number = 0
-  LDA #$01
-  STA staticrender
-  JSR DetermineDirection
-  JSR SetRenderParameters
-  RTS
+  JMP StaticOrNotPassable
 CatMoves:
   LDA #$00
   STA staticrender
@@ -223,7 +335,7 @@ CheckMVup:
   LDA #$18          ; compare pointer to $18 via transform loop
   STA trnsfrmcompare
   LDX #$00
-  JSR CatTransformLoop
+  JSR TransformIfPassable
 CheckMVdown:
   LDA buttons
   AND #MVDOWN
@@ -235,7 +347,7 @@ CheckMVdown:
   LDA #$18          ; compare pointer to $18 via transform loop
   STA trnsfrmcompare
   LDX #$00
-  JSR CatTransformLoop
+  JSR TransformIfPassable
 CheckMVleft:
   LDA buttons
   AND #MVLEFT
@@ -247,7 +359,7 @@ CheckMVleft:
   LDA #$1B          ; compare pointer to $1B via transform loop
   STA trnsfrmcompare
   LDX #$03
-  JSR CatTransformLoop
+  JSR TransformIfPassable
 CheckMVright:
   LDA buttons
   AND #MVRIGHT
@@ -259,8 +371,11 @@ CheckMVright:
   LDA #$1B          ; compare pointer to $1B via transform loop
   STA trnsfrmcompare
   LDX #$03
-  JSR CatTransformLoop
+  JSR TransformIfPassable
 CheckMVdone:
+  ;LDA passable
+  ;CMP #$00
+  ;BEQ StaticOrNotPassable
   JMP CompareDirToDir2
 CompareDirToDir2Done:
   JSR DetermineDirection
@@ -273,6 +388,17 @@ CompareDirToDir2Done:
 SkipRender:
   JSR CheckAnimateCat
   RTS
+
+StaticOrNotPassable:
+  LDA #$00
+  STA mvcounter     ; set animation counter to 0 when nothing is pressed
+  STA framenum      ; frame number = 0
+  LDA #$01
+  STA staticrender
+  JSR DetermineDirection
+  JSR SetRenderParameters
+  RTS
+
 
 CompareDirToDir2:
   LDA direction       ; finding out if the direction changed since the last render
@@ -353,6 +479,16 @@ SetRenderParameters2:   ; setting parameters to load all tile attributes into PP
   LDY #$06
   JMP CatTransformLoop
 
+TransformIfPassable:
+  TXA
+  PHA
+  JSR CheckPassability ; jump to subroutine to define if the tile next to the cat is passable
+  PLA
+  TAX
+  LDA passable
+  CMP #$00
+  BNE CatTransformLoop      ; if the tile is passable, move to transform subroutine
+  RTS
 
 CatTransformLoop:       ; main sprite transform subroutine
   LDA trnsfrm
@@ -471,8 +607,7 @@ left:
 right:
   .db $02, $03, $12, $13, $22, $23, $00, $00, $00, $00, $00, $00, $22, $23, $07, $08, $22, $23, $09, $0A
 
-; not ready yet
-background:
+village1:
   .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 1
   .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
