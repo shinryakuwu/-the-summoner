@@ -16,4 +16,7 @@ PerformBgRender:
   PLA
   STA currentbghigh
   JSR LoadAttribute
+  JSR LoadSprites
+  LDA #OBJECTSANIMATIONSPEED ; renew the animation counter
+  STA animatecounter
   JMP ExitMainLoopSubroutines

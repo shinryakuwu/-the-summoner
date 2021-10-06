@@ -31,20 +31,48 @@ InsideLoop:
   RTS
 
 LoadAttribute:
-  LDA $2002             ; read PPU status to reset the high/low latch
+  LDA $2002               ; read PPU status to reset the high/low latch
   LDA #$23
-  STA $2006             ; write the high byte of $23C0 address
+  STA $2006               ; write the high byte of $23C0 address
   LDA #$C0
-  STA $2006             ; write the low byte of $23C0 address
-  LDX #$00              ; start out at 0
+  STA $2006               ; write the low byte of $23C0 address
+  LDA singleattribute
+  CMP #$01
+  BEQ LoadSingleAttribute
+  LDY #$00                ; start out at 0
+LoadAttributesLoop:
+  LDA [currentattrlow], y ; load data from address (attribute + the value in y)
+  STA $2007               ; write to PPUa
+  INY                     ; X = X + 1
+  CPY #$30                ; load attributes to bg attributes table 48 times
+  BNE LoadAttributesLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
+  RTS
+
+LoadSingleAttribute:
+  LDX attributenumber
   LDY #$00
-LoadAttributeLoop:
-  ;LDA attribute, x      ; load data from address (attribute + the value in x)
-  STX $2007              ; write to PPU
-  ;INX                   ; X = X + 1
+LoadSingleAttributeLoop:
+  STX $2007                    ; write to PPU
   INY
-  CPY #$30               ; load 0 to bg attributes 48 times
-  BNE LoadAttributeLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
+  CPY #$30                     ; load X to bg attributes table 48 times
+  BNE LoadSingleAttributeLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
+  RTS
+
+LoadSprites:
+  LDY #$00                 ; start at 0
+LoadSpritesLoop:
+  LDA [curntspriteslow], y ; load data from address (sprites +  y)
+  STA [ramspriteslow], y   ; store into RAM address
+  INY                      ; Y = Y + 1
+  CPY spritescompare       ; Compare Y to the needed value
+  BNE LoadSpritesLoop      ; Branch to LoadSpritesLoop if compare was Not Equal to zero
+
+ClearSpritesLoop:
+  LDA #$00                 ; fill the rest of sprite addresses with zeros
+  STA [ramspriteslow], y
+  INY
+  CPY #$00
+  BNE ClearSpritesLoop
   RTS
 
 RESET:
@@ -97,28 +125,39 @@ LoadPalettesLoop:
   BNE LoadPalettesLoop  ; Branch to LoadPalettesLoop if compare was Not Equal to zero
                         ; if compare was equal to 32, keep going down
 
+SetDefaultSprites:
+  LDA #LOW(catsprites)
+  STA curntspriteslow     ; put the low byte of the address of tiles into pointer
+  LDA #HIGH(catsprites)
+  STA curntspriteshigh    ; put the high byte of the address into pointer
+  LDA #$00
+  STA ramspriteslow
+  LDA #$02
+  STA ramspriteshigh      ; load sprites starting from 0200 RAM address
+  LDA #$48
+  STA spritescompare
 
-LoadSprites:
-  LDX #$00              ; start at 0
-LoadSpritesLoop:
-  LDA sprites, x        ; load data from address (sprites +  x)
-  STA $0200, x          ; store into RAM address ($0200 + x)
-  INX                   ; X = X + 1
-  CPX #$28              ; Compare X to hex $20, decimal 32
-  BNE LoadSpritesLoop   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
-                        ; if compare was equal to 32, keep going down
+  JSR LoadSprites
+
+  LDA #$18
+  STA ramspriteslow       ; from now on load sprites starting from 0218 RAM address (without reloading cat sprites)
 
 SetDefaultBackground:
   LDA #LOW(village1)
   STA currentbglow       ; put the low byte of the address of background into pointer
   LDA #HIGH(village1)
   STA currentbghigh      ; put the high byte of the address into pointer
-  PHA                    ; save the high byte bg value 
+  PHA                    ; save the high byte bg value
 
   JSR LoadBackground
-  PLA                    ; restore the high byte bg value 
+  PLA                    ; restore the high byte bg value
   STA currentbghigh
 
+SetDefaultAttributes:
+  LDA #LOW(village1attributes)
+  STA currentattrlow            ; put the low byte of the address of attributes into pointer
+  LDA #HIGH(village1attributes)
+  STA currentattrhigh           ; put the high byte of the address into pointer
 
   JSR LoadAttribute
 

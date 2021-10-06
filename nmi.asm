@@ -21,5 +21,7 @@ NMI:
 
   JSR Warp
 
+  JSR CheckAnimateTiles
+
   
   RTI             ; return from interrupt

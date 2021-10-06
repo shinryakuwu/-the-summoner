@@ -19,18 +19,29 @@ TileBelow:            ; do some math to determine the sprite next to the cat bas
   TAY
   TXA
   CLC
-  ADC #$07
+  ADC #$04
   JMP CalculateBgPointer
 TileAbove:
-  DEY
+  TYA
+  CLC
+  ADC #$03
+  TAY
   TXA
   CLC
-  ADC #$07
+  ADC #$04
   JMP CalculateBgPointer
 TileLeft:
+  TYA
+  CLC
+  ADC #$06
+  TAY
   TXA
   JMP CalculateBgPointer
 TileRight:
+  TYA
+  CLC
+  ADC #$06
+  TAY
   TXA
   CLC
   ADC #$10

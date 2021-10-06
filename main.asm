@@ -12,6 +12,7 @@
 	.include "passability.asm"
 	.include "movement.asm"       ; character movement and animation
   .include "warp.asm"           ; teleport character to needed location and position
+  .include "animatetiles"       ; animate different objects on locations
 	.include "tiles.asm"
 
   .org $FFFA     ;first of the three vectors starts here

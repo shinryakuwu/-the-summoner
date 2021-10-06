@@ -137,7 +137,7 @@ SetRenderParameters:    ; setting parameters to load tiles into PPU
 RenderParametersElse:
   LDX #$01
   LDY #$00
-  JSR CatTransformLoop
+  JSR ObjectTransformLoop
   RTS
 
 StaticRenderParameters:
@@ -157,7 +157,16 @@ SetRenderParameters2:   ; setting parameters to load all tile attributes into PP
   STA trnsfrmcompare
   LDX #$02
   LDY #$06
-  JMP CatTransformLoop
+  JMP ObjectTransformLoop
+
+SetRenderParameters3:   ; setting parameters for warp
+  LDA #$05
+  STA trnsfrm
+  LDA #$1B
+  STA trnsfrmcompare
+  LDX #$03
+  LDY #$06 ; might be unnecessary
+  JMP ObjectTransformLoop
 
 TransformIfPassable:
   TXA
@@ -167,42 +176,55 @@ TransformIfPassable:
   TAX
   LDA passable
   CMP #$00
-  BNE CatTransformLoop ; if the tile is passable, move to transform subroutine
+  BNE ObjectTransformLoop ; if the tile is passable, move to transform subroutine
   RTS
 
-CatTransformLoop:      ; main sprite transform subroutine
+ObjectTransformLoop:      ; main sprite transform subroutine
   LDA trnsfrm
   CMP #$00
-  BEQ CatDecrement
+  BEQ DecrementCoordinates
   CMP #$01
-  BEQ CatIncrement
+  BEQ IncrementCoordinates
   CMP #$02
-  BEQ CatRender
+  BEQ RenderObject
   CMP #$03
-  BEQ CatRender
+  BEQ RenderObject
+  CMP #$04
+  BEQ WarpObject
+  CMP #$05
+  BEQ WarpObject
 TrnsfrmBranchDone:
   INX
   INX
   INX
   INX
   CPX trnsfrmcompare
-  BNE CatTransformLoop
+  BNE ObjectTransformLoop
   LDA #$02              ; if trnsfrm state = 2, go through additional loop
   CMP trnsfrm
   BEQ SetRenderParameters2
+  LDA #$04              ; if trnsfrm state = 4, go through additional loop
+  CMP trnsfrm
+  BEQ SetRenderParameters3
   RTS
 
-CatDecrement:
+DecrementCoordinates:
   DEC $0200, x
   JMP TrnsfrmBranchDone
-CatIncrement:
+IncrementCoordinates:
   INC $0200, x
   JMP TrnsfrmBranchDone
-CatRender:
+RenderObject:
   LDA [cattileslow], y
   STA $0200, x
   INY
   JMP TrnsfrmBranchDone
+WarpObject:
+  LDA [warpXYlow], y
+  STA $0200, x
+  INY
+  JMP TrnsfrmBranchDone
+
 
 
 CheckAnimateCat:
@@ -243,5 +265,5 @@ SetAnimationParametersAlmostDone:
   CLC
   ADC #$0C             ; adding the number to reach the animation tiles via the db
   TAY                  ; frame number is transformed into a pointer to the cat tile db
-  JSR CatTransformLoop
+  JSR ObjectTransformLoop
   RTS
