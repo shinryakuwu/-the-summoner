@@ -20,7 +20,7 @@ cattileshigh     .rs 1
 warpXYlow        .rs 1  ; used to address warp coordinates
 warpXYhigh		 .rs 1
 staticrender     .rs 1  ; either true(1) or false(0)
-location         .rs 1  ; location identifier ( 0 - village, 1 - cat house )
+location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2)
 currentbglow     .rs 1  ; 16-bit variable to point to current background
 currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites

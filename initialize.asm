@@ -174,4 +174,3 @@ Forever:
   CMP #$01
   BEQ MainLoopSubroutines
   JMP Forever     ; jump back to Forever, infinite loop
-
