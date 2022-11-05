@@ -193,6 +193,8 @@ ObjectTransformLoop:      ; main sprite transform subroutine
   BEQ WarpObject
   CMP #$05
   BEQ WarpObject
+  CMP #$06
+  BEQ ChangeGraphics
 TrnsfrmBranchDone:
   INX
   INX
@@ -214,7 +216,7 @@ DecrementCoordinates:
 IncrementCoordinates:
   INC $0200, x
   JMP TrnsfrmBranchDone
-RenderObject:
+RenderObject: ; render cat?
   LDA [cattileslow], y
   STA $0200, x
   INY
@@ -224,7 +226,10 @@ WarpObject:
   STA $0200, x
   INY
   JMP TrnsfrmBranchDone
-
+ChangeGraphics: ; it can change both tile address and tile attribute
+  LDA switchtile
+  STA $0200, x
+  JMP TrnsfrmBranchDone
 
 
 CheckAnimateCat:

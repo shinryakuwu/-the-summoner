@@ -1,6 +1,25 @@
 CheckPassability:
   LDX $0213          ; load horizontal coordinate of the cat's left bottom tile into X
   LDY $0210          ; load vertical coordinate of the cat's left bottom tile into Y
+
+  LDA direction
+  CMP #$02
+  BEQ CheckMapBordersLeft
+  CMP #$03
+  BEQ CheckMapBordersRight
+  JMP CheckPassabilityAgain
+CheckMapBordersLeft:
+  CPX #$00
+  BEQ BordersReached
+  JMP CheckPassabilityAgain
+CheckMapBordersRight:
+  CPX #$F0
+  BEQ BordersReached
+  JMP CheckPassabilityAgain
+BordersReached:
+  LDA #$00
+  STA passable       ; set passable to false
+  RTS
 CheckPassabilityAgain:
   LDA direction
   CMP #$00
@@ -51,13 +70,13 @@ CalculateBgPointer:    ; vert is stored in Y, horiz is stored in A
   LSR A 
   LSR A
   STA currentXtile
-  STA $66 ; !!!
+  ; STA $66              ; for debugging purposes
   TYA
   LSR A
   LSR A
   LSR A
   STA currentYtile     ; saving this value before multiplying it for future use in other subroutines
-  STA $67 ; !!!
+  ; STA $67              ; for debugging purposes
   TAX                  ; preparing values for multiplication subroutine
   LDA #$20             ; here we set multiplier to 32 because (pointer to bg tiles + 32) = (Y coordinate + 1)
   JSR Multiply

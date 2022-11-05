@@ -14,6 +14,8 @@ AnimateTiles:
  	LDA location
   CMP #$01
  	BEQ AnimateCatHouse
+ 	CMP #$02
+ 	BEQ AnimateVillage2
  	RTS
 
 AnimateVillage1:
@@ -39,19 +41,60 @@ MoveGhost:
   RTS
 
 AnimateCatHouse:
+	LDA #$06          ; switch tiles via transform loop
+  STA trnsfrm
+  LDX #$19          ; candles tiles are stored at address 0200 + this number
+  LDA #$21
+  STA trnsfrmcompare
 	LDA objectframenum
 	CMP #$00
 	BEQ AnimateCandles
 	LDA #$00
 	STA objectframenum
 	LDA #$0C
-  STA $0219
-  STA $021D
+	STA switchtile
+	JSR ObjectTransformLoop
  	RTS
 AnimateCandles:
 	LDA #$01
 	STA objectframenum
 	LDA #$0B
-	STA $0219
-  STA $021D
+	STA switchtile
+	JSR ObjectTransformLoop
+	RTS
+
+AnimateVillage2:
+	LDA #$06          ; switch tiles via transform loop
+  STA trnsfrm
+  LDX #$49
+  LDA #$E9
+  STA trnsfrmcompare
+	LDA objectframenum
+	CMP #$00
+	BEQ AnimateRiver
+	LDA #$00
+	STA objectframenum
+	LDA #$1D
+	STA switchtile
+	JSR ObjectTransformLoop
+	LDX #$3E          ; also animate festoon here
+	LDA #$4A
+  STA trnsfrmcompare
+  LDA #$03
+	STA switchtile
+	JSR ObjectTransformLoop
+ 	RTS
+AnimateRiver:
+	LDA #$01
+	STA objectframenum
+	LDA #$0D
+	STA switchtile
+	JSR ObjectTransformLoop
+AnimateFestoon:
+	LDX #$3E
+	LDA #$4A
+  STA trnsfrmcompare
+  LDA #$00
+	STA switchtile
+	JSR ObjectTransformLoop
 	RTS

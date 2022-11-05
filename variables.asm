@@ -39,6 +39,7 @@ currentXtile     .rs 1  ; variable for determining the bg tile next to the cat
 currentYtile     .rs 1  ; variable for determining the bg tile next to the cat
 currentYtilelow  .rs 1  ; 16-bit variable for determining the bg tile next to the cat
 currentYtilehigh .rs 1
+switchtile       .rs 1  ; tile (and maybe attribute) for replacement used for object animation
 
 
 ;; DECLARE SOME CONSTANTS HERE

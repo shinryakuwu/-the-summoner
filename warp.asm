@@ -29,11 +29,13 @@ Village1CatHouseWarpCheck:
 	CMP #$08
 	BEQ Village1CatHouseWarp
 Village1Village2WarpCheck:
-	LDA currentYtile
-	CMP #$06
-	BNE Village1ForestWarpCheck
 	LDA currentXtile
 	CMP #$1F
+	BNE Village1ForestWarpCheck
+	LDA currentYtile
+	CMP #$06
+	BEQ Village1Village2Warp
+	CMP #$07
 	BEQ Village1Village2Warp
 Village1ForestWarpCheck:
 	RTS
@@ -79,7 +81,7 @@ Village1Village2Warp:
   STA curntspriteslow
   LDA #HIGH(village2sprites)
   STA curntspriteshigh
-  LDA #$B8
+  LDA #$C8
   STA spritescompare
   JSR PrepareForBGRender
   JSR ChangeCatCoordinates
