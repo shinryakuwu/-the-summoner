@@ -42,7 +42,7 @@ LoadAttribute:
   LDY #$00                ; start out at 0
 LoadAttributesLoop:
   LDA [currentattrlow], y ; load data from address (attribute + the value in y)
-  STA $2007               ; write to PPUa
+  STA $2007               ; write to PPU
   INY                     ; X = X + 1
   CPY #$30                ; load attributes to bg attributes table 48 times
   BNE LoadAttributesLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero

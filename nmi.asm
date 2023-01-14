@@ -10,18 +10,26 @@ NMI:
   STA $2000
   LDA #%00011110   ; enable sprites, enable background, no clipping on left side
   STA $2001
+  
+  JSR ReadController
+
+  JSR PerformAction
+
+  JSR CheckAction
+
+  LDA movement
+  BNE MovementSubroutines ; if movement is true, perform movement related subroutines
+  JMP EndNMI
+
+MovementSubroutines:
+  JSR CheckMovement
+  JSR Warp
+
+EndNMI:
+  JSR CheckAnimateTiles
+
   LDA #$00         ; tell the ppu there is no background scrolling
   STA $2005
   STA $2005
-  
-
-  JSR ReadController
-
-  JSR CheckMovement
-
-  JSR Warp
-
-  JSR CheckAnimateTiles
-
   
   RTI             ; return from interrupt

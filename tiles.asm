@@ -1,8 +1,8 @@
   .bank 1
   .org $E000
 palette:
-  .db $0F,$14,$25,$36,$0F,$36,$14,$25,$0F,$13,$2C,$30,$0F,$1C,$2B,$39
-  .db $0F,$14,$25,$36,$0F,$36,$14,$25,$0F,$13,$2C,$30,$0F,$1C,$2B,$39
+  .db $0F,$14,$25,$36,$0F,$36,$14,$25,$0F,$13,$2C,$36,$0F,$1C,$2B,$39
+  .db $0F,$14,$25,$36,$0F,$36,$14,$25,$0F,$13,$2C,$36,$0F,$1C,$2B,$39
 
 catsprites:
      ;vert tile attr horiz
@@ -353,6 +353,24 @@ catroom:
   .db $97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97  ;;row 23
   .db $97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97
 
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 24
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 25
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 26
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 27
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 28
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 29
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
 
 village1attributes:
   .db $88, $00, $00, $00, $00, $00, $00, $00
@@ -371,3 +389,6 @@ village2attributes:
   .db $00, $00, $00, $00, $00, $00, $00, $00
   .db $00, $00, $00, $00, $00, $00, $00, $00
   .db $00, $00, $00, $00, $00, $00, $00, $00
+
+texttest:
+  .db $30, $31, $32, $FF, $33, $34, $35, $FF, $30, $33, $35, $34, $FF, $36, $37, $38, $37, $39, $39, $30, $33, $3A, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $32, $30, $33, $34, $38, $30, $35, $30, $3B, $39, $FF, $35, $34, $3C, $37, $3D

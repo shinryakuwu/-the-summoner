@@ -4,6 +4,7 @@
 buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button state in this variable
                         ; A B select start up down left right
 mainloop         .rs 1  ; 0 - don't perform main loop logic, 1 - perform
+movement         .rs 1  ; allow movement ( 1 - allow, 0 - not)
 bgrender         .rs 1  ; 0 - don't perform bg render, 1 - perform
 direction        .rs 1  ; either down(0) up(1) left(2) of right(3)
 direction2       .rs 1  ; used to compare to direction variable
@@ -40,7 +41,12 @@ currentYtile     .rs 1  ; variable for determining the bg tile next to the cat
 currentYtilelow  .rs 1  ; 16-bit variable for determining the bg tile next to the cat
 currentYtilehigh .rs 1
 switchtile       .rs 1  ; tile (and maybe attribute) for replacement used for object animation
-
+textpointer      .rs 1  ; points at the letter to render
+textcompare      .rs 1  ; stores the number of letters in total
+currenttextlow   .rs 1  ; 16-bit variable to point to current text to display
+currenttexthigh  .rs 1
+textppuaddrlow   .rs 1  ; 16-bit variable for coordinates of current letter to be rendered
+textppuaddrhigh  .rs 1
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -50,3 +56,4 @@ MVDOWN = %00000100
 MVUP = %00001000
 CATANIMATIONSPEED = $0A
 OBJECTSANIMATIONSPEED = $1A
+INITIALTEXTPPUADDR = $22E1
