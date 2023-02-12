@@ -11,15 +11,19 @@ SetTextRenderParams:
   STA currenttextlow
   LDA #HIGH(texttest)
   STA currenttexthigh
-  LDA #$00
-  STA movement ; disable movement
+  LDA #$01
+  STA action ; enable action
   RTS
 
 PerformAction:
-  LDA movement
-  BEQ Action
+  LDA action
+  BNE Action
   RTS
 
 Action:
+  LDA buttons    ; blocks movement
+  AND #%11000000
+  STA buttons
+
   JSR RenderText
   RTS

@@ -4,7 +4,7 @@
 buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button state in this variable
                         ; A B select start up down left right
 mainloop         .rs 1  ; 0 - don't perform main loop logic, 1 - perform
-movement         .rs 1  ; allow movement ( 1 - allow, 0 - not)
+action           .rs 1  ; allow action ( 1 - allow, 0 - not )
 bgrender         .rs 1  ; 0 - don't perform bg render, 1 - perform
 direction        .rs 1  ; either down(0) up(1) left(2) of right(3)
 direction2       .rs 1  ; used to compare to direction variable
@@ -19,7 +19,7 @@ trnsfrmcompare   .rs 1  ; additional variable for main transform subroutine
 cattileslow      .rs 1  ; used to address the needed tile set
 cattileshigh     .rs 1
 warpXYlow        .rs 1  ; used to address warp coordinates
-warpXYhigh		 .rs 1
+warpXYhigh		   .rs 1
 staticrender     .rs 1  ; either true(1) or false(0)
 location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2)
 currentbglow     .rs 1  ; 16-bit variable to point to current background

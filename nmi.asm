@@ -17,15 +17,9 @@ NMI:
 
   JSR CheckAction
 
-  LDA movement
-  BNE MovementSubroutines ; if movement is true, perform movement related subroutines
-  JMP EndNMI
-
-MovementSubroutines:
   JSR CheckMovement
   JSR Warp
 
-EndNMI:
   JSR CheckAnimateTiles
 
   LDA #$00         ; tell the ppu there is no background scrolling

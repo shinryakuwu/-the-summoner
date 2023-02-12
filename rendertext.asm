@@ -23,8 +23,7 @@ LoadTextIntoPPU:
 RenderTextDone:
   LDA #$00
   STA textpointer
-  LDA #$01
-  STA movement
+  STA action
   RTS
 
 CalculateTextPPUAddress:
