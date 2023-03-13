@@ -1,8 +1,4 @@
 RenderText:
-  ; LDY textpointer
-  ; CPY textcompare
-  ; BEQ RenderTextDone
-
   JSR CalculateTextPPUAddress
   LDA $2002               ; read PPU status to reset the high/low latch
   LDA textppuaddrhigh
@@ -19,10 +15,11 @@ LoadTextIntoPPU:
   INC textpointer
   CMP #$FF                ; if current symbol is a whitespace, render next symbol within the same frame
   BEQ LoadTextIntoPPU
-  JSR RenderTextCursor
+RenderTextCursor:
+  LDA #$85                ; should be a variable later
+  STA $2007
   RTS
 RenderTextDone:
-  JSR RenderTextCursor
   JSR CalculateCurrentTextAddress ; add condition only if textparts?
   LDA #$00
   STA textpointer
@@ -30,10 +27,6 @@ RenderTextDone:
   STA action
   RTS
 
-RenderTextCursor:
-  LDA #$85   ; should be a variable later
-  STA $2007
-  RTS
 
 CalculateTextPPUAddress:
   LDA textpointer
@@ -46,14 +39,15 @@ CalculateTextPPUAddress:
   RTS
 
 CalculateCurrentTextAddress:
-  LDA textpointer
+  LDA textpartscounter  ; don't define the next starting address for text if all text parts are rendered
+  BEQ CalculateCurrentTextAddressDone
+  INC textpointer
+  LDA currenttextlow
   CLC
-  ADC #LOW(INITIALTEXTPPUADDR)
+  ADC textpointer
   STA currenttextlow
-  LDA #HIGH(INITIALTEXTPPUADDR)
+  LDA currenttexthigh
   ADC #$00              ; add 0 and carry from previous add
   STA currenttexthigh
+CalculateCurrentTextAddressDone:
   RTS
-
-; possible solution - 'textpartscounter' with number of text parts, set at 'check action', decrement each time
-; done when reaches zero

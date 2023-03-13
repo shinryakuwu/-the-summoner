@@ -13,8 +13,6 @@ NMI:
   
   JSR ReadController
 
-  JSR PerformAction
-
   JSR CheckAction
 
   JSR CheckMovement
