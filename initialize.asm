@@ -26,8 +26,24 @@ InsideLoop:
   
   INC currentbghigh      ; low byte went 0 to 256, so high byte needs to be changed now
   INX
-  CPX #$04
+  CPX #$03
   BNE OutsideLoop        ; run the outside loop 256 times before continuing down
+
+  JSR ClearTextSection
+  RTS
+
+ClearTextSection:
+  LDY #$00
+  LDA #$22
+  STA $2006             ; write the high byte of $22C0 address
+  LDA #$C0
+  STA $2006
+ClearTextSectionLoop:
+  LDA $FF
+  STA $2007
+  INY
+  CPY #$00
+  BNE ClearTextSectionLoop
   RTS
 
 LoadAttribute:

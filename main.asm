@@ -10,6 +10,7 @@
 	.include "readcontroller.asm"
 	.include "multiply.asm"
 	.include "passability.asm"
+  .include "calculate_tile"     ; subroutine to calculate tile in front of the cat
 	.include "movement.asm"       ; character movement and animation
   .include "warp.asm"           ; teleport character to needed location and position
   .include "animatetiles"       ; animate different objects on locations

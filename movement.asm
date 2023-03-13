@@ -1,7 +1,6 @@
 CheckMovement:
   LDA buttons
   AND #%00001111    ; check only the state of the arrow buttons
-  CMP #$00
   BNE CatMoves      ; branch if any button is pressed
   JMP StaticOrNotPassable
 CatMoves:
@@ -89,8 +88,7 @@ CompareDirToDir2:
 
 DetermineDirection:
   LDA direction
-  CMP #$00
-  BEQ RenderCatDown
+  BEQ RenderCatDown ; if equals zero
   CMP #$01
   BEQ RenderCatUp
   CMP #$02
@@ -171,18 +169,16 @@ SetRenderParameters3:   ; setting parameters for warp
 TransformIfPassable:
   TXA
   PHA
-  JSR CheckPassability ; jump to subroutine to define if the tile next to the cat is passable
+  JSR CheckPassability     ; jump to subroutine to define if the tile next to the cat is passable
   PLA
   TAX
   LDA passable
-  CMP #$00
-  BNE ObjectTransformLoop ; if the tile is passable, move to transform subroutine
+  BNE ObjectTransformLoop  ; if the tile is passable, move to transform subroutine
   RTS
 
-ObjectTransformLoop:      ; main sprite transform subroutine
+ObjectTransformLoop:       ; main sprite transform subroutine
   LDA trnsfrm
-  CMP #$00
-  BEQ DecrementCoordinates
+  BEQ DecrementCoordinates ; if equals zero
   CMP #$01
   BEQ IncrementCoordinates
   CMP #$02
@@ -234,7 +230,6 @@ ChangeGraphics: ; it can change both tile address and tile attribute
 
 CheckAnimateCat:
   LDA mvcounter
-  CMP #$00
   BEQ AnimateCat   ; animate only when counter = 0
   DEC mvcounter    ; if not 0, decrement counter
   RTS

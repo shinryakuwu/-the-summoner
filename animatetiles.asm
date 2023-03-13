@@ -1,6 +1,5 @@
 CheckAnimateTiles:
 	LDA animatecounter
-  CMP #$00
   BEQ AnimateTiles   ; animate only when counter = 0
   DEC animatecounter ; if not 0, decrement counter
   RTS
@@ -9,9 +8,7 @@ AnimateTiles:
 	LDA #OBJECTSANIMATIONSPEED ; renew the counter
   STA animatecounter
   LDA location
-  CMP #$00
- 	BEQ AnimateVillage1
- 	LDA location
+ 	BEQ AnimateVillage1 ; when equals zero
   CMP #$01
  	BEQ AnimateCatHouse
  	CMP #$02
@@ -20,13 +17,11 @@ AnimateTiles:
 
 AnimateVillage1:
 	LDA objectframenum
-	CMP #$00
 	BEQ MoveGhostDown
 MoveGhostUp:
 	LDA #$00
 	STA objectframenum
-	LDA #$00          ; decrement via transform loop
-  STA trnsfrm
+  STA trnsfrm       ; decrement via transform loop
  	JMP MoveGhost
 MoveGhostDown:
 	LDA #$01
@@ -47,7 +42,6 @@ AnimateCatHouse:
   LDA #$21
   STA trnsfrmcompare
 	LDA objectframenum
-	CMP #$00
 	BEQ AnimateCandles
 	LDA #$00
 	STA objectframenum
@@ -70,7 +64,6 @@ AnimateVillage2:
   LDA #$E9
   STA trnsfrmcompare
 	LDA objectframenum
-	CMP #$00
 	BEQ AnimateRiver
 	LDA #$00
 	STA objectframenum
