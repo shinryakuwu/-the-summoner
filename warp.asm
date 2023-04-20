@@ -57,7 +57,7 @@ Village1CatHouseWarp:
   STA curntspriteslow
   LDA #HIGH(cathousesprites)
   STA curntspriteshigh
-  LDA #$08             ; this number identifies how many sprites need to be loaded
+  LDA #$80             ; this number identifies how many sprites need to be loaded
   STA spritescompare
   JSR PrepareForBGRender
   JSR ChangeCatCoordinates

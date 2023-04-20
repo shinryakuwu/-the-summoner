@@ -47,13 +47,13 @@ CalculateBgPointer:    ; vert is stored in Y, horiz is stored in A
   LSR A 
   LSR A
   STA currentXtile
-  ; STA $66              ; for debugging purposes
+  STA $66              ; for debugging purposes
   TYA
   LSR A
   LSR A
   LSR A
   STA currentYtile     ; saving this value before multiplying it for future use in other subroutines
-  ; STA $67              ; for debugging purposes
+  STA $67              ; for debugging purposes
   TAX                  ; preparing values for multiplication subroutine
   LDA #$20             ; here we set multiplier to 32 because (pointer to bg tiles + 32) = (Y coordinate + 1)
   JSR Multiply
