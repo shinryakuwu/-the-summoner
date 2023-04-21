@@ -1,8 +1,7 @@
 Warp:
 	; compare current x and y to needed numbers and compare position, if everything matches, perform a warp
 	LDA location
-	CMP #$00
-	BEQ Village1WarpCheck
+	BEQ Village1WarpCheck ; when equals zero
 	CMP #$01
 	BEQ CatHouseWarpCheck
 	CMP #$02
@@ -58,7 +57,7 @@ Village1CatHouseWarp:
   STA curntspriteslow
   LDA #HIGH(cathousesprites)
   STA curntspriteshigh
-  LDA #$08             ; this number identifies how many sprites need to be loaded
+  LDA #$80             ; this number identifies how many sprites need to be loaded
   STA spritescompare
   JSR PrepareForBGRender
   JSR ChangeCatCoordinates
@@ -95,8 +94,7 @@ CatHouseVillage1WarpCheck:
 	CMP #$13
 	BNE CatHouseVillage1WarpCheckDone
 	LDA direction
-	CMP #$00
-	BEQ CatHouseVillage1Warp
+	BEQ CatHouseVillage1Warp ; when equals zero
 CatHouseVillage1WarpCheckDone:
 	RTS
 
@@ -127,8 +125,7 @@ Village2Village1WarpCheck:
 	CMP #$06
 	BNE Village2ExHouseCheck
 	LDA currentXtile
-	CMP #$00
-	BEQ Village2Village1Warp
+	BEQ Village2Village1Warp ; when equals zero
 Village2ExHouseCheck:
 	RTS
 
