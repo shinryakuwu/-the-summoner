@@ -16,7 +16,7 @@ LoadTextIntoPPU:
   CMP #$FF                ; if current symbol is a whitespace, render next symbol within the same frame
   BEQ LoadTextIntoPPU
 RenderTextCursor:
-  LDA #$85                ; should be a variable later
+  LDA textcursor
   STA $2007
   RTS
 RenderTextDone:

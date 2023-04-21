@@ -63,6 +63,9 @@ BlockMovement:
   LDA buttons        ; blocks movement if action button is pressed
   AND #ACTIONBUTTONS
   STA buttons
+SetDefaultTextCursor: ; default is cat face, redefine it later if needed
+  LDA #$85
+  STA textcursor
 CheckActionTile:
   LDX $0213          ; load horizontal coordinate of the cat's left bottom tile into X
   LDY $0210          ; load vertical coordinate of the cat's left bottom tile into Y
@@ -112,6 +115,8 @@ StartGhostParams:
   STA currenttextlow
   LDA #HIGH(startghost)
   STA currenttexthigh
+  LDA #$86
+  STA textcursor
   JMP SettingEventParamsDone
 ComputerParams:
   LDA #LOW(computer)

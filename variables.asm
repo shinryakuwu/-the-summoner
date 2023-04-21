@@ -47,6 +47,7 @@ currenttexthigh  .rs 1
 textppuaddrlow   .rs 1  ; 16-bit variable for coordinates of current letter to be rendered
 textppuaddrhigh  .rs 1
 textpartscounter .rs 1
+textcursor       .rs 1  ; stores cursor that should be rendered in current text part
 
 ;; DECLARE SOME CONSTANTS HERE
 
