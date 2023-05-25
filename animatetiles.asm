@@ -13,9 +13,24 @@ AnimateTiles:
  	BEQ AnimateCatHouse
  	CMP #$02
  	BEQ AnimateVillage2
+ 	CMP #$03
+ 	BEQ AnimateSkeletonHouse
  	RTS
 
 AnimateVillage1:
+	JSR AnimateVillage1Subroutine
+	RTS
+AnimateCatHouse:
+	JSR AnimateCatHouseSubroutine
+	RTS
+AnimateVillage2:
+	JSR AnimateVillage2Subroutine
+	RTS
+AnimateSkeletonHouse:
+	JSR AnimateSkeletonHouseSubroutine
+	RTS
+
+AnimateVillage1Subroutine:
 	LDA objectframenum
 	BEQ MoveGhostDown
 MoveGhostUp:
@@ -26,8 +41,7 @@ MoveGhostUp:
 MoveGhostDown:
 	LDA #$01
 	STA objectframenum
-	LDA #$01          ; increment via transform loop
-	STA trnsfrm
+	STA trnsfrm       ; increment via transform loop
 MoveGhost:
 	LDA #$48          ; compare pointer to $48 via transform loop
 	STA trnsfrmcompare
@@ -35,7 +49,7 @@ MoveGhost:
 	JSR ObjectTransformLoop
 	RTS
 
-AnimateCatHouse:
+AnimateCatHouseSubroutine:
 	LDA #$06          ; switch tiles via transform loop
 	STA trnsfrm
 	LDX #$19          ; candles tiles are stored at address 0200 + this number
@@ -57,7 +71,7 @@ AnimateCandles:
 	JSR ObjectTransformLoop
 	RTS
 
-AnimateVillage2:
+AnimateVillage2Subroutine:
 	LDA #$06          ; switch tiles via transform loop
 	STA trnsfrm
 	LDX #$49
@@ -91,3 +105,30 @@ AnimateFestoon:
 	STA switchtile
 	JSR ObjectTransformLoop
 	RTS
+
+AnimateSkeletonHouseSubroutine:
+	LDA objectframenum
+	BEQ AnimateLights
+	LDA #$00
+	STA objectframenum
+	LDX #$AA
+	JMP ChangeSkeletonHousePalette
+AnimateLights:
+	LDA #$01
+	STA objectframenum
+	LDX #$00
+ChangeSkeletonHousePalette:
+	LDY #$CB
+	JSR SkeletonHouseLoadAttributes
+	LDY #$D3
+	JSR SkeletonHouseLoadAttributes
+	RTS
+
+SkeletonHouseLoadAttributes:
+	LDA $2002     ; read PPU status to reset the high/low latch
+  LDA #$23
+  STA $2006     ; write the high byte of $23CB/$23D3 address
+  STY $2006     ; write the low byte of $23CB/$23D3 address             
+  STX $2007
+  STX $2007     ; load attribute to PPU twice
+  RTS

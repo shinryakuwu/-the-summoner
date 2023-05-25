@@ -30,12 +30,19 @@ Village1CatHouseWarpCheck:
 Village1Village2WarpCheck:
 	LDA currentXtile
 	CMP #$1F
-	BNE Village1ForestWarpCheck
+	BNE Village1SkeletonHouseWarpCheck
 	LDA currentYtile
 	CMP #$06
 	BEQ Village1Village2Warp
 	CMP #$07
 	BEQ Village1Village2Warp
+Village1SkeletonHouseWarpCheck:
+  LDA currentXtile
+  CMP #$17
+  BNE Village1ForestWarpCheck
+  LDA currentYtile
+  CMP #$0F
+  BEQ Village1SkeletonHouseWarpJump
 Village1ForestWarpCheck:
 	RTS
 
@@ -63,6 +70,9 @@ Village1CatHouseWarp:
   JSR ChangeCatCoordinates
   RTS
 
+Village1SkeletonHouseWarpJump:
+  JMP Village1SkeletonHouseWarp ; was out of range
+
 Village1Village2Warp:
   LDA #$02
   STA location
@@ -86,10 +96,33 @@ Village1Village2Warp:
   JSR ChangeCatCoordinates
   RTS
 
+Village1SkeletonHouseWarp:
+  LDA #$03
+  STA location
+  LDA #$01
+  STA singleattribute
+  LDA #LOW(skeletonhouse)
+  STA currentbglow
+  LDA #HIGH(skeletonhouse)
+  STA currentbghigh
+  LDA #LOW(village1skeletonhousewarp)
+  STA warpXYlow
+  LDA #HIGH(village1skeletonhousewarp)
+  STA warpXYhigh
+  LDA #LOW(skeletonhousesprites)
+  STA curntspriteslow
+  LDA #HIGH(skeletonhousesprites)
+  STA curntspriteshigh
+  LDA #$C8
+  STA spritescompare
+  JSR PrepareForBGRender
+  JSR ChangeCatCoordinates
+  RTS
+
 CatHouseVillage1WarpCheck:
 	LDA currentXtile
 	CMP #$0F
-	BNE Village1ForestWarpCheck
+	BNE CatHouseVillage1WarpCheckDone
 	LDA currentYtile
 	CMP #$13
 	BNE CatHouseVillage1WarpCheckDone

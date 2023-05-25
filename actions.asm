@@ -75,6 +75,8 @@ CheckActionTile:
   BEQ Village1Events
   CMP #$01
   BEQ CatHouseEvents
+  CMP #$03
+  BEQ SkeletonHouseEvents
   RTS
 
 Village1Events:
@@ -108,6 +110,13 @@ CatHouseEvents:
   LDY #$0E
   JSR CheckTilesForEvent
   BNE FanfictionParams
+  RTS
+
+SkeletonHouseEvents:
+  LDX #$09
+  LDY #$10
+  JSR CheckTilesForEvent
+  BNE SkeletonParams
   RTS
 
 StartGhostParams:
@@ -148,6 +157,14 @@ FanfictionParams:
   STA currenttextlow
   LDA #HIGH(fanfiction)
   STA currenttexthigh
+  JMP SettingEventParamsDone
+SkeletonParams:
+  LDA #LOW(skeleton)
+  STA currenttextlow
+  LDA #HIGH(skeleton)
+  STA currenttexthigh
+  LDA #$64
+  STA textcursor
 SettingEventParamsDone:
   LDA #$04
   STA action

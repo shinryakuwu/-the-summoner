@@ -132,6 +132,52 @@ pentagram:
   .db $78, $82, $40, $7F
   .db $78, $81, $40, $87
 
+skeletonhousesprites:
+  ; candy man
+  .db $2D, $35, $00, $B2
+  .db $35, $43, $00, $A2
+  .db $35, $44, $00, $AA
+  .db $35, $45, $00, $B2
+  .db $3D, $53, $00, $A2
+  .db $3D, $54, $00, $AA
+  .db $3D, $55, $00, $B2
+
+jukebox:
+  .db $1D, $36, $00, $48
+  .db $1D, $36, $40, $50
+  .db $25, $46, $00, $48
+  .db $25, $46, $40, $50
+  .db $2D, $56, $00, $48
+  .db $2D, $56, $40, $50
+
+catsign:
+  .db $53, $33, $00, $4C
+
+tables:
+  .db $74, $70, $00, $48
+  .db $74, $70, $40, $50
+  .db $7C, $80, $00, $48
+  .db $7C, $80, $40, $50
+
+  .db $81, $70, $00, $77
+  .db $81, $70, $40, $7F
+  .db $89, $80, $00, $77
+  .db $89, $80, $40, $7F
+
+  .db $64, $70, $00, $A8
+  .db $64, $70, $40, $B0
+  .db $6C, $80, $00, $A8
+  .db $6C, $80, $40, $B0
+
+skeletons:
+  .db $65, $63, $00, $48
+  .db $65, $63, $40, $50
+  .db $6D, $73, $00, $48
+  .db $6D, $73, $40, $50
+  .db $71, $64, $00, $48
+  .db $71, $64, $40, $50
+
+
 front:
       ;tiles                        ;attributes                   ;animation
   .db $10, $10, $20, $20, $30, $04, $00, $40, $00, $40, $00, $40, $30, $04, $30, $05, $30, $04, $06, $04
@@ -157,6 +203,9 @@ village1village2warp:
 
 village2village1warp:
   .db $20, $20, $28, $28, $30, $30, $F0, $F8, $F0, $F8, $F0, $F8
+
+village1skeletonhousewarp:
+  .db $80, $80, $88, $88, $90, $90, $60, $68, $60, $68, $60, $68
 
 
 village1:
@@ -369,6 +418,73 @@ catroom:
   .db $97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97  ;;row 23
   .db $97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97
 
+skeletonhouse:
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 1
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 2
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B  ;;row 3
+  .db $9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 4
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 5
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B  ;;row 6
+  .db $9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 7
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$88,$FF,$88  ;;row 8
+  .db $FF,$88,$FF,$88,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$88,$FF,$88,$FF  ;;row 9
+  .db $88,$FF,$88,$FF,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$FF,$88,$FF,$88  ;;row 10
+  .db $FF,$88,$FF,$88,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$88,$FF,$88,$FF  ;;row 11
+  .db $88,$FF,$88,$FF,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$7F,$7F,$7F,$7F,$FF,$88,$FF,$88  ;;row 12
+  .db $FF,$88,$FF,$88,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 13
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 14
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 15
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 16
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 17
+  .db $00,$9C,$97,$97,$97,$97,$97,$97,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 18
+  .db $00,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 19
+  .db $00,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$97,$97,$97,$97,$FF,$FF,$97,$97  ;;row 20
+  .db $97,$97,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 21
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 22
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
 village1attributes:
   .db $88, $00, $00, $00, $00, $00, $00, $00
   .db $88, $00, $00, $00, $00, $A0, $A0, $A0
@@ -376,15 +492,6 @@ village1attributes:
   .db $00, $00, $00, $00, $22, $00, $00, $00
   .db $00, $00, $00, $00, $22, $A0, $20, $00
   .db $AA, $AA, $AA, $AA, $AA, $AA, $A2, $A0
-  .db $AA, $AA, $AA, $AA, $AA, $AA, $AA, $AA
-
-village2attributes:
-  .db $00, $00, $00, $00, $00, $00, $00, $00
-  .db $00, $00, $00, $00, $00, $00, $00, $00
-  .db $00, $00, $00, $00, $00, $00, $00, $00
-  .db $00, $00, $00, $00, $00, $00, $00, $00
-  .db $00, $00, $00, $00, $00, $00, $00, $00
-  .db $00, $00, $00, $00, $00, $00, $00, $00
   .db $00, $00, $00, $00, $00, $00, $00, $00
 
 startghost:
@@ -404,3 +511,6 @@ fursuit:
 
 fanfiction:
   .db $42,$43,$30,$41,$FF,$43,$41,$34,$3A,$FF,$35,$30,$3D,$35,$38,$32,$43,$38,$3E,$3D,$FE
+
+skeleton:
+  .db $46,$37,$48,$FF,$4D,$41,$4C,$FF,$48,$3E,$44,$FF,$4E,$3E,$FF,$35,$4D,$43,$FF,$4D,$3D,$33,$FF,$44,$4F,$3B,$48,$55,$FF,$FF,$FF,$FF,$31,$41,$3E,$FE
