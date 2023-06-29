@@ -2,6 +2,20 @@ CheckAnimateTiles:
 	LDA animatecounter
 	BEQ AnimateTiles   ; animate only when counter = 0
 	DEC animatecounter ; if not 0, decrement counter
+	LDA location
+	CMP #$03
+	BEQ SkeletonDanceCheck ; separate logic for dancing skeletons animation, I hope it's worth it...
+	RTS
+
+SkeletonDanceCheck:
+	LDA animatecounter ; animate when counter = 9 or 18
+	CMP #$06
+	BEQ SkeletonDance
+	CMP #$12
+	BEQ SkeletonDance
+	RTS
+SkeletonDance:
+	JSR SkeletonDanceSubroutine
 	RTS
 
 AnimateTiles:
@@ -132,3 +146,87 @@ SkeletonHouseLoadAttributes:
   STX $2007
   STX $2007     ; load attribute to PPU twice
   RTS
+
+SkeletonDanceSubroutine:
+	LDA skeletonframenum
+	BEQ AnimateSkeletonsFrame0 ; when equals 0
+	CMP #$01
+ 	BEQ AnimateSkeletonsFrame1
+ 	CMP #$02
+ 	BEQ AnimateSkeletonsFrame2
+AnimateSkeletonsFrame3:
+	LDA #$00
+	STA skeletonframenum
+	JSR SkeletonShakesHands1
+	JSR SkeletonStandsStraight
+	RTS
+AnimateSkeletonsFrame0:
+	INC skeletonframenum
+	JSR SkeletonShakesHands2
+	JSR SkeletonShakesLeft
+	RTS
+AnimateSkeletonsFrame1:
+	INC skeletonframenum
+	JSR SkeletonShakesHands1
+	JSR SkeletonStandsStraight
+	RTS
+AnimateSkeletonsFrame2:
+	INC skeletonframenum
+	JSR SkeletonShakesHands2
+	JSR SkeletonShakesRight
+	RTS
+
+SkeletonShakesHands1:
+	LDA #$00
+	STA $02CE
+	LDA #$C0
+	STA $02D2
+	LDA #$4C
+	STA $02D0
+	LDA #$4F
+	STA $02CC
+	RTS
+
+SkeletonShakesHands2:
+	LDA #$80
+	STA $02CE
+	LDA #$40
+	STA $02D2
+	LDA #$4F
+	STA $02D0
+	LDA #$4C
+	STA $02CC
+	RTS
+
+SkeletonStandsStraight:
+	LDA #$64
+	STA $02A9
+	STA $02AD
+
+	LDA #$74
+	STA $02B1
+	RTS
+
+SkeletonShakesLeft:
+	LDA #$83
+	STA $02A9
+	LDA #$65
+	STA $02AD
+
+	LDA #$75
+	STA $02B1
+	LDA #$40
+	STA $02B2
+	RTS
+
+SkeletonShakesRight:
+	LDA #$65
+	STA $02A9
+	LDA #$83
+	STA $02AD
+
+	LDA #$75
+	STA $02B1
+	LDA #$00
+	STA $02B2
+	RTS

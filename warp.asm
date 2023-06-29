@@ -6,6 +6,8 @@ Warp:
 	BEQ CatHouseWarpCheck
 	CMP #$02
 	BEQ Village2WarpCheck
+  CMP #$03
+  BEQ SkeletonHouseWarpCheck
 	RTS
 
 Village1WarpCheck:
@@ -17,6 +19,9 @@ CatHouseWarpCheck:
 Village2WarpCheck:
 	JSR Village2Village1WarpCheck
 	RTS
+SkeletonHouseWarpCheck:
+  JSR SkeletonHouseVillage1WarpCheck
+  RTS
 
 Village1CatHouseWarpCheck:
 	LDA currentYtile
@@ -113,7 +118,7 @@ Village1SkeletonHouseWarp:
   STA curntspriteslow
   LDA #HIGH(skeletonhousesprites)
   STA curntspriteshigh
-  LDA #$C8
+  LDA #$C0
   STA spritescompare
   JSR PrepareForBGRender
   JSR ChangeCatCoordinates
@@ -173,6 +178,40 @@ Village2Village1Warp:
   LDA #LOW(village2village1warp)
   STA warpXYlow
   LDA #HIGH(village2village1warp)
+  STA warpXYhigh
+  LDA #LOW(village1sprites)
+  STA curntspriteslow
+  LDA #HIGH(village1sprites)
+  STA curntspriteshigh
+  LDA #$30
+  STA spritescompare
+  JSR PrepareForBGRender
+  JSR ChangeCatCoordinates
+  RTS
+
+SkeletonHouseVillage1WarpCheck:
+  LDA currentXtile
+  CMP #$0C
+  BNE SkeletonHouseVillage1WarpCheckDone
+  LDA currentYtile
+  CMP #$13
+  BNE SkeletonHouseVillage1WarpCheckDone
+  LDA direction
+  BEQ SkeletonHouseVillage1Warp ; when equals zero
+SkeletonHouseVillage1WarpCheckDone:
+  RTS
+
+SkeletonHouseVillage1Warp:
+  LDA #$00
+  STA location
+  STA singleattribute
+  LDA #LOW(village1)
+  STA currentbglow
+  LDA #HIGH(village1)
+  STA currentbghigh
+  LDA #LOW(skeletonhousevillage1warp)
+  STA warpXYlow
+  LDA #HIGH(skeletonhousevillage1warp)
   STA warpXYhigh
   LDA #LOW(village1sprites)
   STA curntspriteslow

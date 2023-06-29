@@ -1,4 +1,5 @@
 RenderText:
+  JSR SetTextCursor       ; each piece of text begins with cursor that should be defined for it, define it if textpointer is zero
   JSR CalculateTextPPUAddress
   LDA $2002               ; read PPU status to reset the high/low latch
   LDA textppuaddrhigh
@@ -20,13 +21,22 @@ RenderTextCursor:
   STA $2007
   RTS
 RenderTextDone:
-  JSR CalculateCurrentTextAddress ; add condition only if textparts?
+  JSR CalculateCurrentTextAddress
   LDA #$00
   STA textpointer
   LDA #$02
   STA action
   RTS
 
+SetTextCursor:
+  LDA textpointer
+  BNE SetTextCursorDone
+  LDY textpointer
+  LDA [currenttextlow], y
+  STA textcursor
+  INC textpointer
+SetTextCursorDone:
+  RTS
 
 CalculateTextPPUAddress:
   LDA textpointer
