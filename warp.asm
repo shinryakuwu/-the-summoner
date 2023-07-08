@@ -118,7 +118,7 @@ Village1SkeletonHouseWarp:
   STA curntspriteslow
   LDA #HIGH(skeletonhousesprites)
   STA curntspriteshigh
-  LDA #$C0
+  LDA #$B8
   STA spritescompare
   JSR PrepareForBGRender
   JSR ChangeCatCoordinates

@@ -2,17 +2,34 @@ CheckAction:
   LDA action
   BEQ CheckActionButtons ; if zero action state
   CMP #$01
-  BEQ Action
+  BEQ PerformTextEvent
   CMP #$02
   BEQ ActionTimeout
   CMP #$03
   BEQ CheckActionButtonReleased
   CMP #$04
   BEQ CheckActionButtonReleased
+  CMP #$05
+  BEQ PerformNonTextEvent
+  CMP #$06
+  BEQ ClearTextSection
+  CMP #$07
+  BEQ ClearTextSectionDone
   RTS
 
-Action:
-  JSR PerformAction
+PerformTextEvent:
+  JSR BlockButtons
+  JSR RenderText
+  RTS
+
+PerformNonTextEvent:
+  JSR BlockButtons
+  JSR NonTextEvents
+  RTS
+
+ClearTextSection:
+  JSR BlockButtons
+  JSR ClearTextSectionSubroutine
   RTS
 
 CheckActionButtons:
@@ -38,17 +55,23 @@ CheckActionButtonReleased:
   STA buttons              ; disable movement for this frame
   BNE ActionButtonOnHold
   LDA action
-  CMP #$04                 ; if state is 4, it means that the initial action will start in the next frame
-  BEQ InitialAction
-  JSR ClearTextSection
-  LDA textpartscounter
-  BNE NextTextPart         ; if textpartscounter is not zero, set action to 1, decrement textpartscounter
+  CMP #$04                 ; if state is 4, it means that the initial text event will start in the next frame
+  BEQ InitialTextEvent
   LDA #$00
+  STA cleartextstate
+  LDA #$06                 ; trigger processing ClearTextSectionSubroutine from the next frame
   STA action
 ActionButtonOnHold:
   RTS
 
-InitialAction:
+ClearTextSectionDone:
+  JSR BlockButtons
+  LDA textpartscounter
+  BNE NextTextPart         ; if textpartscounter is not zero, set action to 1, decrement textpartscounter
+  JSR NonTextEvents
+  RTS
+
+InitialTextEvent:
   LDA #$01
   STA action
   RTS
@@ -190,6 +213,8 @@ CandymanParams:
   STA currenttexthigh
   LDA #$01
   STA textpartscounter
+  LDA #$01
+  STA eventnumber
   JSR SettingEventParamsDone
   RTS
 
@@ -201,11 +226,6 @@ SettingEventParamsDone:
 BlockButtons:
   LDA #$00    ; blocks buttons if action is in process
   STA buttons
-  RTS
-
-PerformAction:
-  JSR BlockButtons
-  JSR RenderText
   RTS
 
 CheckTilesForEvent:

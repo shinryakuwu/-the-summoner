@@ -177,25 +177,17 @@ AnimateSkeletonsFrame2:
 	RTS
 
 SkeletonShakesHands1:
-	LDA #$00
-	STA $02CE
-	LDA #$C0
-	STA $02D2
-	LDA #$4C
-	STA $02D0
-	LDA #$4F
-	STA $02CC
+	LDA #$85
+	STA $02C5
+	LDA #$84
+	STA $02C9
 	RTS
 
 SkeletonShakesHands2:
-	LDA #$80
-	STA $02CE
-	LDA #$40
-	STA $02D2
-	LDA #$4F
-	STA $02D0
-	LDA #$4C
-	STA $02CC
+	LDA #$84
+	STA $02C5
+	LDA #$85
+	STA $02C9
 	RTS
 
 SkeletonStandsStraight:

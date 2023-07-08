@@ -29,21 +29,21 @@ InsideLoop:
   CPX #$03
   BNE OutsideLoop        ; run the outside loop 256 times before continuing down
 
-  JSR ClearTextSection
+  JSR ClearRemainingBG   ; the rest of bg is empty
   RTS
 
-ClearTextSection:
+ClearRemainingBG:
   LDY #$00
-  LDA #$22
-  STA $2006             ; write the high byte of $22C0 address
-  LDA #$C0
-  STA $2006
-ClearTextSectionLoop:
-  LDA $FF
+  ; LDA #$22
+  ; STA $2006             ; write the high byte of $22C0 address
+  ; LDA #$C0
+  ; STA $2006
+ClearRemainingBGLoop:
+  LDA #$FF
   STA $2007
   INY
-  CPY #$00
-  BNE ClearTextSectionLoop
+  CPY #$A0
+  BNE ClearRemainingBGLoop
   RTS
 
 LoadAttribute:

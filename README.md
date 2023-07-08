@@ -6,7 +6,7 @@ It's a little project to mess around with assembly 6502.
 Already implemented:
  - Character animation and movement
  - Passability of objects
- - Several locations (2 parts of the village and a cat house)
+ - Several locations
  - Animations of surroundings
  - Warping between locations
  - Map borders

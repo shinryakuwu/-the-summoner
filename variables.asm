@@ -49,7 +49,10 @@ textppuaddrlow   .rs 1  ; 16-bit variable for coordinates of current letter to b
 textppuaddrhigh  .rs 1
 textpartscounter .rs 1
 textcursor       .rs 1  ; stores cursor that should be rendered in current text part
-candycounter     .rs 1  ; stores the number of candies left to collect
+cleartextstate   .rs 1  ; defines a line to be cleared within a frame
+candycounter     .rs 1  ; stores the number of candy left to collect
+eventnumber      .rs 1  ; stores the identificator of an event that is going to be performed
+walkbackwards    .rs 1  ; 0 - no, 1 - yes
 
 ;; DECLARE SOME CONSTANTS HERE
 

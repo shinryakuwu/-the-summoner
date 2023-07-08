@@ -215,9 +215,15 @@ TrnsfrmBranchDone:
   RTS
 
 DecrementCoordinates:
+  LDA walkbackwards
+  BNE ReallyIncrement
+ReallyDecrement:
   DEC $0200, x
   JMP TrnsfrmBranchDone
 IncrementCoordinates:
+  LDA walkbackwards
+  BNE ReallyDecrement
+ReallyIncrement:
   INC $0200, x
   JMP TrnsfrmBranchDone
 RenderObject: ; render cat?
