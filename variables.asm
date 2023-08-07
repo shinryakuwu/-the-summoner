@@ -53,6 +53,7 @@ cleartextstate   .rs 1  ; defines a line to be cleared within a frame
 candycounter     .rs 1  ; stores the number of candy left to collect
 eventnumber      .rs 1  ; stores the identificator of an event that is going to be performed
 walkbackwards    .rs 1  ; 0 - no, 1 - yes
+walkcounter      .rs 1  ; defines for how many frames the cat will move automatically during an event
 
 ;; DECLARE SOME CONSTANTS HERE
 

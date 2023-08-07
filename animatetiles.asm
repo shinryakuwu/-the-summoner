@@ -57,9 +57,9 @@ MoveGhostDown:
 	STA objectframenum
 	STA trnsfrm       ; increment via transform loop
 MoveGhost:
-	LDA #$48          ; compare pointer to $48 via transform loop
+	LDA #$44          ; compare pointer to $44 via transform loop
 	STA trnsfrmcompare
-	LDX #$38          ; ghost tiles are stored at address 0200 + this number
+	LDX #$34          ; ghost tiles are stored at address 0200 + this number
 	JSR ObjectTransformLoop
 	RTS
 
@@ -88,32 +88,31 @@ AnimateCandles:
 AnimateVillage2Subroutine:
 	LDA #$06          ; switch tiles via transform loop
 	STA trnsfrm
-	LDX #$49
-	LDA #$E9
+	LDX #$46
+	LDA #$E6
 	STA trnsfrmcompare
 	LDA objectframenum
 	BEQ AnimateRiver
 	LDA #$00
 	STA objectframenum
-	LDA #$1D
 	STA switchtile
 	JSR ObjectTransformLoop
-	LDX #$3E          ; also animate festoon here
-	LDA #$4A
+	LDX #$3A          ; also animate festoon here
+	LDA #$46
 	STA trnsfrmcompare
-	LDA #$03
+	LDA #$01
 	STA switchtile
 	JSR ObjectTransformLoop
  	RTS
 AnimateRiver:
 	LDA #$01
 	STA objectframenum
-	LDA #$0D
+	LDA #$80
 	STA switchtile
 	JSR ObjectTransformLoop
 AnimateFestoon:
-	LDX #$3E
-	LDA #$4A
+	LDX #$3A
+	LDA #$46
 	STA trnsfrmcompare
 	LDA #$00
 	STA switchtile

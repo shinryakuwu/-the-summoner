@@ -1,4 +1,12 @@
 CheckAction:
+  LDA animatecounter
+  BNE CanCheckForAction  ; fix for blinking screen when action logic is happening during the animation frame
+  LDA action
+  BEQ CanCheckForAction  ; allow movement only when no action is happening
+  JSR BlockButtons
+  RTS
+
+CanCheckForAction:
   LDA action
   BEQ CheckActionButtons ; if zero action state
   CMP #$01
@@ -15,6 +23,8 @@ CheckAction:
   BEQ ClearTextSection
   CMP #$07
   BEQ ClearTextSectionDone
+  CMP #$08
+  BEQ CheckActionButtonReleased
   RTS
 
 PerformTextEvent:
@@ -57,6 +67,8 @@ CheckActionButtonReleased:
   LDA action
   CMP #$04                 ; if state is 4, it means that the initial text event will start in the next frame
   BEQ InitialTextEvent
+  CMP #$08                 ; if state is 8, it means that the initial non-text event will start in the next frame
+  BEQ InitialNonTextEvent
   LDA #$00
   STA cleartextstate
   LDA #$06                 ; trigger processing ClearTextSectionSubroutine from the next frame
@@ -67,12 +79,24 @@ ActionButtonOnHold:
 ClearTextSectionDone:
   JSR BlockButtons
   LDA textpartscounter
-  BNE NextTextPart         ; if textpartscounter is not zero, set action to 1, decrement textpartscounter
-  JSR NonTextEvents
+  BNE NextTextPart      ; if textpartscounter is not zero, set action to 1, decrement textpartscounter
+  LDA eventnumber
+  BEQ EndOfAction
+  LDA #$05
+  STA action            ; perform non text event within the next frame
+  RTS
+EndOfAction:
+  LDA #$00
+  STA action
   RTS
 
 InitialTextEvent:
   LDA #$01
+  STA action
+  RTS
+
+InitialNonTextEvent:
+  LDA #$06
   STA action
   RTS
 
@@ -118,6 +142,10 @@ Village1EventsSubroutine:
   LDY #$05
   JSR CheckTilesForEvent
   BNE StartGhostParams
+  LDX #$0B
+  LDY #$08
+  JSR CheckTilesForEvent
+  BNE OldLadyParams
   RTS
 
 StartGhostParams:
@@ -125,6 +153,16 @@ StartGhostParams:
   STA currenttextlow
   LDA #HIGH(startghost)
   STA currenttexthigh
+  JSR SettingEventParamsDone
+  RTS
+
+OldLadyParams:
+  LDA #$40
+  STA eventnumber
+  LDA #$15
+  STA walkcounter
+  LDA #$01
+  STA walkbackwards
   JSR SettingEventParamsDone
   RTS
 
@@ -213,12 +251,18 @@ CandymanParams:
   STA currenttexthigh
   LDA #$01
   STA textpartscounter
-  LDA #$01
   STA eventnumber
   JSR SettingEventParamsDone
   RTS
 
 SettingEventParamsDone:
+  LDA eventnumber
+  CMP #$40             ; 1-40 - postevent (happens after text), 40 and more - initial event (happens before text)
+  BCC PostEvent ; post event (or noevent if 0)
+  LDA #$08
+  STA action
+  RTS
+PostEvent:
   LDA #$04
   STA action
   RTS

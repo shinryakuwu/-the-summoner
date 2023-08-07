@@ -95,7 +95,7 @@ Village1Village2Warp:
   STA curntspriteslow
   LDA #HIGH(village2sprites)
   STA curntspriteshigh
-  LDA #$C8
+  LDA #$C4
   STA spritescompare
   JSR PrepareForBGRender
   JSR ChangeCatCoordinates
