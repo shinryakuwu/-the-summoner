@@ -47,6 +47,8 @@ CandymanHandSubroutine:
 OldLadyWalkSubroutine:
 	LDA walkcounter
 	BEQ OldLadyWalkSubroutineDone
+	LDA #$01
+  STA walkbackwards
 	DEC walkcounter
 	LDA #MVUP
 	STA buttons

@@ -121,6 +121,8 @@ CheckActionTile:
   BEQ CatHouseEvents
   CMP #$03
   BEQ SkeletonHouseEvents
+  CMP #$04
+  BEQ ServerRoomEvents
   RTS
 
 Village1Events:
@@ -131,6 +133,9 @@ CatHouseEvents:
   RTS
 SkeletonHouseEvents:
   JSR SkeletonHouseEventsSubroutine
+  RTS
+ServerRoomEvents:
+  JSR ServerRoomEventsSubroutine
   RTS
 
 Village1EventsSubroutine:
@@ -161,8 +166,6 @@ OldLadyParams:
   STA eventnumber
   LDA #$15
   STA walkcounter
-  LDA #$01
-  STA walkbackwards
   JSR SettingEventParamsDone
   RTS
 
@@ -255,9 +258,38 @@ CandymanParams:
   JSR SettingEventParamsDone
   RTS
 
+ServerRoomEventsSubroutine:
+  LDX #$14
+  LDY #$08
+  JSR CheckTilesForEvent
+  BNE TVParams
+  LDX #$09
+  LDY #$0C
+  JSR CheckTilesForEvent
+  BNE BucketHatGuyParams
+  RTS
+
+TVParams:
+  LDA #LOW(tv)
+  STA currenttextlow
+  LDA #HIGH(tv)
+  STA currenttexthigh
+  JSR SettingEventParamsDone
+  RTS
+
+BucketHatGuyParams:
+  LDA #LOW(corporations)
+  STA currenttextlow
+  LDA #HIGH(corporations)
+  STA currenttexthigh
+  LDA #$02
+  STA textpartscounter
+  JSR SettingEventParamsDone
+  RTS
+
 SettingEventParamsDone:
   LDA eventnumber
-  CMP #$40             ; 1-40 - postevent (happens after text), 40 and more - initial event (happens before text)
+  CMP #$40             ; 1-39 - postevent (happens after text), 40 and more - initial event (happens before text)
   BCC PostEvent ; post event (or noevent if 0)
   LDA #$08
   STA action
@@ -279,13 +311,11 @@ CheckTilesForEvent:
   BNE EventFalse
   LDA direction
   CMP #$02
-  BEQ SkipExtraChechForX ; to do: check if can compare by 'more than 1'
-  CMP #$03
-  BEQ SkipExtraChechForX
+  BCS SkipExtraCheckForX ; if 2 or more
   TXA                    ; if cat looks to the side, check one x tile
   CMP currentXtile       ; if looks up or down, check x and the next tile to the right
   BEQ EventTrue
-SkipExtraChechForX:
+SkipExtraCheckForX:
   TXA
   CLC
   ADC #$01

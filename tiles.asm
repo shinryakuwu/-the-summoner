@@ -2,16 +2,16 @@
   .org $E000
 palette:
   .db $0F,$14,$25,$36,$0F,$36,$14,$25,$0F,$13,$2C,$36,$0F,$1C,$2B,$39
-  .db $0F,$14,$25,$36,$0F,$36,$14,$25,$0F,$13,$2C,$36,$0F,$1C,$2B,$39
+  .db $0F,$14,$25,$36,$0F,$36,$14,$25,$0F,$13,$25,$36,$0F,$1C,$2B,$39
 
 catsprites:
      ;vert tile attr horiz
-  .db $80, $10, $00, $80
-  .db $80, $10, $40, $88
-  .db $88, $20, $00, $80
-  .db $88, $20, $40, $88
-  .db $90, $30, $00, $80
-  .db $90, $04, $40, $88
+  .db $70, $10, $00, $80
+  .db $70, $10, $40, $88
+  .db $78, $20, $00, $80
+  .db $78, $20, $40, $88
+  .db $80, $30, $00, $80
+  .db $80, $04, $40, $88
 
 village1sprites:
   ; pumpkins
@@ -206,6 +206,45 @@ skeletons:
   .db $50, $85, $40, $8D
   .db $56, $74, $00, $89
 
+serverroomsprites:
+  ; tv
+  .db $33, $38, $00, $9F
+  .db $33, $39, $00, $A7
+  .db $33, $38, $40, $AA
+  .db $3B, $38, $80, $9F
+  .db $3B, $39, $80, $A7
+  .db $3B, $38, $C0, $AA
+  .db $38, $1A, $00, $A5
+  .db $33, $48, $00, $B1
+  .db $3B, $58, $00, $B1
+  .db $43, $67, $00, $9D
+  .db $43, $67, $00, $AE
+
+  ; nes
+  .db $48, $3A, $00, $94
+  .db $48, $3B, $00, $9C
+  .db $48, $3C, $00, $A4
+  .db $43, $49, $00, $A1
+
+  ; buckethat guy
+  .db $55, $1D, $02, $4D
+  .db $50, $2F, $02, $4A
+  .db $50, $2F, $42, $52
+  .db $58, $3F, $02, $4A
+  .db $58, $3F, $42, $52
+  .db $60, $4F, $02, $4A
+  .db $60, $4F, $42, $52
+
+  ; laptop
+  .db $5F, $3D, $02, $57
+  .db $5F, $3E, $02, $5F
+
+  ; diodes
+  .db $28, $00, $01, $41
+  .db $3C, $00, $01, $81
+  .db $34, $00, $01, $54
+  .db $24, $00, $01, $64
+
 
 front:
       ;tiles                        ;attributes                   ;animation
@@ -239,6 +278,12 @@ village1skeletonhousewarp:
 skeletonhousevillage1warp:
   .db $70, $70, $78, $78, $80, $80, $B8, $C0, $B8, $C0, $B8, $C0
 
+village2serverroomwarp:
+  .db $78, $78, $80, $80, $88, $88, $78, $80, $78, $80, $78, $80
+
+serverroomvillage2warp:
+  .db $68, $68, $70, $70, $78, $78, $2C, $34, $2C, $34, $2C, $34
+
 
 village1:
   .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 1
@@ -257,7 +302,7 @@ village1:
   .db $BD,$E0,$E1,$E2,$00,$00,$00,$D0,$D1,$D2,$00,$00,$FF,$FF,$00,$00
 
   .db $00,$00,$00,$01,$00,$C0,$C1,$C2,$C3,$C9,$CA,$A5,$A6,$A7,$C9,$CA  ;;row 6
-  .db $C8,$00,$F1,$00,$00,$00,$00,$E0,$F0,$E2,$00,$00,$FF,$FF,$00,$00
+  .db $C8,$00,$F1,$FF,$00,$00,$00,$E0,$F0,$E2,$00,$00,$FF,$FF,$00,$00
 
   .db $00,$02,$00,$01,$00,$D0,$D1,$D2,$C3,$D9,$DA,$B5,$B6,$B7,$D9,$DA  ;;row 7
   .db $C8,$00,$00,$00,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
@@ -265,7 +310,7 @@ village1:
   .db $00,$00,$00,$01,$00,$E0,$E1,$E2,$C3,$00,$00,$C5,$00,$AC,$00,$00  ;;row 8
   .db $C8,$00,$03,$00,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
-  .db $00,$00,$00,$01,$00,$00,$F1,$00,$D3,$D4,$D4,$D5,$D6,$D7,$D4,$D4  ;;row 9
+  .db $00,$00,$00,$01,$00,$FF,$F1,$00,$D3,$D4,$D4,$D5,$D6,$D7,$D4,$D4  ;;row 9
   .db $D8,$02,$00,$00,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
   .db $00,$00,$00,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 10
@@ -512,7 +557,74 @@ skeletonhouse:
   .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 22
   .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 
-  ; to do: check if these lines can be deleted later
+serverroom:
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 1
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 2
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 3
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B  ;;row 4
+  .db $9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$7D,$7E,$7D,$7E  ;;row 5
+  .db $7D,$7E,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$7D,$7E,$7B,$7C,$7D,$7E,$7B,$7C  ;;row 6
+  .db $79,$7A,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$79,$7A,$7D,$7E,$7B,$7C,$7D,$7E  ;;row 7
+  .db $7B,$7C,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$7D,$7E,$7D,$7E,$79,$7A,$7D,$7E  ;;row 8
+  .db $7D,$7E,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$7B,$7C,$79,$7A,$7D,$7E,$7B,$7C  ;;row 9
+  .db $7D,$7E,$97,$97,$97,$97,$97,$97,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$07,$07,$07,$07,$07,$07,$07,$07  ;;row 10
+  .db $07,$07,$FF,$FF,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$FF,$FF,$FF,$00,$00,$00,$00  ;;row 11
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$FF,$FF,$FF,$00,$00,$00,$00  ;;row 12
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$FF,$FF,$FF,$FF,$00,$00,$00  ;;row 13
+  .db $00,$00,$00,$00,$00,$00,$63,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$63,$00  ;;row 14
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 15
+  .db $00,$00,$00,$00,$63,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$63,$00,$00,$00,$00  ;;row 16
+  .db $00,$00,$00,$00,$00,$63,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 17
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 18
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$97,$97,$97,$97,$97,$97,$97,$FF  ;;row 19
+  .db $FF,$97,$97,$97,$97,$97,$97,$97,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 20
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 21
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 22
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  ;; TODO: remove later
   .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 23
   .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 
@@ -526,6 +638,15 @@ village1attributes:
   .db $00, $00, $00, $00, $22, $00, $00, $00
   .db $00, $00, $00, $00, $22, $A0, $20, $00
   .db $0A, $0A, $0A, $0A, $0A, $0A, $02, $00
+  .db $00, $00, $00, $00, $00, $00, $00, $00
+
+serverroomattributes:
+  .db $55, $55, $55, $55, $55, $55, $55, $55
+  .db $55, $55, $00, $00, $00, $00, $55, $55
+  .db $55, $55, $00, $00, $04, $55, $55, $55
+  .db $55, $55, $00, $00, $00, $00, $55, $55
+  .db $55, $55, $55, $55, $55, $55, $55, $55
+  .db $00, $00, $00, $00, $00, $00, $00, $00
   .db $00, $00, $00, $00, $00, $00, $00, $00
 
 startghost:
@@ -575,5 +696,17 @@ hand_acquired:
 candy_left:
   ; x candy left
   .db $FF,$EF,$FF,$32,$30,$3D,$33,$48,$FF,$3B,$34,$35,$43,$FE
+
+tv:
+  ; yet another pretentious indie game
+  .db $85,$48,$34,$43,$FF,$30,$3D,$3E,$43,$37,$34,$41,$FF,$3F,$41,$34,$43,$34,$3D,$43,$38,$3E,$44,$42,$FF,$38,$3D,$33,$38,$34,$FF,$FF,$FF,$36,$30,$3C,$34,$FE
+
+corporations:
+  ; corporations are evil. please use open-source software whenever possible...
+  .db $65,$32,$3E,$41,$3F,$3E,$41,$30,$43,$38,$3E,$3D,$42,$FF,$30,$41,$34,$FF,$34,$45,$38,$3B,$54,$FF,$3F,$3B,$34,$30,$42,$34,$FF,$FF,$FF,$44,$42,$34,$FF,$3E,$3F,$34,$3D,$56,$42,$3E,$44,$41,$32,$34,$FF,$42,$3E,$35,$43,$46,$30,$41,$34,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$46,$37,$34,$3D,$34,$45,$34,$41,$FF,$3F,$3E,$42,$42,$38,$31,$3B,$34,$54,$54,$54,$FE
+  ; got yourself into trouble again?
+  .db $85,$36,$3E,$43,$FF,$48,$3E,$44,$41,$42,$34,$3B,$35,$FF,$38,$3D,$43,$3E,$FF,$43,$41,$3E,$44,$31,$3B,$34,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$30,$36,$30,$38,$3D,$59,$FE
+  ; i'm out of anxiety pills
+  .db $65,$38,$53,$3C,$FF,$3E,$44,$43,$FF,$3E,$35,$FF,$30,$3D,$47,$38,$34,$43,$48,$FF,$3F,$38,$3B,$3B,$42,$FE
 
 ; is it 'no cats allowed' or is it just me?

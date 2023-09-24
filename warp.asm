@@ -8,6 +8,8 @@ Warp:
 	BEQ Village2WarpCheck
   CMP #$03
   BEQ SkeletonHouseWarpCheck
+  CMP #$04
+  BEQ ServerRoomWarpCheck
 	RTS
 
 Village1WarpCheck:
@@ -22,6 +24,10 @@ Village2WarpCheck:
 SkeletonHouseWarpCheck:
   JSR SkeletonHouseVillage1WarpCheck
   RTS
+ServerRoomWarpCheck:
+  JSR ServerRoomVillage2WarpCheck
+  RTS
+
 
 Village1CatHouseWarpCheck:
 	LDA currentYtile
@@ -54,6 +60,7 @@ Village1ForestWarpCheck:
 Village1CatHouseWarp:
   LDA #$01
   STA location
+  ; TODO: refactor setting singleattribute across the file, it might be unnecessary in some places
   STA singleattribute
   LDA #$00
   STA attributenumber
@@ -161,10 +168,19 @@ CatHouseVillage1Warp:
 Village2Village1WarpCheck:
 	LDA currentYtile
 	CMP #$06
-	BNE Village2ExHouseCheck
+	BNE Village2ServerRoomWarpCheck
 	LDA currentXtile
 	BEQ Village2Village1Warp ; when equals zero
-Village2ExHouseCheck:
+Village2ServerRoomWarpCheck:
+  LDA currentYtile
+  CMP #$0D
+  BNE Village2ExHouseWarpCheck
+  LDA currentXtile
+  CMP #$05
+  BEQ Village2ServerRoomWarp
+  CMP #$06
+  BEQ Village2ServerRoomWarp
+Village2ExHouseWarpCheck:
 	RTS
 
 Village2Village1Warp:
@@ -184,6 +200,27 @@ Village2Village1Warp:
   LDA #HIGH(village1sprites)
   STA curntspriteshigh
   LDA #$30
+  STA spritescompare
+  JSR PrepareForBGRender
+  JSR ChangeCatCoordinates
+  RTS
+
+Village2ServerRoomWarp:
+  LDA #$04
+  STA location
+  LDA #LOW(serverroom)
+  STA currentbglow
+  LDA #HIGH(serverroom)
+  STA currentbghigh
+  LDA #LOW(village2serverroomwarp)
+  STA warpXYlow
+  LDA #HIGH(village2serverroomwarp)
+  STA warpXYhigh
+  LDA #LOW(serverroomsprites)
+  STA curntspriteslow
+  LDA #HIGH(serverroomsprites)
+  STA curntspriteshigh
+  LDA #$70
   STA spritescompare
   JSR PrepareForBGRender
   JSR ChangeCatCoordinates
@@ -218,6 +255,41 @@ SkeletonHouseVillage1Warp:
   LDA #HIGH(village1sprites)
   STA curntspriteshigh
   LDA #$30
+  STA spritescompare
+  JSR PrepareForBGRender
+  JSR ChangeCatCoordinates
+  RTS
+
+ServerRoomVillage2WarpCheck:
+  LDA currentXtile
+  CMP #$0F
+  BNE ServerRoomVillage2WarpCheckDone
+  LDA currentYtile
+  CMP #$12
+  BNE ServerRoomVillage2WarpCheckDone
+  LDA direction
+  BEQ ServerRoomVillage2Warp ; when equals zero
+ServerRoomVillage2WarpCheckDone:
+  RTS
+
+ServerRoomVillage2Warp:
+  LDA #$02
+  STA location
+  LDA #$01
+  STA singleattribute
+  LDA #LOW(village2)
+  STA currentbglow
+  LDA #HIGH(village2)
+  STA currentbghigh
+  LDA #LOW(serverroomvillage2warp)
+  STA warpXYlow
+  LDA #HIGH(serverroomvillage2warp)
+  STA warpXYhigh
+  LDA #LOW(village2sprites)
+  STA curntspriteslow
+  LDA #HIGH(village2sprites)
+  STA curntspriteshigh
+  LDA #$C4
   STA spritescompare
   JSR PrepareForBGRender
   JSR ChangeCatCoordinates

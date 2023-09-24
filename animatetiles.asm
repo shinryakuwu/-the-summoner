@@ -29,6 +29,8 @@ AnimateTiles:
  	BEQ AnimateVillage2
  	CMP #$03
  	BEQ AnimateSkeletonHouse
+ 	CMP #$04
+ 	BEQ AnimateServerRoom
  	RTS
 
 AnimateVillage1:
@@ -43,8 +45,13 @@ AnimateVillage2:
 AnimateSkeletonHouse:
 	JSR AnimateSkeletonHouseSubroutine
 	RTS
+AnimateServerRoom:
+	JSR AnimateServerRoomSubroutine
+	RTS
 
 AnimateVillage1Subroutine:
+	LDA #$00
+  STA walkbackwards ; fix for very silly bug with ghost moving backwards when a cat moves backwards
 	LDA objectframenum
 	BEQ MoveGhostDown
 MoveGhostUp:
@@ -220,4 +227,40 @@ SkeletonShakesRight:
 	STA $02B1
 	LDA #$00
 	STA $02B2
+	RTS
+
+AnimateServerRoomSubroutine:
+	LDA #$06          ; switch tiles via transform loop
+	STA trnsfrm
+	LDA objectframenum
+	BEQ AnimateDiodes
+	LDA #$00
+	STA objectframenum
+	STA switchtile
+	LDX #$79
+	LDA #$81
+	STA trnsfrmcompare
+	JSR ObjectTransformLoop
+	LDA #$FF
+	STA switchtile
+	LDX #$81
+	LDA #$89
+	STA trnsfrmcompare
+	JSR ObjectTransformLoop
+ 	RTS
+AnimateDiodes:
+	LDA #$01
+	STA objectframenum
+	LDA #$FF
+	STA switchtile
+	LDX #$79
+	LDA #$81
+	STA trnsfrmcompare
+	JSR ObjectTransformLoop
+	LDA #$00
+	STA switchtile
+	LDX #$81
+	LDA #$89
+	STA trnsfrmcompare
+	JSR ObjectTransformLoop
 	RTS
