@@ -1,4 +1,12 @@
 CheckMovement:
+  LDA location      ; need to skip one frame in skeleton house to change background attributes
+  CMP #$03
+  BNE MovementSubroutine
+  LDA animatecounter
+  BNE MovementSubroutine
+  RTS
+
+MovementSubroutine:
   LDA buttons
   AND #%00001111    ; check only the state of the arrow buttons
   BNE CatMoves      ; branch if any button is pressed
@@ -207,9 +215,15 @@ TrnsfrmBranchDone:
   RTS
 
 DecrementCoordinates:
+  LDA walkbackwards
+  BNE ReallyIncrement
+ReallyDecrement:
   DEC $0200, x
   JMP TrnsfrmBranchDone
 IncrementCoordinates:
+  LDA walkbackwards
+  BNE ReallyDecrement
+ReallyIncrement:
   INC $0200, x
   JMP TrnsfrmBranchDone
 RenderObject: ; render cat?

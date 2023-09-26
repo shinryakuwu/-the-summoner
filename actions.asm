@@ -1,18 +1,45 @@
 CheckAction:
+  LDA animatecounter
+  BNE CanCheckForAction  ; fix for blinking screen when action logic is happening during the animation frame
+  LDA action
+  BEQ CanCheckForAction  ; allow movement only when no action is happening
+  JSR BlockButtons
+  RTS
+
+CanCheckForAction:
   LDA action
   BEQ CheckActionButtons ; if zero action state
   CMP #$01
-  BEQ Action
+  BEQ PerformTextEvent
   CMP #$02
   BEQ ActionTimeout
   CMP #$03
   BEQ CheckActionButtonReleased
   CMP #$04
   BEQ CheckActionButtonReleased
+  CMP #$05
+  BEQ PerformNonTextEvent
+  CMP #$06
+  BEQ ClearTextSection
+  CMP #$07
+  BEQ ClearTextSectionDone
+  CMP #$08
+  BEQ CheckActionButtonReleased
   RTS
 
-Action:
-  JSR PerformAction
+PerformTextEvent:
+  JSR BlockButtons
+  JSR RenderText
+  RTS
+
+PerformNonTextEvent:
+  JSR BlockButtons
+  JSR NonTextEvents
+  RTS
+
+ClearTextSection:
+  JSR BlockButtons
+  JSR ClearTextSectionSubroutine
   RTS
 
 CheckActionButtons:
@@ -38,18 +65,38 @@ CheckActionButtonReleased:
   STA buttons              ; disable movement for this frame
   BNE ActionButtonOnHold
   LDA action
-  CMP #$04                 ; if state is 4, it means that the initial action will start in the next frame
-  BEQ InitialAction
-  JSR ClearTextSection
-  LDA textpartscounter
-  BNE NextTextPart         ; if textpartscounter is not zero, set action to 1, decrement textpartscounter
+  CMP #$04                 ; if state is 4, it means that the initial text event will start in the next frame
+  BEQ InitialTextEvent
+  CMP #$08                 ; if state is 8, it means that the initial non-text event will start in the next frame
+  BEQ InitialNonTextEvent
   LDA #$00
+  STA cleartextstate
+  LDA #$06                 ; trigger processing ClearTextSectionSubroutine from the next frame
   STA action
 ActionButtonOnHold:
   RTS
 
-InitialAction:
+ClearTextSectionDone:
+  JSR BlockButtons
+  LDA textpartscounter
+  BNE NextTextPart      ; if textpartscounter is not zero, set action to 1, decrement textpartscounter
+  LDA eventnumber
+  BEQ EndOfAction
+  LDA #$05
+  STA action            ; perform non text event within the next frame
+  RTS
+EndOfAction:
+  LDA #$00
+  STA action
+  RTS
+
+InitialTextEvent:
   LDA #$01
+  STA action
+  RTS
+
+InitialNonTextEvent:
+  LDA #$06
   STA action
   RTS
 
@@ -63,9 +110,6 @@ BlockMovement:
   LDA buttons        ; blocks movement if action button is pressed
   AND #ACTIONBUTTONS
   STA buttons
-SetDefaultTextCursor: ; default is cat face, redefine it later if needed
-  LDA #$85
-  STA textcursor
 CheckActionTile:
   LDX $0213          ; load horizontal coordinate of the cat's left bottom tile into X
   LDY $0210          ; load vertical coordinate of the cat's left bottom tile into Y
@@ -75,9 +119,26 @@ CheckActionTile:
   BEQ Village1Events
   CMP #$01
   BEQ CatHouseEvents
+  CMP #$03
+  BEQ SkeletonHouseEvents
+  CMP #$04
+  BEQ ServerRoomEvents
   RTS
 
 Village1Events:
+  JSR Village1EventsSubroutine
+  RTS
+CatHouseEvents:
+  JSR CatHouseEventsSubroutine
+  RTS
+SkeletonHouseEvents:
+  JSR SkeletonHouseEventsSubroutine
+  RTS
+ServerRoomEvents:
+  JSR ServerRoomEventsSubroutine
+  RTS
+
+Village1EventsSubroutine:
   LDX #$1B
   LDY #$05
   JSR CheckTilesForEvent
@@ -86,8 +147,29 @@ Village1Events:
   LDY #$05
   JSR CheckTilesForEvent
   BNE StartGhostParams
+  LDX #$0B
+  LDY #$08
+  JSR CheckTilesForEvent
+  BNE OldLadyParams
   RTS
-CatHouseEvents:
+
+StartGhostParams:
+  LDA #LOW(startghost)
+  STA currenttextlow
+  LDA #HIGH(startghost)
+  STA currenttexthigh
+  JSR SettingEventParamsDone
+  RTS
+
+OldLadyParams:
+  LDA #$40
+  STA eventnumber
+  LDA #$15
+  STA walkcounter
+  JSR SettingEventParamsDone
+  RTS
+
+CatHouseEventsSubroutine:
   LDX #$14
   LDY #$07
   JSR CheckTilesForEvent
@@ -110,45 +192,109 @@ CatHouseEvents:
   BNE FanfictionParams
   RTS
 
-StartGhostParams:
-  LDA #LOW(startghost)
-  STA currenttextlow
-  LDA #HIGH(startghost)
-  STA currenttexthigh
-  LDA #$86
-  STA textcursor
-  JMP SettingEventParamsDone
 ComputerParams:
   LDA #LOW(computer)
   STA currenttextlow
   LDA #HIGH(computer)
   STA currenttexthigh
   ; set textpartscounter here if needed
-  JMP SettingEventParamsDone
+  JSR SettingEventParamsDone
+  RTS
 ColaParams:
   LDA #LOW(cola)
   STA currenttextlow
   LDA #HIGH(cola)
   STA currenttexthigh
-  JMP SettingEventParamsDone
+  JSR SettingEventParamsDone
+  RTS
 CassetteParams:
   LDA #LOW(cassette)
   STA currenttextlow
   LDA #HIGH(cassette)
   STA currenttexthigh
-  JMP SettingEventParamsDone
+  JSR SettingEventParamsDone
+  RTS
 FursuitParams:
   LDA #LOW(fursuit)
   STA currenttextlow
   LDA #HIGH(fursuit)
   STA currenttexthigh
-  JMP SettingEventParamsDone
+  JSR SettingEventParamsDone
+  RTS
 FanfictionParams:
   LDA #LOW(fanfiction)
   STA currenttextlow
   LDA #HIGH(fanfiction)
   STA currenttexthigh
+  JSR SettingEventParamsDone
+  RTS
+
+SkeletonHouseEventsSubroutine:
+  LDX #$09
+  LDY #$10
+  JSR CheckTilesForEvent
+  BNE SkeletonParams
+  LDX #$15
+  LDY #$07
+  JSR CheckTilesForEvent
+  BNE CandymanParams
+  RTS
+
+SkeletonParams:
+  LDA #LOW(skeleton)
+  STA currenttextlow
+  LDA #HIGH(skeleton)
+  STA currenttexthigh
+  JSR SettingEventParamsDone
+  RTS
+CandymanParams:
+  LDA #LOW(candyman)
+  STA currenttextlow
+  LDA #HIGH(candyman)
+  STA currenttexthigh
+  LDA #$01
+  STA textpartscounter
+  STA eventnumber
+  JSR SettingEventParamsDone
+  RTS
+
+ServerRoomEventsSubroutine:
+  LDX #$14
+  LDY #$08
+  JSR CheckTilesForEvent
+  BNE TVParams
+  LDX #$09
+  LDY #$0C
+  JSR CheckTilesForEvent
+  BNE BucketHatGuyParams
+  RTS
+
+TVParams:
+  LDA #LOW(tv)
+  STA currenttextlow
+  LDA #HIGH(tv)
+  STA currenttexthigh
+  JSR SettingEventParamsDone
+  RTS
+
+BucketHatGuyParams:
+  LDA #LOW(corporations)
+  STA currenttextlow
+  LDA #HIGH(corporations)
+  STA currenttexthigh
+  LDA #$02
+  STA textpartscounter
+  JSR SettingEventParamsDone
+  RTS
+
 SettingEventParamsDone:
+  LDA eventnumber
+  CMP #$40             ; 1-39 - postevent (happens after text), 40 and more - initial event (happens before text)
+  BCC PostEvent ; post event (or noevent if 0)
+  LDA #$08
+  STA action
+  RTS
+PostEvent:
   LDA #$04
   STA action
   RTS
@@ -158,11 +304,6 @@ BlockButtons:
   STA buttons
   RTS
 
-PerformAction:
-  JSR BlockButtons
-  JSR RenderText
-  RTS
-
 CheckTilesForEvent:
   ; x coordinate in X, y coordinate in Y
   TYA
@@ -170,13 +311,11 @@ CheckTilesForEvent:
   BNE EventFalse
   LDA direction
   CMP #$02
-  BEQ SkipExtraChechForX ; check if can compare by 'more than 1'
-  CMP #$03
-  BEQ SkipExtraChechForX
-  TXA
-  CMP currentXtile
+  BCS SkipExtraCheckForX ; if 2 or more
+  TXA                    ; if cat looks to the side, check one x tile
+  CMP currentXtile       ; if looks up or down, check x and the next tile to the right
   BEQ EventTrue
-SkipExtraChechForX:
+SkipExtraCheckForX:
   TXA
   CLC
   ADC #$01

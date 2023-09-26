@@ -14,8 +14,9 @@
   .include "movement.asm"       ; character movement and animation
   .include "warp.asm"           ; teleport character to needed location and position
   .include "animatetiles"       ; animate different objects on locations
-  .include "actions.asm"        ; perform events
+  .include "actions.asm"        ; checks and params for performing events
   .include "rendertext.asm"
+  .include "events.asm"         ; logic for performing any events aside from rendering text
   .include "tiles.asm"
 
   .org $FFFA     ;first of the three vectors starts here

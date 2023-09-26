@@ -1,4 +1,7 @@
 CheckPassability:
+  LDA walkbackwards
+  BNE PassableForWalkBackwards
+
   LDX $0213          ; load horizontal coordinate of the cat's left bottom tile into X
   LDY $0210          ; load vertical coordinate of the cat's left bottom tile into Y
 
@@ -20,6 +23,12 @@ BordersReached:
   LDA #$00
   STA passable       ; set passable to false
   RTS
+
+PassableForWalkBackwards:
+  LDA #$01
+  STA passable       ; set passable to true
+  RTS
+
 CheckPassabilityAgain:
   JSR CalculateTileInFrontOfCat
 

@@ -14,6 +14,7 @@ mvcounter        .rs 1  ; counter for cat movement animation
 animatecounter   .rs 1  ; counter for animating objects on locations
 framenum         .rs 1  ; number of the current animation frame for cat
 objectframenum   .rs 1  ; number of the current animation frame for surroundings
+skeletonframenum .rs 1  ; number of the current animation frame for dancing skeletons
 trnsfrm          .rs 1  ; tile transform state variable
 trnsfrmcompare   .rs 1  ; additional variable for main transform subroutine
 cattileslow      .rs 1  ; used to address the needed tile set
@@ -21,7 +22,7 @@ cattileshigh     .rs 1
 warpXYlow        .rs 1  ; used to address warp coordinates
 warpXYhigh		   .rs 1
 staticrender     .rs 1  ; either true(1) or false(0)
-location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2)
+location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house)
 currentbglow     .rs 1  ; 16-bit variable to point to current background
 currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
@@ -48,6 +49,11 @@ textppuaddrlow   .rs 1  ; 16-bit variable for coordinates of current letter to b
 textppuaddrhigh  .rs 1
 textpartscounter .rs 1
 textcursor       .rs 1  ; stores cursor that should be rendered in current text part
+cleartextstate   .rs 1  ; defines a line to be cleared within a frame
+candycounter     .rs 1  ; stores the number of candy left to collect
+eventnumber      .rs 1  ; stores the identificator of an event that is going to be performed
+walkbackwards    .rs 1  ; 0 - no, 1 - yes
+walkcounter      .rs 1  ; defines for how many frames the cat will move automatically during an event
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -57,6 +63,6 @@ MVDOWN = %00000100
 MVUP = %00001000
 ACTIONBUTTONS = %11000000
 CATANIMATIONSPEED = $0A
-OBJECTSANIMATIONSPEED = $1A
-INITIALTEXTPPUADDR = $22E1
+OBJECTSANIMATIONSPEED = $18
+INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
