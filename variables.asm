@@ -6,6 +6,7 @@ buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button st
 mainloop         .rs 1  ; 0 - don't perform main loop logic, 1 - perform
 action           .rs 1  ; action state ( 1 - action active, 0 - not, 2 - text render done, 3 - timeout state)
 bgrender         .rs 1  ; 0 - don't perform bg render, 1 - perform
+waitcounter      .rs 1  ; defines how many frames the game should wait
 direction        .rs 1  ; either down(0) up(1) left(2) of right(3)
 direction2       .rs 1  ; used to compare to direction variable
 singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
@@ -22,7 +23,7 @@ cattileshigh     .rs 1
 warpXYlow        .rs 1  ; used to address warp coordinates
 warpXYhigh		   .rs 1
 staticrender     .rs 1  ; either true(1) or false(0)
-location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house)
+location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house, 4 - server room)
 currentbglow     .rs 1  ; 16-bit variable to point to current background
 currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites

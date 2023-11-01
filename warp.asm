@@ -77,9 +77,9 @@ Village1CatHouseWarp:
   LDA #HIGH(cathousesprites)
   STA curntspriteshigh
   LDA #$80             ; this number identifies how many sprites need to be loaded
+  ; LDA #$D8
   STA spritescompare
   JSR PrepareForBGRender
-  JSR ChangeCatCoordinates
   RTS
 
 Village1SkeletonHouseWarpJump:
@@ -105,7 +105,6 @@ Village1Village2Warp:
   LDA #$C4
   STA spritescompare
   JSR PrepareForBGRender
-  JSR ChangeCatCoordinates
   RTS
 
 Village1SkeletonHouseWarp:
@@ -128,7 +127,6 @@ Village1SkeletonHouseWarp:
   LDA #$B8
   STA spritescompare
   JSR PrepareForBGRender
-  JSR ChangeCatCoordinates
   RTS
 
 CatHouseVillage1WarpCheck:
@@ -162,7 +160,6 @@ CatHouseVillage1Warp:
   LDA #$30
   STA spritescompare
   JSR PrepareForBGRender
-  JSR ChangeCatCoordinates
   RTS
 
 Village2Village1WarpCheck:
@@ -202,7 +199,6 @@ Village2Village1Warp:
   LDA #$30
   STA spritescompare
   JSR PrepareForBGRender
-  JSR ChangeCatCoordinates
   RTS
 
 Village2ServerRoomWarp:
@@ -223,7 +219,6 @@ Village2ServerRoomWarp:
   LDA #$70
   STA spritescompare
   JSR PrepareForBGRender
-  JSR ChangeCatCoordinates
   RTS
 
 SkeletonHouseVillage1WarpCheck:
@@ -257,7 +252,6 @@ SkeletonHouseVillage1Warp:
   LDA #$30
   STA spritescompare
   JSR PrepareForBGRender
-  JSR ChangeCatCoordinates
   RTS
 
 ServerRoomVillage2WarpCheck:
@@ -292,7 +286,6 @@ ServerRoomVillage2Warp:
   LDA #$C4
   STA spritescompare
   JSR PrepareForBGRender
-  JSR ChangeCatCoordinates
   RTS
 
 
@@ -300,8 +293,8 @@ PrepareForBGRender:
   LDA #$01         ; activate background rendering and perform it via main loop (outside of NMI)
   STA bgrender
   STA mainloop
-  LDA #%00000110   ; disable rendering
-  STA $2001
+  STA waitcounter  ; skip nmi subroutines in the first frame after bg is changed
+  JSR ChangeCatCoordinates
   RTS
 
 ChangeCatCoordinates:

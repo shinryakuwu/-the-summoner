@@ -7,9 +7,11 @@ ExitMainLoopSubroutines:
 	LDA #$00
 	STA mainloop
 	STA bgrender
-	JMP ReturnToNMI
+  JMP Forever
 
 PerformBgRender:
+  LDA #$00
+  STA $2001    ; disable rendering
   LDA currentbghigh
   PHA
   JSR LoadBackground

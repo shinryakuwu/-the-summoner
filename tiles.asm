@@ -145,6 +145,69 @@ pentagram:
   .db $78, $82, $40, $7F
   .db $78, $81, $40, $87
 
+satan:
+  .db $20, $5E, $02, $70
+  .db $20, $5F, $02, $78
+  .db $20, $5F, $42, $7F
+  .db $20, $5E, $42, $87
+
+  .db $28, $6D, $02, $68
+  .db $28, $6E, $02, $70
+  .db $28, $6F, $02, $78
+  .db $28, $6F, $42, $7F
+  .db $28, $6E, $42, $87
+  .db $28, $6D, $42, $8F
+
+  .db $36, $67, $02, $6B
+  .db $30, $7E, $02, $70
+  .db $30, $7F, $02, $78
+  .db $30, $7F, $42, $7F
+  .db $30, $7E, $42, $87
+  .db $36, $67, $42, $8C
+
+  .db $38, $8D, $02, $68
+  .db $38, $8E, $02, $70
+  .db $38, $8F, $02, $78
+  .db $38, $8F, $42, $7F
+  .db $38, $8E, $42, $87
+  .db $38, $8D, $42, $8F
+
+  .db $40, $9C, $02, $60
+  .db $40, $9D, $02, $68
+  .db $40, $9E, $02, $70
+  .db $40, $9F, $02, $78
+  .db $40, $9F, $42, $7F
+  .db $40, $9E, $42, $87
+  .db $40, $9D, $42, $8F
+  .db $40, $9C, $42, $97
+
+  .db $48, $AD, $02, $68
+  .db $48, $AE, $02, $70
+  .db $48, $AF, $02, $78
+  .db $48, $AF, $42, $7F
+  .db $48, $AE, $42, $87
+  .db $48, $AD, $42, $8F
+
+  .db $50, $BD, $02, $68
+  .db $50, $BE, $02, $70
+  .db $50, $BF, $02, $78
+  .db $50, $BF, $42, $7F
+  .db $50, $BE, $42, $87
+  .db $50, $BD, $42, $8F
+
+  .db $58, $CD, $02, $68
+  .db $58, $CE, $02, $70
+  .db $58, $CF, $02, $78
+  .db $58, $CF, $42, $7F
+  .db $58, $CE, $42, $87
+  .db $58, $CD, $42, $8F
+
+  .db $60, $DF, $02, $78
+  .db $60, $DF, $42, $7F
+
+  .db $68, $7D, $02, $77
+  .db $68, $7D, $42, $80
+
 skeletonhousesprites:
   ; candy man
   .db $2D, $35, $00, $B2
@@ -500,17 +563,17 @@ skeletonhouse:
   .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B  ;;row 3
   .db $9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 4
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$EF,$FF  ;;row 4
+  .db $FF,$FF,$FF,$FF,$FF,$EF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 5
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$ED,$EE,$FF,$FF  ;;row 5
+  .db $FF,$FF,$FF,$EF,$FF,$FF,$EF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B  ;;row 6
-  .db $9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 6
+  .db $EF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$00,$00,$00,$00,$00  ;;row 7
-  .db $00,$00,$00,$00,$00,$00,$00,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$0D,$FF,$FF,$0D,$0D,$0D,$0D,$0D  ;;row 7
+  .db $0D,$0D,$0D,$0D,$0D,$0D,$0D,$97,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 
   .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$88,$FF,$88  ;;row 8
   .db $FF,$88,$FF,$88,$00,$00,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
@@ -656,6 +719,10 @@ startghost:
 computer:
   ; I'm not into harassing minorities today
   .db $85,$38,$53,$3C,$FF,$3D,$3E,$43,$FF,$38,$3D,$43,$3E,$FF,$37,$30,$41,$30,$42,$42,$38,$3D,$36,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$3C,$38,$3D,$3E,$41,$38,$43,$38,$34,$42,$FF,$43,$3E,$33,$30,$48,$FE
+
+medicine:
+  ; a variety of medicine peacefully residing in my emergency box
+  .db $85,$30,$FF,$45,$30,$41,$38,$34,$43,$48,$FF,$3E,$35,$FF,$3C,$34,$33,$38,$32,$38,$3D,$34,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$3F,$34,$30,$32,$34,$35,$44,$3B,$3B,$48,$FF,$41,$34,$42,$38,$33,$38,$3D,$36,$FF,$38,$3D,$FF,$3C,$48,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$34,$3C,$34,$41,$36,$34,$3D,$32,$48,$FF,$31,$3E,$47,$FE
 
 cola:
   ; sugar free cola

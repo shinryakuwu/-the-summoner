@@ -170,10 +170,14 @@ OldLadyParams:
   RTS
 
 CatHouseEventsSubroutine:
-  LDX #$14
+  LDX #$15
   LDY #$07
   JSR CheckTilesForEvent
   BNE ComputerParams
+  LDX #$13
+  LDY #$07
+  JSR CheckTilesForEvent
+  BNE MedicineParams
   LDX #$11
   LDY #$0A
   JSR CheckTilesForEvent
@@ -197,7 +201,13 @@ ComputerParams:
   STA currenttextlow
   LDA #HIGH(computer)
   STA currenttexthigh
-  ; set textpartscounter here if needed
+  JSR SettingEventParamsDone
+  RTS
+MedicineParams:
+  LDA #LOW(medicine)
+  STA currenttextlow
+  LDA #HIGH(medicine)
+  STA currenttexthigh
   JSR SettingEventParamsDone
   RTS
 ColaParams:
