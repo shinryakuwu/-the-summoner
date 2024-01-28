@@ -4,9 +4,9 @@ NMI:
   LDA #$02
   STA $4014       ; set the high byte (02) of the RAM address, start the transfer
 
-  LDA waitcounter
+  LDA nmiwaitcounter
   BEQ NMISubroutines
-  DEC waitcounter
+  DEC nmiwaitcounter
   JMP EndOfNMI
 
 NMISubroutines:

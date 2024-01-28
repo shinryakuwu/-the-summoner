@@ -1,10 +1,13 @@
 CheckAnimateTiles:
+	LDA glitchstate
+	BNE SkipAnimateTiles ; skip animation logic during the glitch event
 	LDA animatecounter
 	BEQ AnimateTiles   ; animate only when counter = 0
 	DEC animatecounter ; if not 0, decrement counter
 	LDA location
 	CMP #$03
 	BEQ SkeletonDanceCheck ; separate logic for dancing skeletons animation, I hope it's worth it...
+SkipAnimateTiles:
 	RTS
 
 SkeletonDanceCheck:
@@ -96,7 +99,7 @@ AnimateVillage2Subroutine:
 	LDA #$06          ; switch tiles via transform loop
 	STA trnsfrm
 	LDX #$46
-	LDA #$E6
+	LDA #$DE
 	STA trnsfrmcompare
 	LDA objectframenum
 	BEQ AnimateRiver
@@ -236,6 +239,7 @@ AnimateServerRoomSubroutine:
 	BEQ AnimateDiodes
 	LDA #$00
 	STA objectframenum
+	LDA #$4A
 	STA switchtile
 	LDX #$79
 	LDA #$81
@@ -257,7 +261,7 @@ AnimateDiodes:
 	LDA #$81
 	STA trnsfrmcompare
 	JSR ObjectTransformLoop
-	LDA #$00
+	LDA #$4A
 	STA switchtile
 	LDX #$81
 	LDA #$89

@@ -34,15 +34,11 @@ InsideLoop:
 
 ClearRemainingBG:
   LDY #$00
-  ; LDA #$22
-  ; STA $2006             ; write the high byte of $22C0 address
-  ; LDA #$C0
-  ; STA $2006
 ClearRemainingBGLoop:
   LDA #$FF
   STA $2007
   INY
-  CPY #$A0
+  CPY #$C0
   BNE ClearRemainingBGLoop
   RTS
 
@@ -60,7 +56,8 @@ LoadAttributesLoop:
   LDA [currentattrlow], y ; load data from address (attribute + the value in y)
   STA $2007               ; write to PPU
   INY                     ; X = X + 1
-  CPY #$30                ; load attributes to bg attributes table 48 times
+  ; TODO: add different values for PAL/NTSC
+  CPY #$40                ; load attributes to bg attributes table 64 times
   BNE LoadAttributesLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
   RTS
 
@@ -70,7 +67,8 @@ LoadSingleAttribute:
 LoadSingleAttributeLoop:
   STX $2007                    ; write to PPU
   INY
-  CPY #$30                     ; load X to bg attributes table 48 times
+  ; TODO: add different values for PAL/NTSC
+  CPY #$40                     ; load X to bg attributes table 64 times
   BNE LoadSingleAttributeLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
   RTS
 
@@ -89,6 +87,26 @@ ClearSpritesLoop:
   INY
   CPY #$00
   BNE ClearSpritesLoop
+  RTS
+
+LoadPalettes:
+  LDA $2002             ; read PPU status to reset the high/low latch
+  LDA #$3F
+  STA $2006             ; write the high byte of $3F00 address
+  LDA #$00
+  STA $2006             ; write the low byte of $3F00 address
+  LDX #$00              ; start out at 0
+LoadPalettesLoop:
+  LDA palette, x        ; load data from address (palette + the value in x)
+                          ; 1st time through loop it will load palette+0
+                          ; 2nd time through loop it will load palette+1
+                          ; 3rd time through loop it will load palette+2
+                          ; etc
+  STA $2007             ; write to PPU
+  INX                   ; X = X + 1
+  CPX #$20              ; Compare X to hex $10, decimal 16 - copying 16 bytes = 4 sprites
+  BNE LoadPalettesLoop  ; Branch to LoadPalettesLoop if compare was Not Equal to zero
+                        ; if compare was equal to 32, keep going down
   RTS
 
 RESET:
@@ -121,25 +139,7 @@ clrmem:
    
   JSR vblankwait      ; Second wait for vblank, PPU is ready after this
 
-
-LoadPalettes:
-  LDA $2002             ; read PPU status to reset the high/low latch
-  LDA #$3F
-  STA $2006             ; write the high byte of $3F00 address
-  LDA #$00
-  STA $2006             ; write the low byte of $3F00 address
-  LDX #$00              ; start out at 0
-LoadPalettesLoop:
-  LDA palette, x        ; load data from address (palette + the value in x)
-                          ; 1st time through loop it will load palette+0
-                          ; 2nd time through loop it will load palette+1
-                          ; 3rd time through loop it will load palette+2
-                          ; etc
-  STA $2007             ; write to PPU
-  INX                   ; X = X + 1
-  CPX #$20              ; Compare X to hex $10, decimal 16 - copying 16 bytes = 4 sprites
-  BNE LoadPalettesLoop  ; Branch to LoadPalettesLoop if compare was Not Equal to zero
-                        ; if compare was equal to 32, keep going down
+  JSR LoadPalettes
 
 SetDefaultSprites:
   LDA #LOW(catsprites)

@@ -79,6 +79,7 @@ Village1CatHouseWarp:
   LDA #$80             ; this number identifies how many sprites need to be loaded
   ; LDA #$D8
   STA spritescompare
+  JSR SatanEventParams
   JSR PrepareForBGRender
   RTS
 
@@ -288,21 +289,25 @@ ServerRoomVillage2Warp:
   JSR PrepareForBGRender
   RTS
 
-
-PrepareForBGRender:
-  LDA #$01         ; activate background rendering and perform it via main loop (outside of NMI)
-  STA bgrender
-  STA mainloop
-  STA waitcounter  ; skip nmi subroutines in the first frame after bg is changed
-  JSR ChangeCatCoordinates
+SatanEventParams:
+  LDA candyswitches
+  AND #CANDYGATHERED
+  CMP #CANDYGATHERED
+  BNE SatanEventParamsDone
+  LDA #$43
+  STA eventnumber
+  LDA #$0F
+  STA walkcounter
+  LDA #$20
+  STA eventwaitcounter
+  LDA #$08
+  STA action
+SatanEventParamsDone:
   RTS
 
-ChangeCatCoordinates:
-	LDA #$04          ; warp via transform loop
-  STA trnsfrm
-  LDA #$18          ; compare pointer to $18 via transform loop
-  STA trnsfrmcompare
-  LDX #$00
-  LDY #$00
-  JSR ObjectTransformLoop
+PrepareForBGRender:
+  LDA #$01            ; activate background rendering and perform it via main loop (outside of NMI)
+  STA bgrender
+  STA mainloop
+  STA nmiwaitcounter  ; skip nmi subroutines in the first frame after bg is changed
   RTS
