@@ -1,13 +1,10 @@
 CheckAnimateTiles:
-	LDA glitchstate
-	BNE SkipAnimateTiles ; skip animation logic during the glitch event
 	LDA animatecounter
 	BEQ AnimateTiles   ; animate only when counter = 0
 	DEC animatecounter ; if not 0, decrement counter
 	LDA location
 	CMP #$03
 	BEQ SkeletonDanceCheck ; separate logic for dancing skeletons animation, I hope it's worth it...
-SkipAnimateTiles:
 	RTS
 
 SkeletonDanceCheck:

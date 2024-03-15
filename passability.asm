@@ -10,15 +10,15 @@ CheckPassability:
   BEQ CheckMapBordersLeft
   CMP #$03
   BEQ CheckMapBordersRight
-  JMP CheckPassabilityAgain
+  JMP CalculateTileInFrontOfCat
 CheckMapBordersLeft:
   CPX #$00
   BEQ BordersReached
-  JMP CheckPassabilityAgain
+  JMP CalculateTileInFrontOfCat
 CheckMapBordersRight:
   CPX #$F0
   BEQ BordersReached
-  JMP CheckPassabilityAgain
+  JMP CalculateTileInFrontOfCat
 BordersReached:
   LDA #$00
   STA passable       ; set passable to false
@@ -29,8 +29,8 @@ PassableForWalkBackwards:
   STA passable       ; set passable to true
   RTS
 
-CheckPassabilityAgain:
-  JSR CalculateTileInFrontOfCat
+CalculateTileInFrontOfCat:
+  JSR CalculateTileInFrontOfCatSubroutine
 
 AddingYpointerToCurrentBg:
   CLC
@@ -55,11 +55,9 @@ TileIsPassable:
   LDA passablecheck2 ; see if the passability check runs for second time
   CMP #$01
   BEQ SetPassableToTrue
-  LDA direction
-  BEQ CheckSecondCatTile ; when equals zero
-  CMP #$01
-  BEQ CheckSecondCatTile ; if direction is above or below, we would also check if bottom right cat tile is on a passable bg tile
-
+  LDA direction          ; if direction is above or below, we would also check if bottom right cat tile is on a passable bg tile
+  CMP #$02
+  BCC CheckSecondCatTile ; if less than 2
 SetPassableToTrue:
   LDA #$00
   STA passablecheck2 ; nullify check counter for future use
@@ -72,4 +70,4 @@ CheckSecondCatTile:
   STA passablecheck2 ; mark that the passability check is running for second time
   LDX $0217          ; load horizontal coordinate of the cat's right bottom tile into X
   LDY $0214          ; load vertical coordinate of the cat's right bottom tile into Y
-  JMP CheckPassabilityAgain
+  JMP CalculateTileInFrontOfCat

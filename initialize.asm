@@ -29,6 +29,8 @@ InsideLoop:
   CPX #$03
   BNE OutsideLoop        ; run the outside loop 256 times before continuing down
 
+  LDA #$C0               ; TODO: add different values for PAL/NTSC
+  STA clearbgcompare
   JSR ClearRemainingBG   ; the rest of bg is empty
   RTS
 
@@ -38,7 +40,7 @@ ClearRemainingBGLoop:
   LDA #$FF
   STA $2007
   INY
-  CPY #$C0
+  CPY clearbgcompare
   BNE ClearRemainingBGLoop
   RTS
 
@@ -176,6 +178,9 @@ SetDefaultAttributes:
   STA currentattrhigh           ; put the high byte of the address into pointer
 
   JSR LoadAttribute
+
+  ; LDA #$FF
+  ; STA candyswitches
 
 ReturnToNMI:
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1

@@ -1,6 +1,6 @@
 CheckMovement:
   LDA location      ; need to skip one frame in skeleton house to change background attributes
-  CMP #$03
+  CMP #$03          ; TODO: consider refactoring here
   BNE MovementSubroutine
   LDA animatecounter
   BNE MovementSubroutine

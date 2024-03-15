@@ -1,4 +1,4 @@
-CalculateTileInFrontOfCat:
+CalculateTileInFrontOfCatSubroutine:
   LDA direction
   BEQ TileBelow ; if equals zero
   CMP #$01

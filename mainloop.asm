@@ -12,7 +12,9 @@ ExitMainLoopSubroutines:
   JMP Forever
 
 ChangeLocation:
+  JSR DisableNMIRendering
   JSR PerformBgRender
+  JSR LoadAttribute
   JSR ChangeCatCoordinates
   JSR LoadSprites
   LDA #OBJECTSANIMATIONSPEED ; renew the animation counter
@@ -20,19 +22,43 @@ ChangeLocation:
   JMP ExitMainLoopSubroutines
 
 ReloadLocation:
-  JSR PerformBgRender
+  JSR DisableNMIRendering
+  JSR ClearBG
+  JSR LoadAttribute
   JSR LoadPalettes
   JMP ExitMainLoopSubroutines
 
 PerformBgRender:
-  LDA #$00
-  STA $2001    ; disable rendering
   LDA currentbghigh
   PHA
   JSR LoadBackground
   PLA
   STA currentbghigh
-  JSR LoadAttribute
+  RTS
+
+ClearBG:
+  JSR DisableNMIRendering
+  LDA $2002             ; read PPU status to reset the high/low latch
+  LDA #$20
+  STA $2006             ; write the high byte of $2000 address
+  LDA #$00
+  STA $2006             ; write the low byte of $2000 address
+  LDX #$00
+ClearBgLoop:
+  LDA #$FF
+  STA clearbgcompare
+  JSR ClearRemainingBG
+  INX
+  CPX #$03
+  BNE ClearBgLoop
+  LDA #$C3
+  STA clearbgcompare
+  JSR ClearRemainingBG
+  RTS
+
+DisableNMIRendering:
+  LDA #$00
+  STA $2001    ; disable rendering
   RTS
 
 ChangeCatCoordinates:

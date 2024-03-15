@@ -103,7 +103,7 @@ Village1Village2Warp:
   STA curntspriteslow
   LDA #HIGH(village2sprites)
   STA curntspriteshigh
-  LDA #$C4
+  LDA #$DC
   STA spritescompare
   JSR PrepareForBGRender
   RTS
@@ -284,7 +284,7 @@ ServerRoomVillage2Warp:
   STA curntspriteslow
   LDA #HIGH(village2sprites)
   STA curntspriteshigh
-  LDA #$C4
+  LDA #$DC
   STA spritescompare
   JSR PrepareForBGRender
   RTS

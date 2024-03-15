@@ -120,7 +120,7 @@ BlockMovement:
 CheckActionTile:
 	LDX $0213          ; load horizontal coordinate of the cat's left bottom tile into X
 	LDY $0210          ; load vertical coordinate of the cat's left bottom tile into Y
-	JSR CalculateTileInFrontOfCat
+	JSR CalculateTileInFrontOfCatSubroutine
 	; add conditions for actions here
 	LDA location
 	BEQ Village1Events

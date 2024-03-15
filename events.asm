@@ -148,8 +148,8 @@ SatanGlitchSubroutine:
 	CMP #$16
 	BEQ EndGlitch      ; branch depends on whether the state number is even/odd
 	AND #%00000001
-	BNE LoadGlitchText
-	JSR RenderSatan
+	BNE LoadGlitchText ; odd
+	JSR RenderSatan    ; even
 	RTS
 
 EndGlitch:
@@ -166,8 +166,6 @@ EndGlitch:
   STA currenttextlow
   LDA #HIGH(satan_talk)
   STA currenttexthigh
-  LDA #$05
-  STA location
   LDA #$00
   STA glitchstate
 	JSR PerformNonTextEventDone
@@ -193,12 +191,16 @@ SatanGlitchInitiate:
 	STA textppuaddrlow
 	LDA #$20
 	STA textppuaddrhigh
-	LDY #$00
-	JSR ClearSpritesLoop
+	LDA #$05
+  STA location
 	RTS
 
 RenderSatan:
-	LDA glitchstate       ; use glitchstate / 2 as poiner
+	LDA glitchstate
+	CMP #$02
+	BEQ GlitchClearSprites ; should clear sprites first because there would be no place in memory for all the objects
+ProceedSatanRender:
+	LDA glitchstate        ; use glitchstate / 2 as poiner
 	LSR A
 	TAY
 	LDA satantilesperline, y
@@ -227,6 +229,12 @@ RenderSatanLoop:
   STA ramspriteshigh
 
 	INC glitchstate
+	RTS
+
+GlitchClearSprites:
+	LDY #$00
+	JSR ClearSpritesLoop
+	JMP ProceedSatanRender
 	RTS
 
 LoadGlitchTextSubroutine:

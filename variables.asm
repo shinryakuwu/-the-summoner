@@ -19,6 +19,7 @@ objectframenum   .rs 1  ; number of the current animation frame for surroundings
 skeletonframenum .rs 1  ; number of the current animation frame for dancing skeletons
 trnsfrm          .rs 1  ; tile transform state variable
 trnsfrmcompare   .rs 1  ; additional variable for main transform subroutine
+clearbgcompare   .rs 1  ; additional variable for ClearBG subroutine
 cattileslow      .rs 1  ; used to address the needed tile set
 cattileshigh     .rs 1
 warpXYlow        .rs 1  ; used to address warp coordinates
