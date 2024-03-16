@@ -11,4 +11,3 @@ ReadControllerLoop:
   DEX
   BNE ReadControllerLoop
   RTS
-  

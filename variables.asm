@@ -5,7 +5,9 @@ buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button st
                         ; A B select start up down left right
 mainloop         .rs 1  ; 0 - don't perform main loop logic, 1 - perform
 action           .rs 1  ; action state ( 1 - action active, 0 - not, 2 - text render done, 3 - timeout state)
-bgrender         .rs 1  ; 0 - don't perform bg render, 1 - perform
+bgrender         .rs 1  ; 0 - don't perform bg render, 1 - perform, 2 - bg render with loading palette
+nmiwaitcounter   .rs 1  ; defines how many frames nmi should wait
+eventwaitcounter .rs 1  ; defines delays in events
 direction        .rs 1  ; either down(0) up(1) left(2) of right(3)
 direction2       .rs 1  ; used to compare to direction variable
 singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
@@ -17,12 +19,14 @@ objectframenum   .rs 1  ; number of the current animation frame for surroundings
 skeletonframenum .rs 1  ; number of the current animation frame for dancing skeletons
 trnsfrm          .rs 1  ; tile transform state variable
 trnsfrmcompare   .rs 1  ; additional variable for main transform subroutine
+clearbgcompare   .rs 1  ; additional variable for ClearBG subroutine
 cattileslow      .rs 1  ; used to address the needed tile set
 cattileshigh     .rs 1
 warpXYlow        .rs 1  ; used to address warp coordinates
 warpXYhigh		   .rs 1
 staticrender     .rs 1  ; either true(1) or false(0)
-location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house)
+location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
+                        ; 4 - server room, 5 - bsod)
 currentbglow     .rs 1  ; 16-bit variable to point to current background
 currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
@@ -51,9 +55,12 @@ textpartscounter .rs 1
 textcursor       .rs 1  ; stores cursor that should be rendered in current text part
 cleartextstate   .rs 1  ; defines a line to be cleared within a frame
 candycounter     .rs 1  ; stores the number of candy left to collect
+candyswitches    .rs 1  ; stores switches for collecting candy
 eventnumber      .rs 1  ; stores the identificator of an event that is going to be performed
 walkbackwards    .rs 1  ; 0 - no, 1 - yes
 walkcounter      .rs 1  ; defines for how many frames the cat will move automatically during an event
+glitchstate      .rs 1  ; stores the state of satan glitch event
+glitchcount      .rs 1  ; stores counter for satan glitch event
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -62,6 +69,7 @@ MVLEFT = %00000010
 MVDOWN = %00000100
 MVUP = %00001000
 ACTIONBUTTONS = %11000000
+CANDYGATHERED = %00111111
 CATANIMATIONSPEED = $0A
 OBJECTSANIMATIONSPEED = $18
 INITIALTEXTPPUADDR = $22E0

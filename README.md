@@ -14,8 +14,6 @@ Already implemented:
 
 To be implemented in the near future:
  - More locations and interactions
- - Fixes for location attributes and warping
- - A fix for blinking screen during actions/warp
 
 The project is distributed under the teabag license. Feel free to reuse the code for your needs, but if it becomes handy to you for whatever reason and you somehow meet me in real life, make sure to buy me a cup of tea ~~or sit on my face if you are cute~~.
 
