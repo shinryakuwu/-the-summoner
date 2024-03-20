@@ -61,6 +61,8 @@ walkbackwards    .rs 1  ; 0 - no, 1 - yes
 walkcounter      .rs 1  ; defines for how many frames the cat will move automatically during an event
 glitchstate      .rs 1  ; stores the state of satan glitch event
 glitchcount      .rs 1  ; stores counter for satan glitch event
+emptytilesnumber .rs 1  ; number of empty bg tiles in a row
+loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -74,3 +76,4 @@ CATANIMATIONSPEED = $0A
 OBJECTSANIMATIONSPEED = $18
 INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
+EMPTYBGTILEATTRIBUTE = $0F
