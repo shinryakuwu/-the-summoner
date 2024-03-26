@@ -32,20 +32,37 @@ PassableForWalkBackwards:
 CalculateTileInFrontOfCat:
   JSR CalculateTileInFrontOfCatSubroutine
 
-AddingYpointerToCurrentBg:
+MultiplyYpointerBy32:
+  LDA currentYtile
+  TAX                  ; preparing values for multiplication subroutine
+  LDA #$20             ; here we set multiplier to 32 because (pointer to bg tiles + 32) = (Y coordinate + 1)
+  JSR Multiply
+
+AddYpointerToCurrentBg:
   CLC
   LDA currentbglow
   ADC mathresultlow
-  STA currentYtilelow
+  STA currenttilelow
   LDA currentbghigh
   ADC mathresulthigh
-  STA currentYtilehigh
+  STA currenttilehigh
 
-FinallyDefiningPassibilityOfTile:
-  LDY currentXtile
-  LDA [currentYtilelow], y
+AddXpointerToCurrentBg:
+  CLC
+  LDA currentXtile
+  ADC currenttilelow
+  STA currenttilelow
+  LDA currenttilehigh
+  ADC #$00              ; add 0 and carry from previous add
+  STA currenttilehigh
+
+DefinePassibilityOfTile:
+  LDY #$00
+  ; TODO: add logic to check for the empty tiles attribute
+  LDA [currenttilelow], y
   CMP #$60           ; check if the tile is within the passable tiles in the tiletable (they currently end by address $60 but will change later)
   BCC TileIsPassable
+TileIsNotPassable:
   LDA #$00
   STA passablecheck2 ; nullify check counter for future use
   LDA #$00
@@ -68,6 +85,11 @@ SetPassableToTrue:
 CheckSecondCatTile:
   LDA #$01
   STA passablecheck2 ; mark that the passability check is running for second time
-  LDX $0217          ; load horizontal coordinate of the cat's right bottom tile into X
-  LDY $0214          ; load vertical coordinate of the cat's right bottom tile into Y
-  JMP CalculateTileInFrontOfCat
+  ; LDX $0217          ; load horizontal coordinate of the cat's right bottom tile into X
+  ; LDY $0214          ; load vertical coordinate of the cat's right bottom tile into Y
+  ; JMP CalculateTileInFrontOfCat
+  INC currenttilelow
+  LDA currenttilehigh
+  ADC #$00                               ; add 0 and carry from previous add
+  STA currenttilehigh
+  JMP DefinePassibilityOfTile
