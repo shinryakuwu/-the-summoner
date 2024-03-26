@@ -43,8 +43,8 @@ mathresultlow    .rs 1  ; 16-bit variable for storing multiplication result
 mathresulthigh   .rs 1
 currentXtile     .rs 1  ; variable for determining the bg tile next to the cat
 currentYtile     .rs 1  ; variable for determining the bg tile next to the cat
-currentYtilelow  .rs 1  ; 16-bit variable for determining the bg tile next to the cat
-currentYtilehigh .rs 1
+currenttilelow   .rs 1  ; 16-bit variable for determining the bg tile next to the cat
+currenttilehigh  .rs 1
 switchtile       .rs 1  ; tile (and maybe attribute) for replacement used for object animation
 textpointer      .rs 1  ; points at the letter to render
 currenttextlow   .rs 1  ; 16-bit variable to point to current text to display
@@ -61,6 +61,9 @@ walkbackwards    .rs 1  ; 0 - no, 1 - yes
 walkcounter      .rs 1  ; defines for how many frames the cat will move automatically during an event
 glitchstate      .rs 1  ; stores the state of satan glitch event
 glitchcount      .rs 1  ; stores counter for satan glitch event
+emptytilesnumber .rs 1  ; number of empty bg tiles in a row
+loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
+emptybeforecurr  .rs 2  ; number of empty tiles before the current tile (required in passability checker)
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -74,3 +77,4 @@ CATANIMATIONSPEED = $0A
 OBJECTSANIMATIONSPEED = $18
 INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
+EMPTYBGTILEATTRIBUTE = $0F

@@ -7,41 +7,69 @@ vblankwait:
   RTS
 
 LoadBackground:
+  JSR InitializeLoadBackground
+  LDA currentbghigh     ; save this value to stack to restore it by the end of the subroutine
+  PHA
+  LDX #$00              ; start at pointer + 0
+  LDY #$00
+LoadBackgroundLoop:
+  JSR CheckEmptyBgTile
+  STA $2007
+  INY
+  CPY #$00
+  BNE SkipLoadBackgroundIncrement
+  INC currentbghigh     ; low byte went 0 to 256, so high byte needs to be changed now
+  INX
+SkipLoadBackgroundIncrement:
+  CPY loadbgcompare
+  BNE LoadBackgroundLoop
+  CPX loadbgcompare+1
+  BNE LoadBackgroundLoop
+
+  PLA
+  STA currentbghigh
+  RTS
+
+InitializeLoadBackground:
   LDA $2002             ; read PPU status to reset the high/low latch
   LDA #$20
   STA $2006             ; write the high byte of $2000 address
   LDA #$00
   STA $2006             ; write the low byte of $2000 address
-  
-  LDX #$00              ; start at pointer + 0
-  LDY #$00
-OutsideLoop:
-  
-InsideLoop:
-  LDA [currentbglow], y  ; copy one background byte from address in pointer plus Y
-  STA $2007              ; this runs 256 * 4 times
-  INY                    ; inside loop counter
-  CPY #$00
-  BNE InsideLoop         ; run the inside loop 256 times before continuing down
-  
-  INC currentbghigh      ; low byte went 0 to 256, so high byte needs to be changed now
-  INX
-  CPX #$03
-  BNE OutsideLoop        ; run the outside loop 256 times before continuing down
-
-  LDA #$C0               ; TODO: add different values for PAL/NTSC
-  STA clearbgcompare
-  JSR ClearRemainingBG   ; the rest of bg is empty
   RTS
 
 ClearRemainingBG:
   LDY #$00
 ClearRemainingBGLoop:
-  LDA #$FF
+  LDA #$FE
   STA $2007
   INY
   CPY clearbgcompare
   BNE ClearRemainingBGLoop
+  RTS
+
+CheckEmptyBgTile:
+  LDA [currentbglow], y
+  CMP #EMPTYBGTILEATTRIBUTE
+  BNE CheckEmptyBgTileDone
+LoadEmptyBgTiles:
+  INY
+  LDA [currentbglow], y
+  STA emptytilesnumber
+  TXA
+  PHA                    ; push X to stack
+  LDX #$00
+LoadEmptyBgTilesLoop:    ; x times move #$FF to addr 2007
+  LDA #$FF
+  STA $2007
+  INX
+  CPX emptytilesnumber
+  BNE LoadEmptyBgTilesLoop
+  INY
+  PLA
+  TAX
+CheckEmptyBgTileDone:
+  LDA [currentbglow], y
   RTS
 
 LoadAttribute:
@@ -165,11 +193,17 @@ SetDefaultBackground:
   STA currentbglow       ; put the low byte of the address of background into pointer
   LDA #HIGH(village1)
   STA currentbghigh      ; put the high byte of the address into pointer
-  PHA                    ; save the high byte bg value
+
+  LDA #$02
+  STA loadbgcompare+1
+  LDA #$85
+  STA loadbgcompare
 
   JSR LoadBackground
-  PLA                    ; restore the high byte bg value
-  STA currentbghigh
+
+  LDA #$DF               ; TODO: add different values for PAL/NTSC
+  STA clearbgcompare
+  JSR ClearRemainingBG   ; the rest of bg is empty
 
 SetDefaultAttributes:
   LDA #LOW(village1attributes)
