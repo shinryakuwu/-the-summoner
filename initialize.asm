@@ -12,15 +12,11 @@ LoadBackground:
   PHA
   LDX #$00              ; start at pointer + 0
   LDY #$00
+  STY emptytilescount   ; clear empty tile rows counter
 LoadBackgroundLoop:
   JSR CheckEmptyBgTile
   STA $2007
-  INY
-  CPY #$00
-  BNE SkipLoadBackgroundIncrement
-  INC currentbghigh     ; low byte went 0 to 256, so high byte needs to be changed now
-  INX
-SkipLoadBackgroundIncrement:
+  JSR Increment16BitBGPointer
   CPY loadbgcompare
   BNE LoadBackgroundLoop
   CPX loadbgcompare+1
@@ -28,6 +24,16 @@ SkipLoadBackgroundIncrement:
 
   PLA
   STA currentbghigh
+  RTS
+
+Increment16BitBGPointer:
+  INY
+  CPY #$00
+  BEQ Increment16BitBgPointerHigh
+  RTS
+Increment16BitBgPointerHigh:
+  INC currentbghigh     ; low byte went 0 to 256, so high byte needs to be changed now
+  INX
   RTS
 
 InitializeLoadBackground:
@@ -38,22 +44,14 @@ InitializeLoadBackground:
   STA $2006             ; write the low byte of $2000 address
   RTS
 
-ClearRemainingBG:
-  LDY #$00
-ClearRemainingBGLoop:
-  LDA #$FE
-  STA $2007
-  INY
-  CPY clearbgcompare
-  BNE ClearRemainingBGLoop
-  RTS
-
 CheckEmptyBgTile:
   LDA [currentbglow], y
   CMP #EMPTYBGTILEATTRIBUTE
   BNE CheckEmptyBgTileDone
+  INC emptytilescount    ; increment empty tile rows counter
 LoadEmptyBgTiles:
-  INY
+  JSR StoreEmptyTilesRowAddress
+  JSR Increment16BitBGPointer
   LDA [currentbglow], y
   STA emptytilesnumber
   TXA
@@ -70,6 +68,42 @@ LoadEmptyBgTilesLoop:    ; x times move #$FF to addr 2007
   TAX
 CheckEmptyBgTileDone:
   LDA [currentbglow], y
+  RTS
+
+StoreEmptyTilesRowAddress:
+  ; this subroutine stores all addresses containing the empty tile attribute (EMPTYBGTILEATTRIBUTE)
+  ; in RAM starting from EMPTYTILEROWADDRESSES + 2 to use them later in passability logic
+  TYA
+  PHA                    ; push y to stack
+  CLC
+  ADC currentbglow       ; add value from y to currentbglow and store in emptytilerowaddr
+  STA emptytilerowaddr
+  LDA currentbghigh
+  ADC #$00               ; add 0 and carry from previous add
+  STA emptytilerowaddr+1
+  LDA emptytilescount    ; take emptytilescount, multiply by 2 and use as pointer
+
+  ; STA EMPTYTILEROWADDRESSES  ; debug
+
+  ASL A
+  TAY
+  LDA emptytilerowaddr
+  STA EMPTYTILEROWADDRESSES, y
+  INY
+  LDA emptytilerowaddr+1
+  STA EMPTYTILEROWADDRESSES, y
+  PLA
+  TAY                    ; pull y from stack
+  RTS
+
+ClearRemainingBG:
+  LDY #$00
+ClearRemainingBGLoop:
+  LDA #$FE
+  STA $2007
+  INY
+  CPY clearbgcompare
+  BNE ClearRemainingBGLoop
   RTS
 
 LoadAttribute:

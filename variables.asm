@@ -63,7 +63,9 @@ glitchstate      .rs 1  ; stores the state of satan glitch event
 glitchcount      .rs 1  ; stores counter for satan glitch event
 emptytilesnumber .rs 1  ; number of empty bg tiles in a row
 loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
-emptybeforecurr  .rs 2  ; number of empty tiles before the current tile (required in passability checker)
+emptytilescount  .rs 1  ; number of empty tile rows before the current tile (required in passability checker)
+emptytilerowaddr .rs 2  ; 16-bit variable to temporarily store the address of empty tile row 
+                        ; (used in StoreEmptyTilesRowAddress and AddEmptyTilesToCurrentTile)
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -78,3 +80,4 @@ OBJECTSANIMATIONSPEED = $18
 INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
 EMPTYBGTILEATTRIBUTE = $0F
+EMPTYTILEROWADDRESSES = $80

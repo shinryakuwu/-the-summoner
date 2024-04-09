@@ -810,3 +810,85 @@ satan_appear:
   .db $85,$42,$30,$43,$30,$3D,$55,$FF,$3E,$41,$3E,$FF,$43,$34,$55,$FF,$30,$3F,$3F,$30,$41,$34,$FF,$43,$34,$FF,$41,$3E,$42,$43,$3E,$54,$FF,$45,$34,$3D,$38,$55,$FF,$42,$30,$43,$30,$3D,$3E,$54,$FF,$30,$3C,$34,$3D,$54,$FE
 
 ; is it 'no cats allowed' or is it just me?
+
+
+; .db $00,$01,$00,$FF,$FF,$FF,$FF,$00,$01,$00,$FF,$FF,$FF,$02
+; .db $00,$01,$00,$0F,$04,$00,$01,$00,$0F,$03,$02
+
+  ; compare current tile addr to $0F address
+  ; if current tile addr < $0F addr, end the loop, jump to DefinePassibilityOfTile
+  ; if current tile addr = $0F addr, end the loop, jump to TileIsNotPassable
+  ; else keep iterating
+  ; increment RAM addr to get attribute value ($0F address +1)
+  ; result (updated current tile value) = current tile addr - attribute value
+  ; if result <= RAM address ($0F address +1), jump to TileIsNotPassable
+  ; else keep iterating - jump to IncludeEmptyTileRowsLoop
+
+; p = 1
+; less than first 0F - done, check tile 1
+
+; p = 3
+; p = first 0F => not passable
+
+; p = 4
+; not less than first 0F
+; attr value = 4
+; result = 4 - 4 (+2) = 2
+; RAM address = 4
+; result <= RAM address => not passable
+
+; p = 4
+; not less than first 0F
+; attr value = 4
+; result = 4 - 4 (+2) = 2
+; RAM address = 4
+; result <= RAM address => not passable
+
+; p = 5
+; not less than first 0F
+; attr value = 4
+; result = 5 - 4 (+2) = 3
+; RAM address = 4
+; result <= RAM address => not passable
+
+; p = 6
+; not less than first 0F
+; attr value = 4
+; result = 6 - 4 (+2) = 4
+; RAM address = 4
+; result <= RAM address => not passable
+
+; p = 7
+; not less than first 0F
+; result = 7 - 4 (+2) = 5
+; RAM address = 4
+; result > RAM address
+; less than second 0F - done, check tile 7
+
+; p = 9
+; not less than first 0F
+; result = 9 - 4 (+2) = 7
+; RAM address = 4
+; result > RAM address
+; less than second 0F - done, check tile 9
+
+; p = 12
+; not less than first 0F
+; result = 12 - 4 (+2) = 10
+; RAM address = 4
+; result > RAM address
+; not less than second 0F
+; result2 = 10 - 3 (+2) = 9
+; second RAM address = 9
+; result <= second RAM address, not passable
+
+; p = 13
+; not less than first 0F
+; result = 13 - 4 (+2) = 11
+; RAM address = 4
+; result > RAM address
+; not less than second 0F
+; result2 = 11 - 3 (+2) = 10
+; second RAM address = 9
+; result > second RAM address
+; no more 0F addresses - done, check tile 13
