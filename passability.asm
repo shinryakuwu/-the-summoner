@@ -52,19 +52,20 @@ AddXpointerToCurrentBg:
   LDA currentXtile
   ADC currenttilelow
   STA currenttilelow
+  STA $91 ; debug
   LDA currenttilehigh
   ADC #$00              ; add 0 and carry from previous add
   STA currenttilehigh
+  STA $90 ; debug
 
   LDA emptytilescount
-  BEQ DefinePassibilityOfTile
+  BEQ DefinePassabilityOfTile
 
 IncludeEmptyTileRows:
   ; this logic is really tricky, it parses compressed bg data to utilize it properly
 
   ; compare current tile addr to $0F address
-  ; if current tile addr < $0F addr, end the loop, jump to DefinePassibilityOfTile
-  ; if current tile addr = $0F addr, end the loop, jump to TileIsNotPassable
+  ; if current tile addr <= $0F addr, end the loop, jump to DefinePassabilityOfTile
   ; else keep iterating
   ; increment RAM addr to get attribute value ($0F address +1)
   ; result (updated current tile value) = current tile addr - (attribute value - 2)
@@ -78,26 +79,37 @@ IncludeEmptyTileRowsLoop:
   TAY
   INY
 CompareEmptyTileCurrTileHighAddr:
+  ; BCC - ram addr < curr
+  ; BCS - ram addr >= curr
   LDA EMPTYTILEROWADDRESSES, y        ; get high byte of empty tiles attr (EMPTYBGTILEATTRIBUTE) address
-  CMP currenttilehigh                 ; branch if high empty tiles attr address >= high current tile addr
-  BCS CheckEmptyTileCurrTileEqual     ; if high empty tiles attr address < high current tile addr,
-  DEY                                 ; then empty tiles attr address < current tile addr, so we keep the loop going
+  CMP currenttilehigh                 ; if high empty tiles attr address < high current tile addr
+  BCC IncrementEmptyTileAddress       ; then empty tiles attr address < current tile addr, so we keep the loop going
+  DEY                                 ; at this point high empty tiles attr address => high current tile addr
+  LDA EMPTYTILEROWADDRESSES, y        ; get low byte of empty tiles attr (EMPTYBGTILEATTRIBUTE) address
+  CMP currenttilelow                  ; if low empty tiles attr address >= low current tile addr
+  BCS DefinePassabilityOfTile         ; then empty tiles attr address >= current tile addr, jump to DefinePassabilityOfTile
+  JMP IncrementEmptyTileAddress2      ; skip decreasing y pointer because we already did
 IncrementEmptyTileAddress:
-  LDA EMPTYTILEROWADDRESSES, y        ; y should point at low empty tiles attr address at this point
-  INC A
-  STA EMPTYTILEROWADDRESSES, y
-  BNE GetEmptyTilesAttrValue
-  ; if a becomes 0, add carry and store in EMPTYTILEROWADDRESSES, y + 1
+  DEY
+IncrementEmptyTileAddress2:
+  LDA EMPTYTILEROWADDRESSES, y   ; y should point at low empty tiles attr address at this point
+  STA emptytilerowaddr
   INY
   LDA EMPTYTILEROWADDRESSES, y
-  INC A
-  STA EMPTYTILEROWADDRESSES, y
-  DEY
+  STA emptytilerowaddr+1
+  INC emptytilerowaddr
+  BCC GetEmptyTilesAttrValue     ; branch if carry clear
+  INC emptytilerowaddr+1         ; add carry to high byte
 GetEmptyTilesAttrValue:
-  LDA [EMPTYTILEROWADDRESSES], y
+  TYA                   ; move y to stack
+  PHA
+  LDY #$00
+  LDA [emptytilerowaddr], y
   SEC
   SBC #$02
   STA emptytilesnumber  ; subtract 2 from empty tiles value and store it in emptytilesnumber
+  PLA
+  TAY                   ; restore y
 SubtractEmptyTilesAttrValue:
   LDA currenttilelow
   SEC
@@ -107,7 +119,6 @@ SubtractEmptyTilesAttrValue:
   SBC #$00
   STA currenttilehigh
 CompareResultAddrToEmptyTilesAttrAddr:
-  INY
   LDA EMPTYTILEROWADDRESSES, y   ; get high byte of empty tiles value (EMPTYBGTILEATTRIBUTE+1) address
   CMP currenttilehigh            ; if high empty tiles value address < high current tile addr,
   BCC CompareXtoEmptytilescount  ; then empty tiles value address < current tile addr, so we keep the loop going
@@ -115,32 +126,16 @@ CompareResultAddrToEmptyTilesAttrAddr:
   LDA EMPTYTILEROWADDRESSES, y   ; get low byte of empty tiles value (EMPTYBGTILEATTRIBUTE+1) address
   CMP currenttilelow             ; if low empty tiles value address >= low current tile addr
   BCS TileIsNotPassable          ; then empty tiles value address >= current tile addr, so the tile is not passable
-  ; BCC - ram addr < curr
-  ; BCS - ram addr >= curr
 CompareXtoEmptytilescount:
   CPX emptytilescount           ; loop ends when x = emptytilescount
   BNE IncludeEmptyTileRowsLoop
-  JMP DefinePassibilityOfTile
+  ; else just move to DefinePassabilityOfTile
 
-
-CheckEmptyTileCurrTileEqual:
-  LDA EMPTYTILEROWADDRESSES, y        ; get high byte of empty tiles attr (EMPTYBGTILEATTRIBUTE) address
-  CMP currenttilehigh                 ; if high empty tiles attr address != high current tile addr,
-  BNE DefinePassibilityOfTile         ; then empty tiles attr address > current tile addr, move to DefinePassibilityOfTile
-CompareEmptyTileCurrTileLowAddr:      ; high bytes are equal at this point
-  DEY
-  LDA EMPTYTILEROWADDRESSES, y        ; get low byte of empty tiles attr (EMPTYBGTILEATTRIBUTE) address
-  CMP currenttilelow
-  BEQ TileIsNotPassable               ; if empty tiles attr address = current tile addr, tile is not passable (pointer is at EMPTYBGTILEATTRIBUTE)
-  ; TODO: check if works without this line
-  CMP currenttilelow                  ; if low empty tiles attr address < low current tile addr,
-  BCC IncrementEmptyTileAddress       ; then empty tiles attr address < current tile addr, go back to the loop
-  ; else if empty tiles attr address > current tile addr, move to DefinePassibilityOfTile
-
-DefinePassibilityOfTile:
+DefinePassabilityOfTile:
   LDY #$00
-  ; TODO: add logic to check for the empty tiles attribute
   LDA [currenttilelow], y
+  CMP #EMPTYBGTILEATTRIBUTE
+  BEQ TileIsNotPassable
   CMP #$60           ; check if the tile is within the passable tiles in the tiletable (they currently end by address $60 but will change later)
   BCC TileIsPassable
 TileIsNotPassable:
@@ -166,11 +161,8 @@ SetPassableToTrue:
 CheckSecondCatTile:
   LDA #$01
   STA passablecheck2 ; mark that the passability check is running for second time
-  ; LDX $0217          ; load horizontal coordinate of the cat's right bottom tile into X
-  ; LDY $0214          ; load vertical coordinate of the cat's right bottom tile into Y
-  ; JMP CalculateTileInFrontOfCat
   INC currenttilelow
   LDA currenttilehigh
   ADC #$00                               ; add 0 and carry from previous add
   STA currenttilehigh
-  JMP DefinePassibilityOfTile
+  JMP DefinePassabilityOfTile

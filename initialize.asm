@@ -14,13 +14,17 @@ LoadBackground:
   LDY #$00
   STY emptytilescount   ; clear empty tile rows counter
 LoadBackgroundLoop:
-  JSR CheckEmptyBgTile
+  LDA [currentbglow], y
+  CMP #EMPTYBGTILEATTRIBUTE
+  BEQ LoadEmptyBgTiles
+  LDA [currentbglow], y
   STA $2007
   JSR Increment16BitBGPointer
+CompareLoadBgPointer:
   CPY loadbgcompare
-  BNE LoadBackgroundLoop
+  BCC LoadBackgroundLoop
   CPX loadbgcompare+1
-  BNE LoadBackgroundLoop
+  BCC LoadBackgroundLoop
 
   PLA
   STA currentbghigh
@@ -44,12 +48,8 @@ InitializeLoadBackground:
   STA $2006             ; write the low byte of $2000 address
   RTS
 
-CheckEmptyBgTile:
-  LDA [currentbglow], y
-  CMP #EMPTYBGTILEATTRIBUTE
-  BNE CheckEmptyBgTileDone
-  INC emptytilescount    ; increment empty tile rows counter
 LoadEmptyBgTiles:
+  INC emptytilescount    ; increment empty tile rows counter
   JSR StoreEmptyTilesRowAddress
   JSR Increment16BitBGPointer
   LDA [currentbglow], y
@@ -63,12 +63,10 @@ LoadEmptyBgTilesLoop:    ; x times move #$FF to addr 2007
   INX
   CPX emptytilesnumber
   BNE LoadEmptyBgTilesLoop
-  INY
+  JSR Increment16BitBGPointer
   PLA
   TAX
-CheckEmptyBgTileDone:
-  LDA [currentbglow], y
-  RTS
+  JMP CompareLoadBgPointer
 
 StoreEmptyTilesRowAddress:
   ; this subroutine stores all addresses containing the empty tile attribute (EMPTYBGTILEATTRIBUTE)
@@ -83,7 +81,7 @@ StoreEmptyTilesRowAddress:
   STA emptytilerowaddr+1
   LDA emptytilescount    ; take emptytilescount, multiply by 2 and use as pointer
 
-  ; STA EMPTYTILEROWADDRESSES  ; debug
+  STA EMPTYTILEROWADDRESSES  ; debug
 
   ASL A
   TAY

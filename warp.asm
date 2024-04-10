@@ -47,6 +47,8 @@ Village1Village2WarpCheck:
 	BEQ Village1Village2Warp
 	CMP #$07
 	BEQ Village1Village2Warp
+  CMP #$08
+  BEQ Village1Village2Warp
 Village1SkeletonHouseWarpCheck:
   LDA currentXtile
   CMP #$17
@@ -309,5 +311,6 @@ PrepareForBGRender:
   LDA #$01            ; activate background rendering and perform it via main loop (outside of NMI)
   STA bgrender
   STA mainloop
+  LDA #$02
   STA nmiwaitcounter  ; skip nmi subroutines in the first frame after bg is changed
   RTS
