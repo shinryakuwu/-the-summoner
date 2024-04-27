@@ -74,7 +74,7 @@ IncludeEmptyTileRows:
   LDX #$00
 IncludeEmptyTileRowsLoop:
   INX    ; need to start with x = 1
-  TXA    ; transform x into a pointer
+  TXA    ; transform x into a pointer by multiplying it by 2
   ASL A
   TAY
   INY
@@ -84,7 +84,8 @@ CompareEmptyTileCurrTileHighAddr:
   LDA EMPTYTILEROWADDRESSES, y        ; get high byte of empty tiles attr (EMPTYBGTILEATTRIBUTE) address
   CMP currenttilehigh                 ; if high empty tiles attr address < high current tile addr
   BCC IncrementEmptyTileAddress       ; then empty tiles attr address < current tile addr, so we keep the loop going
-  DEY                                 ; at this point high empty tiles attr address => high current tile addr
+  BNE DefinePassabilityOfTile         ; if high empty tiles value address > high current tile addr, jump to DefinePassabilityOfTile
+  DEY                                 ; at this point high empty tiles attr address = high current tile addr
   LDA EMPTYTILEROWADDRESSES, y        ; get low byte of empty tiles attr (EMPTYBGTILEATTRIBUTE) address
   CMP currenttilelow                  ; if low empty tiles attr address >= low current tile addr
   BCS DefinePassabilityOfTile         ; then empty tiles attr address >= current tile addr, jump to DefinePassabilityOfTile
@@ -122,7 +123,8 @@ CompareResultAddrToEmptyTilesAttrAddr:
   LDA EMPTYTILEROWADDRESSES, y   ; get high byte of empty tiles value (EMPTYBGTILEATTRIBUTE+1) address
   CMP currenttilehigh            ; if high empty tiles value address < high current tile addr,
   BCC CompareXtoEmptytilescount  ; then empty tiles value address < current tile addr, so we keep the loop going
-  DEY                            ; at this point high empty tiles value address => high current tile addr
+  BNE TileIsNotPassable          ; high empty tiles value address > high current tile addr, so the tile is not passable
+  DEY                            ; at this point high empty tiles value address = high current tile addr
   LDA EMPTYTILEROWADDRESSES, y   ; get low byte of empty tiles value (EMPTYBGTILEATTRIBUTE+1) address
   CMP currenttilelow             ; if low empty tiles value address >= low current tile addr
   BCS TileIsNotPassable          ; then empty tiles value address >= current tile addr, so the tile is not passable
@@ -136,33 +138,30 @@ DefinePassabilityOfTile:
   LDA [currenttilelow], y
   CMP #EMPTYBGTILEATTRIBUTE
   BEQ TileIsNotPassable
-  CMP #$60           ; check if the tile is within the passable tiles in the tiletable (they currently end by address $60 but will change later)
+  CMP #$60               ; check if the tile is within the passable tiles in the tiletable (they currently end by address $60 but will change later)
   BCC TileIsPassable
 TileIsNotPassable:
-  LDA #$00
-  STA passablecheck2 ; nullify check counter for future use
-  LDA #$00
-  STA passable       ; set passable to false
-  RTS
+  LDY #$00
+  JMP SetPassable
 TileIsPassable:
-  LDA passablecheck2 ; see if the passability check runs for second time
+  LDA passablecheck2     ; see if the passability check runs for second time
   CMP #$01
   BEQ SetPassableToTrue
   LDA direction          ; if direction is above or below, we would also check if bottom right cat tile is on a passable bg tile
   CMP #$02
   BCC CheckSecondCatTile ; if less than 2
 SetPassableToTrue:
+  LDY #$01
+SetPassable:
+  STY passable
   LDA #$00
-  STA passablecheck2 ; nullify check counter for future use
-  LDA #$01
-  STA passable
+  STA passablecheck2     ; nullify check counter for future use
   RTS
 
 CheckSecondCatTile:
   LDA #$01
-  STA passablecheck2 ; mark that the passability check is running for second time
+  STA passablecheck2           ; mark that the passability check is running for second time
   INC currenttilelow
-  LDA currenttilehigh
-  ADC #$00                               ; add 0 and carry from previous add
-  STA currenttilehigh
+  BNE DefinePassabilityOfTile
+  INC currenttilehigh          ; if currenttilelow becomes 0, increment currenttilehigh too
   JMP DefinePassabilityOfTile

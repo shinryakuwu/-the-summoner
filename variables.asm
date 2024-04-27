@@ -1,6 +1,15 @@
 ;; DECLARE SOME VARIABLES HERE
   .rsset $0000  ;;start variables at ram location 0
-  
+catcache         .rs 6
+currentbglow     .rs 1  ; 16-bit variable to point to current background
+currentbghigh    .rs 1
+curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
+curntspriteshigh .rs 1
+location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
+                        ; 4 - server room, 5 - bsod)
+spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
+singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
+attributenumber  .rs 1  ; define single attribute to load
 buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button state in this variable
                         ; A B select start up down left right
 mainloop         .rs 1  ; 0 - don't perform main loop logic, 1 - perform
@@ -10,8 +19,6 @@ nmiwaitcounter   .rs 1  ; defines how many frames nmi should wait
 eventwaitcounter .rs 1  ; defines delays in events
 direction        .rs 1  ; either down(0) up(1) left(2) of right(3)
 direction2       .rs 1  ; used to compare to direction variable
-singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
-attributenumber  .rs 1  ; define single attribute to load
 mvcounter        .rs 1  ; counter for cat movement animation
 animatecounter   .rs 1  ; counter for animating objects on locations
 framenum         .rs 1  ; number of the current animation frame for cat
@@ -25,15 +32,8 @@ cattileshigh     .rs 1
 warpXYlow        .rs 1  ; used to address warp coordinates
 warpXYhigh		   .rs 1
 staticrender     .rs 1  ; either true(1) or false(0)
-location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
-                        ; 4 - server room, 5 - bsod)
-currentbglow     .rs 1  ; 16-bit variable to point to current background
-currentbghigh    .rs 1
-curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
-curntspriteshigh .rs 1
 ramspriteslow    .rs 1  ; load sprites starting from RAM address stored in this variable
 ramspriteshigh   .rs 1
-spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
 currentattrlow   .rs 1  ; 16-bit variable to point to current background attributes
 currentattrhigh  .rs 1
 passable         .rs 1  ; either passable(1) or not(0)
@@ -66,6 +66,7 @@ loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 emptytilescount  .rs 1  ; number of empty tile rows before the current tile (required in passability checker)
 emptytilerowaddr .rs 2  ; 16-bit variable to temporarily store the address of empty tile row 
                         ; (used in StoreEmptyTilesRowAddress and AddEmptyTilesToCurrentTile)
+currentbgparams  .rs 2  ; used for setting params for current location during warp
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -81,3 +82,5 @@ INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
 EMPTYBGTILEATTRIBUTE = $0F
 EMPTYTILEROWADDRESSES = $80
+BGPARAMSADDRESS = $06
+BGPARAMSCOMPARE = $08

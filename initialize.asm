@@ -228,12 +228,12 @@ SetDefaultBackground:
 
   LDA #$02
   STA loadbgcompare+1
-  LDA #$85
+  LDA #$86
   STA loadbgcompare
 
   JSR LoadBackground
 
-  LDA #$DF               ; TODO: add different values for PAL/NTSC
+  LDA #$C0               ; TODO: add different values for PAL/NTSC
   STA clearbgcompare
   JSR ClearRemainingBG   ; the rest of bg is empty
 

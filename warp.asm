@@ -59,28 +59,41 @@ Village1SkeletonHouseWarpCheck:
 Village1ForestWarpCheck:
 	RTS
 
+; Village1CatHouseWarp:
+;   LDA #$01
+;   STA location
+;   ; TODO: refactor setting singleattribute across the file, it might be unnecessary in some places
+;   STA singleattribute
+;   LDA #$00
+;   STA attributenumber
+;   LDA #LOW(catroom)
+;   STA currentbglow
+;   LDA #HIGH(catroom)
+;   STA currentbghigh
+;   LDA #LOW(village1cathousewarp)
+;   STA warpXYlow
+;   LDA #HIGH(village1cathousewarp)
+;   STA warpXYhigh
+;   LDA #LOW(cathousesprites)
+;   STA curntspriteslow
+;   LDA #HIGH(cathousesprites)
+;   STA curntspriteshigh
+;   LDA #$80             ; this number identifies how many sprites need to be loaded
+;   STA spritescompare
+;   JSR SatanEventParams
+;   JSR PrepareForBGRender
+;   RTS
+
 Village1CatHouseWarp:
-  LDA #$01
-  STA location
-  ; TODO: refactor setting singleattribute across the file, it might be unnecessary in some places
-  STA singleattribute
-  LDA #$00
-  STA attributenumber
-  LDA #LOW(catroom)
-  STA currentbglow
-  LDA #HIGH(catroom)
-  STA currentbghigh
+  LDA #LOW(cathouseparams)
+  STA currentbgparams
+  LDA #HIGH(cathouseparams)
+  STA currentbgparams+1
   LDA #LOW(village1cathousewarp)
   STA warpXYlow
   LDA #HIGH(village1cathousewarp)
   STA warpXYhigh
-  LDA #LOW(cathousesprites)
-  STA curntspriteslow
-  LDA #HIGH(cathousesprites)
-  STA curntspriteshigh
-  LDA #$80             ; this number identifies how many sprites need to be loaded
-  ; LDA #$D8
-  STA spritescompare
+  JSR SetWarpBgParams
   JSR SatanEventParams
   JSR PrepareForBGRender
   RTS
@@ -305,6 +318,16 @@ SatanEventParams:
   LDA #$08
   STA action
 SatanEventParamsDone:
+  RTS
+
+SetWarpBgParams:
+  LDY #$00
+SetWarpBgParamsLoop:
+  LDA [currentbgparams], y
+  STA BGPARAMSADDRESS, y
+  INY
+  CPY #BGPARAMSCOMPARE
+  BNE SetWarpBgParamsLoop
   RTS
 
 PrepareForBGRender:
