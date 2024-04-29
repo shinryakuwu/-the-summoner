@@ -20,6 +20,11 @@ LoadBackgroundLoop:
   LDA [currentbglow], y
   STA $2007
   JSR Increment16BitBGPointer
+  ; INY
+  ; CPY #$00
+  ; BNE CompareLoadBgPointer
+  ; INC currentbghigh     ; low byte went 0 to 256, so high byte needs to be changed now
+  ; INX
 CompareLoadBgPointer:
   CPY loadbgcompare
   BCC LoadBackgroundLoop
@@ -52,6 +57,12 @@ LoadEmptyBgTiles:
   INC emptytilescount    ; increment empty tile rows counter
   JSR StoreEmptyTilesRowAddress
   JSR Increment16BitBGPointer
+  ; INY
+  ; CPY #$00
+  ; BNE LoadEmptyBgTilesSkipAddCarry
+  ; INC currentbghigh     ; low byte went 0 to 256, so high byte needs to be changed now
+  ; INX
+; LoadEmptyBgTilesSkipAddCarry:
   LDA [currentbglow], y
   STA emptytilesnumber
   TXA
@@ -221,15 +232,8 @@ SetDefaultSprites:
   STA ramspriteslow       ; from now on load sprites starting from 0218 RAM address (without reloading cat sprites)
 
 SetDefaultBackground:
-  LDA #LOW(village1)
-  STA currentbglow       ; put the low byte of the address of background into pointer
-  LDA #HIGH(village1)
-  STA currentbghigh      ; put the high byte of the address into pointer
-
-  LDA #$02
-  STA loadbgcompare+1
-  LDA #$86
-  STA loadbgcompare
+  JSR SetVillage1Params
+  JSR SetBgParams
 
   JSR LoadBackground
 

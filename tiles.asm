@@ -723,13 +723,36 @@ serverroomattributes:
   .db $00, $00, $00, $00, $00, $00, $00, $00
   .db $00, $00, $00, $00, $00, $00, $00, $00
 
+; TODO: remove attributenumber where not needed
+village1params:
+  ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
+  .db LOW(village1), HIGH(village1), LOW(village1sprites), HIGH(village1sprites)
+  ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+  .db $00, $30, $86, $02, $00
 
 cathouseparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(catroom), HIGH(catroom), LOW(cathousesprites), HIGH(cathousesprites)
-  ; location, spritescompare, singleattribute, attributenumber (optional)
-  .db $01, $80, $01, $00
+  ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+  .db $01, $80, $86, $02, $01, $00
 
+village2params:
+  ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
+  .db LOW(village2), HIGH(village2), LOW(village2sprites), HIGH(village2sprites)
+  ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+  .db $02, $DC, $84, $02, $01, $00
+
+skeletonhouseparams:
+  ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
+  .db LOW(skeletonhouse), HIGH(skeletonhouse), LOW(skeletonhousesprites), HIGH(skeletonhousesprites)
+  ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+  .db $03, $B8, $84, $02, $01, $00
+
+serverroomparams:
+  ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
+  .db LOW(serverroom), HIGH(serverroom), LOW(serverroomsprites), HIGH(serverroomsprites)
+  ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+  .db $04, $70, $84, $02, $01, $00
 
 startghost:
   ; $0D is a bad color. Do not use it

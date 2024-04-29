@@ -8,6 +8,7 @@ curntspriteshigh .rs 1
 location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
                         ; 4 - server room, 5 - bsod)
 spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
+loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
 attributenumber  .rs 1  ; define single attribute to load
 buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button state in this variable
@@ -62,7 +63,6 @@ walkcounter      .rs 1  ; defines for how many frames the cat will move automati
 glitchstate      .rs 1  ; stores the state of satan glitch event
 glitchcount      .rs 1  ; stores counter for satan glitch event
 emptytilesnumber .rs 1  ; number of empty bg tiles in a row
-loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 emptytilescount  .rs 1  ; number of empty tile rows before the current tile (required in passability checker)
 emptytilerowaddr .rs 2  ; 16-bit variable to temporarily store the address of empty tile row 
                         ; (used in StoreEmptyTilesRowAddress and AddEmptyTilesToCurrentTile)
@@ -83,4 +83,4 @@ ENDOFTEXT = $FE
 EMPTYBGTILEATTRIBUTE = $0F
 EMPTYTILEROWADDRESSES = $80
 BGPARAMSADDRESS = $06
-BGPARAMSCOMPARE = $08
+BGPARAMSCOMPARE = $0A

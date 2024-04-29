@@ -55,34 +55,9 @@ Village1SkeletonHouseWarpCheck:
   BNE Village1ForestWarpCheck
   LDA currentYtile
   CMP #$0F
-  BEQ Village1SkeletonHouseWarpJump
+  BEQ Village1SkeletonHouseWarp
 Village1ForestWarpCheck:
 	RTS
-
-; Village1CatHouseWarp:
-;   LDA #$01
-;   STA location
-;   ; TODO: refactor setting singleattribute across the file, it might be unnecessary in some places
-;   STA singleattribute
-;   LDA #$00
-;   STA attributenumber
-;   LDA #LOW(catroom)
-;   STA currentbglow
-;   LDA #HIGH(catroom)
-;   STA currentbghigh
-;   LDA #LOW(village1cathousewarp)
-;   STA warpXYlow
-;   LDA #HIGH(village1cathousewarp)
-;   STA warpXYhigh
-;   LDA #LOW(cathousesprites)
-;   STA curntspriteslow
-;   LDA #HIGH(cathousesprites)
-;   STA curntspriteshigh
-;   LDA #$80             ; this number identifies how many sprites need to be loaded
-;   STA spritescompare
-;   JSR SatanEventParams
-;   JSR PrepareForBGRender
-;   RTS
 
 Village1CatHouseWarp:
   LDA #LOW(cathouseparams)
@@ -93,55 +68,28 @@ Village1CatHouseWarp:
   STA warpXYlow
   LDA #HIGH(village1cathousewarp)
   STA warpXYhigh
-  JSR SetWarpBgParams
   JSR SatanEventParams
   JSR PrepareForBGRender
   RTS
 
-Village1SkeletonHouseWarpJump:
-  JMP Village1SkeletonHouseWarp ; was out of range
-
 Village1Village2Warp:
-  LDA #$02
-  STA location
-  LDA #$01
-  STA singleattribute
-  LDA #LOW(village2)
-  STA currentbglow
-  LDA #HIGH(village2)
-  STA currentbghigh
+  JSR SetVillage2Params
   LDA #LOW(village1village2warp)
   STA warpXYlow
   LDA #HIGH(village1village2warp)
   STA warpXYhigh
-  LDA #LOW(village2sprites)
-  STA curntspriteslow
-  LDA #HIGH(village2sprites)
-  STA curntspriteshigh
-  LDA #$DC
-  STA spritescompare
   JSR PrepareForBGRender
   RTS
 
 Village1SkeletonHouseWarp:
-  LDA #$03
-  STA location
-  LDA #$01
-  STA singleattribute
-  LDA #LOW(skeletonhouse)
-  STA currentbglow
-  LDA #HIGH(skeletonhouse)
-  STA currentbghigh
+  LDA #LOW(skeletonhouseparams)
+  STA currentbgparams
+  LDA #HIGH(skeletonhouseparams)
+  STA currentbgparams+1
   LDA #LOW(village1skeletonhousewarp)
   STA warpXYlow
   LDA #HIGH(village1skeletonhousewarp)
   STA warpXYhigh
-  LDA #LOW(skeletonhousesprites)
-  STA curntspriteslow
-  LDA #HIGH(skeletonhousesprites)
-  STA curntspriteshigh
-  LDA #$B8
-  STA spritescompare
   JSR PrepareForBGRender
   RTS
 
@@ -158,23 +106,11 @@ CatHouseVillage1WarpCheckDone:
 	RTS
 
 CatHouseVillage1Warp:
-	LDA #$00
-  STA location
-  STA singleattribute
-  LDA #LOW(village1)
-  STA currentbglow
-  LDA #HIGH(village1)
-  STA currentbghigh
+  JSR SetVillage1Params
   LDA #LOW(cathousevillage1warp)
   STA warpXYlow
   LDA #HIGH(cathousevillage1warp)
   STA warpXYhigh
-  LDA #LOW(village1sprites)
-  STA curntspriteslow
-  LDA #HIGH(village1sprites)
-  STA curntspriteshigh
-  LDA #$30
-  STA spritescompare
   JSR PrepareForBGRender
   RTS
 
@@ -197,43 +133,23 @@ Village2ExHouseWarpCheck:
 	RTS
 
 Village2Village1Warp:
-	LDA #$00
-  STA location
-  STA singleattribute
-  LDA #LOW(village1)
-  STA currentbglow
-  LDA #HIGH(village1)
-  STA currentbghigh
+  JSR SetVillage1Params
   LDA #LOW(village2village1warp)
   STA warpXYlow
   LDA #HIGH(village2village1warp)
   STA warpXYhigh
-  LDA #LOW(village1sprites)
-  STA curntspriteslow
-  LDA #HIGH(village1sprites)
-  STA curntspriteshigh
-  LDA #$30
-  STA spritescompare
   JSR PrepareForBGRender
   RTS
 
 Village2ServerRoomWarp:
-  LDA #$04
-  STA location
-  LDA #LOW(serverroom)
-  STA currentbglow
-  LDA #HIGH(serverroom)
-  STA currentbghigh
+  LDA #LOW(serverroomparams)
+  STA currentbgparams
+  LDA #HIGH(serverroomparams)
+  STA currentbgparams+1
   LDA #LOW(village2serverroomwarp)
   STA warpXYlow
   LDA #HIGH(village2serverroomwarp)
   STA warpXYhigh
-  LDA #LOW(serverroomsprites)
-  STA curntspriteslow
-  LDA #HIGH(serverroomsprites)
-  STA curntspriteshigh
-  LDA #$70
-  STA spritescompare
   JSR PrepareForBGRender
   RTS
 
@@ -250,23 +166,11 @@ SkeletonHouseVillage1WarpCheckDone:
   RTS
 
 SkeletonHouseVillage1Warp:
-  LDA #$00
-  STA location
-  STA singleattribute
-  LDA #LOW(village1)
-  STA currentbglow
-  LDA #HIGH(village1)
-  STA currentbghigh
+  JSR SetVillage1Params
   LDA #LOW(skeletonhousevillage1warp)
   STA warpXYlow
   LDA #HIGH(skeletonhousevillage1warp)
   STA warpXYhigh
-  LDA #LOW(village1sprites)
-  STA curntspriteslow
-  LDA #HIGH(village1sprites)
-  STA curntspriteshigh
-  LDA #$30
-  STA spritescompare
   JSR PrepareForBGRender
   RTS
 
@@ -283,25 +187,26 @@ ServerRoomVillage2WarpCheckDone:
   RTS
 
 ServerRoomVillage2Warp:
-  LDA #$02
-  STA location
-  LDA #$01
-  STA singleattribute
-  LDA #LOW(village2)
-  STA currentbglow
-  LDA #HIGH(village2)
-  STA currentbghigh
+  JSR SetVillage2Params
   LDA #LOW(serverroomvillage2warp)
   STA warpXYlow
   LDA #HIGH(serverroomvillage2warp)
   STA warpXYhigh
-  LDA #LOW(village2sprites)
-  STA curntspriteslow
-  LDA #HIGH(village2sprites)
-  STA curntspriteshigh
-  LDA #$DC
-  STA spritescompare
   JSR PrepareForBGRender
+  RTS
+
+SetVillage1Params:
+  LDA #LOW(village1params)
+  STA currentbgparams
+  LDA #HIGH(village1params)
+  STA currentbgparams+1
+  RTS
+
+SetVillage2Params:
+  LDA #LOW(village2params)
+  STA currentbgparams
+  LDA #HIGH(village2params)
+  STA currentbgparams+1
   RTS
 
 SatanEventParams:
@@ -320,20 +225,19 @@ SatanEventParams:
 SatanEventParamsDone:
   RTS
 
-SetWarpBgParams:
-  LDY #$00
-SetWarpBgParamsLoop:
-  LDA [currentbgparams], y
-  STA BGPARAMSADDRESS, y
-  INY
-  CPY #BGPARAMSCOMPARE
-  BNE SetWarpBgParamsLoop
-  RTS
 
 PrepareForBGRender:
   LDA #$01            ; activate background rendering and perform it via main loop (outside of NMI)
   STA bgrender
   STA mainloop
   LDA #$02
-  STA nmiwaitcounter  ; skip nmi subroutines in the first frame after bg is changed
+  STA nmiwaitcounter  ; skip nmi subroutines in the first n frames after bg is changed
+SetBgParams:
+  LDY #$00
+SetBgParamsLoop:
+  LDA [currentbgparams], y
+  STA BGPARAMSADDRESS, y
+  INY
+  CPY #BGPARAMSCOMPARE
+  BNE SetBgParamsLoop
   RTS
