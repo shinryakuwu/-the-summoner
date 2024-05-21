@@ -319,6 +319,38 @@ serverroomsprites:
   .db $34, $4A, $01, $54
   .db $24, $4A, $01, $64
 
+ghostroom1sprites:
+  ; table
+  .db $5C, $77, $00, $73
+  .db $5C, $77, $40, $7B
+  .db $5C, $87, $00, $82
+  .db $67, $2E, $00, $7B
+  .db $67, $2E, $40, $80
+  .db $61, $78, $00, $74
+  .db $61, $78, $00, $7C
+  .db $61, $78, $00, $83
+  .db $64, $79, $00, $75
+  .db $64, $79, $00, $7D
+  .db $64, $79, $00, $82
+  .db $6C, $88, $00, $75
+  .db $6C, $88, $00, $77
+  .db $6C, $88, $00, $79
+  .db $6C, $88, $00, $88
+
+  ; ghost
+  .db $50, $4B, $02, $78
+  .db $50, $4B, $42, $80
+  .db $4D, $76, $00, $78
+  .db $4D, $76, $40, $80
+  .db $55, $86, $00, $78
+  .db $55, $86, $40, $80
+
+  ; plant
+  .db $3B, $59, $00, $A0
+  .db $43, $69, $00, $A0
+
+  ; picture
+  .db $30, $89, $00, $60
 
 front:
       ;tiles                        ;attributes                   ;animation
@@ -358,13 +390,11 @@ village2serverroomwarp:
 serverroomvillage2warp:
   .db $68, $68, $70, $70, $78, $78, $2C, $34, $2C, $34, $2C, $34
 
+village2ghostroom1warp:
+  .db $75, $75, $7D, $7D, $85, $85, $78, $80, $78, $80, $78, $80
 
 village1:
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 1
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-
-  .db $FF,$FF,$00,$01,$00,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 2
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F, $23, $01, $0F, $1C ;;row 1-2
 
   .db $00,$00,$00,$01,$00,$00,$00,$03,$00,$00,$00,$AB,$B4,$A4,$00,$00  ;;row 3
   .db $00,$C0,$C1,$C2,$00,$00,$02,$00,$00,$00,$00,$00,$00,$00,$00,$00
@@ -426,16 +456,10 @@ village1:
   .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 22
   .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$E0,$F0,$E2
 
-  ; uncomment it if decide to use a separation line
-  ; .db $97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97  ;;row 23
-  ; .db $97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97
+  .db $0F, $20  ;;row 23
 
 village2:
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 1
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 2
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F, $40 ;;row 1-2
 
   .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$02,$00,$00,$FF,$FF,$00,$00  ;;row 3
   .db $02,$00,$C0,$C1,$C2,$00,$A0,$A2,$A3,$B8,$B9,$A1,$A1,$BA,$00,$00
@@ -477,16 +501,16 @@ village2:
   .db $00,$00,$8A,$A3,$C4,$B8,$8B,$F2,$F2,$00,$00,$F2,$F2,$F2,$F3,$00
 
   .db $00,$00,$00,$00,$00,$00,$00,$00,$02,$00,$00,$00,$FF,$FF,$00,$03  ;;row 16
-  .db $00,$00,$00,$B3,$00,$BB,$00,$F3,$00,$00,$00,$00,$FF,$FF,$F3,$00
+  .db $00,$00,$6D,$B3,$8C,$BB,$6E,$F3,$00,$00,$00,$00,$FF,$FF,$F3,$00
 
   .db $00,$00,$C0,$C1,$C2,$00,$00,$00,$00,$00,$02,$00,$FF,$FF,$00,$00  ;;row 17
-  .db $00,$F2,$F2,$99,$00,$9C,$F2,$F3,$8C,$00,$00,$00,$FF,$FF,$F3,$00
+  .db $00,$F2,$F2,$69,$68,$6A,$F2,$F3,$8C,$00,$00,$00,$FF,$FF,$F3,$00
 
   .db $00,$00,$D0,$D1,$D2,$00,$00,$C0,$C1,$C2,$00,$00,$FF,$FF,$00,$00  ;;row 18
-  .db $00,$F3,$00,$99,$00,$9C,$FF,$00,$00,$00,$00,$00,$00,$00,$F3,$00
+  .db $00,$F3,$00,$6B,$78,$6C,$FF,$00,$00,$00,$00,$00,$00,$00,$F3,$00
 
   .db $00,$00,$E0,$E1,$E2,$00,$00,$D0,$D1,$D2,$00,$00,$FF,$FF,$00,$00  ;;row 19
-  .db $00,$F3,$00,$04,$04,$04,$00,$02,$00,$00,$8C,$00,$00,$00,$F3,$00
+  .db $00,$F3,$00,$07,$07,$07,$00,$02,$00,$00,$8C,$00,$00,$00,$F3,$00
 
   .db $00,$02,$FF,$F1,$FF,$00,$00,$E0,$F0,$E2,$00,$00,$FF,$FF,$00,$02  ;;row 20
   .db $00,$F3,$00,$00,$00,$02,$00,$00,$00,$00,$00,$00,$00,$00,$F3,$00
@@ -497,213 +521,143 @@ village2:
   .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$FF,$FF,$00,$00  ;;row 22
   .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
+  .db $0F, $20  ;;row 23
+
 catroom:
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 1
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$49,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B          ;;row 1-3
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 2
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$11,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9A  ;;row 3-4
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9B,$9B,$9B,$9B,$9B,$9B,$9B  ;;row 3
-  .db $9B,$9B,$9B,$9B,$9B,$9B,$9B,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$CB,$9D,$9D,$9D,$9D,$9A  ;;row 4-5
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D  ;;row 4
-  .db $9D,$9D,$9D,$9D,$9D,$9D,$9D,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$DB,$9D,$9D,$61,$62,$9A  ;;row 5-6
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D  ;;row 5
-  .db $9D,$9D,$CB,$9D,$9D,$9D,$9D,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$70,$71,$72,$9A  ;;row 6-7
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D  ;;row 6
-  .db $9D,$9D,$DB,$9D,$9D,$61,$62,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$80,$81,$82,$9A  ;;row 7-8
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D  ;;row 7
-  .db $9D,$9D,$9D,$9D,$70,$71,$72,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$00,$09,$0A,$0B,$0C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 8-9
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$04,$04,$04,$04,$04,$04,$04  ;;row 8
-  .db $04,$04,$04,$04,$80,$81,$82,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 9-10
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$09,$0A,$0B,$0C,$00,$00  ;;row 9
-  .db $00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$00,$00,$00,$00,$84,$00,$00,$00,$00,$63,$00,$00,$00,$00,$9A  ;;row 10-11
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00  ;;row 10
-  .db $00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$00,$00,$60,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 11-12
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$84,$00,$00  ;;row 11
-  .db $00,$00,$63,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 12-13
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$60,$00,$00,$00,$00  ;;row 12
-  .db $00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 13-14
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00  ;;row 13
-  .db $00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$00,$00,$00,$83,$00,$00,$00,$00,$00,$00,$73,$00,$00,$00,$9A  ;;row 14-15
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00  ;;row 14
-  .db $00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 15-16
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$83,$00,$00,$00  ;;row 15
-  .db $00,$00,$00,$73,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$60,$00,$00,$9A  ;;row 16-17
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00  ;;row 16
-  .db $00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 17-18
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00  ;;row 17
-  .db $00,$00,$00,$00,$60,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$10,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 18-19
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00  ;;row 18
-  .db $00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00  ;;row 19
-  .db $00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$97,$97,$97,$97,$97,$97,$FF  ;;row 20
-  .db $FF,$97,$97,$97,$97,$97,$97,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 21
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 22
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$11,$97,$97,$97,$97,$97,$97,$FF,$FF,$97,$97,$97,$97,$97,$97,$0F,$49  ;;row 19-22
 
 skeletonhouse:
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 1
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$48,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B          ;;row 1-3
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 2
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0F,$9C,$0F,$06,$EF,$0F,$06,$EF,$FF,$FF,$9A                                  ;;row 3-4
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B  ;;row 3
-  .db $9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$0F,$04,$ED,$EE,$0F,$05,$EF,$FF,$FF,$EF,$FF,$9A                      ;;row 4-5
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$EF,$FF  ;;row 4
-  .db $FF,$FF,$FF,$FF,$FF,$EF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$0F,$08,$EF,$0F,$07,$9A                                              ;;row 5-6
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$ED,$EE,$FF,$FF  ;;row 5
-  .db $FF,$FF,$FF,$EF,$FF,$FF,$EF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$0D,$FF,$FF,$0D,$0D,$0D,$0D,$0D,$0D,$0D,$0D,$0D,$0D,$0D,$0D,$97,$9A  ;;row 6-7
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 6
-  .db $EF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$00,$00,$00,$00,$88,$FF,$88,$FF,$88,$FF,$88,$00,$00,$FF,$FF,$9A  ;;row 7-8
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$0D,$FF,$FF,$0D,$0D,$0D,$0D,$0D  ;;row 7
-  .db $0D,$0D,$0D,$0D,$0D,$0D,$0D,$97,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$00,$00,$00,$88,$FF,$88,$FF,$88,$FF,$88,$FF,$00,$00,$00,$00,$9A  ;;row 8-9
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$88,$FF,$88  ;;row 8
-  .db $FF,$88,$FF,$88,$00,$00,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$00,$00,$00,$FF,$88,$FF,$88,$FF,$88,$FF,$88,$00,$00,$00,$00,$9A  ;;row 9-10
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$88,$FF,$88,$FF  ;;row 9
-  .db $88,$FF,$88,$FF,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$0F,$04,$88,$FF,$88,$FF,$88,$FF,$88,$FF,$00,$00,$00,$00,$9A          ;;row 10-11
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$FF,$88,$FF,$88  ;;row 10
-  .db $FF,$88,$FF,$88,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$7F,$7F,$7F,$7F,$FF,$88,$FF,$88,$FF,$88,$FF,$88,$00,$00,$00,$00,$9A  ;;row 11-12
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$88,$FF,$88,$FF  ;;row 11
-  .db $88,$FF,$88,$FF,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 12-13
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$7F,$7F,$7F,$7F,$FF,$88,$FF,$88  ;;row 12
-  .db $FF,$88,$FF,$88,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$0F,$03,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$0F,$03,$9A          ;;row 13-14
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 13
-  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$0F,$03,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$0F,$03,$9A          ;;row 14-15
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$00,$00,$00,$00,$00  ;;row 14
-  .db $00,$00,$00,$00,$00,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$0F,$03,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A      ;;row 15-16
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$00,$00,$00,$00,$00  ;;row 15
-  .db $00,$00,$00,$00,$00,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$0F,$03,$00,$00,$00,$00,$FF,$FF,$9C,$97,$97,$97,$97,$97,$97          ;;row 16-17
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$00,$00,$00,$00,$00  ;;row 16
-  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0F,$9C,$00,$00,$00,$00,$00,$00,$00,$FF,$FF,$9C                              ;;row 17-18
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$00,$00,$00,$00,$FF  ;;row 17
-  .db $FF,$9C,$97,$97,$97,$97,$97,$97,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$15,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9C                              ;;row 18-19
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$FF  ;;row 18
-  .db $FF,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 19
-  .db $00,$9C,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$97,$97,$97,$97,$FF,$FF,$97,$97  ;;row 20
-  .db $97,$97,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 21
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 22
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$16,$97,$97,$97,$97,$FF,$FF,$97,$97,$97,$97,$0F,$4E                          ;;row 20-22
 
 serverroom:
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 1
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$68,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B          ;;row 1-4
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 2
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0F,$9C,$0F,$04,$7D,$7E,$7D,$7E,$7D,$7E,$0F,$06,$9A                          ;;row 4-5
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 3
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$7D,$7E,$7B,$7C,$7D,$7E,$7B,$7C,$79,$7A,$0F,$06,$9A                  ;;row 5-6
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B  ;;row 4
-  .db $9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$79,$7A,$7D,$7E,$7B,$7C,$7D,$7E,$7B,$7C,$0F,$06,$9A                  ;;row 6-7
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$FF,$FF,$FF,$FF,$7D,$7E,$7D,$7E  ;;row 5
-  .db $7D,$7E,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$7D,$7E,$7D,$7E,$79,$7A,$7D,$7E,$7D,$7E,$0F,$06,$9A                  ;;row 7-8
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$7D,$7E,$7B,$7C,$7D,$7E,$7B,$7C  ;;row 6
-  .db $79,$7A,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$7B,$7C,$79,$7A,$7D,$7E,$7B,$7C,$7D,$7E,$97,$97,$97,$97,$97,$97,$9A  ;;row 8-9
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$79,$7A,$7D,$7E,$7B,$7C,$7D,$7E  ;;row 7
-  .db $7B,$7C,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$07,$07,$07,$07,$07,$07,$07,$07,$07,$07,$FF,$FF,$00,$00,$00,$00,$9A  ;;row 9-10
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$7D,$7E,$7D,$7E,$79,$7A,$7D,$7E  ;;row 8
-  .db $7D,$7E,$FF,$FF,$FF,$FF,$FF,$FF,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$0F,$03,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A      ;;row 10-11
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$7B,$7C,$79,$7A,$7D,$7E,$7B,$7C  ;;row 9
-  .db $7D,$7E,$97,$97,$97,$97,$97,$97,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$0F,$03,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A      ;;row 11-12
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$07,$07,$07,$07,$07,$07,$07,$07  ;;row 10
-  .db $07,$07,$FF,$FF,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$0F,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$63,$00,$9A          ;;row 12-13
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$FF,$FF,$FF,$00,$00,$00,$00  ;;row 11
-  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$00,$00,$00,$00,$00,$63,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 13-14
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$FF,$FF,$FF,$00,$00,$00,$00  ;;row 12
-  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$63,$00,$00,$00,$9A  ;;row 14-15
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$FF,$FF,$FF,$FF,$00,$00,$00  ;;row 13
-  .db $00,$00,$00,$00,$00,$00,$63,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$00,$00,$63,$00,$00,$00,$00,$00,$00,$00,$00,$00,$63,$00,$00,$9A  ;;row 15-16
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$63,$00  ;;row 14
-  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 16-17
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 15
-  .db $00,$00,$00,$00,$63,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0E,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 17-18
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$63,$00,$00,$00,$00  ;;row 16
-  .db $00,$00,$00,$00,$00,$63,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0F,$97,$97,$97,$97,$97,$97,$97,$FF,$FF,$97,$97,$97,$97,$97,$97,$97,$0F,$1E  ;;row 18-22
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 17
-  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$9C,$00,$00,$00,$00,$00,$00,$00,$00  ;;row 18
-  .db $00,$00,$00,$00,$00,$00,$00,$00,$9A,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+ghostroom:
+  .db $0F,$6A,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B          ;;row 1-4
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$97,$97,$97,$97,$97,$97,$97,$FF  ;;row 19
-  .db $FF,$97,$97,$97,$97,$97,$97,$97,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$13,$9C,$0F,$0C,$9A,$0F,$12,$9C,$0F,$0C,$9A,$0F,$12,$9C      ;;row 4-7
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 20
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$0C,$9A,$0F,$12,$9C,$0F,$0C,$9A,$0F,$12,$9C,$0F,$0C,$9A      ;;row 7-9
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 21
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$12,$9C,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$FF,$04,$9A  ;;row 9-10
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 22
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 10-11
 
-  ;; TODO: remove later
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 23
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 11-12
 
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 24
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 12-13
+
+  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 13-14
+
+  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 14-15
+
+  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 15-16
+
+  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 16-17
+
+  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 17-18
+
+  .db $0F,$13,$97,$97,$97,$97,$97,$FF,$FF,$97,$97,$97,$97,$97,$0F,$8A  ;;row 18-23
+
 
 village1attributes:
   .db $88, $00, $00, $00, $00, $00, $00, $00
@@ -724,6 +678,44 @@ serverroomattributes:
   .db $00, $00, $00, $00, $00, $00, $00, $00
   .db $00, $00, $00, $00, $00, $00, $00, $00
   .db $00, $00, $00, $00, $00, $00, $00, $00
+
+; TODO: remove attributenumber where not needed
+
+village1params:
+  ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
+  .db LOW(village1), HIGH(village1), LOW(village1sprites), HIGH(village1sprites)
+  ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+  .db $00, $30, $86, $02, $00
+
+cathouseparams:
+  ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
+  .db LOW(catroom), HIGH(catroom), LOW(cathousesprites), HIGH(cathousesprites)
+  ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+  .db $01, $80, $42, $01, $01, $00
+
+village2params:
+  ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
+  .db LOW(village2), HIGH(village2), LOW(village2sprites), HIGH(village2sprites)
+  ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+  .db $02, $DC, $84, $02, $01, $00
+
+skeletonhouseparams:
+  ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
+  .db LOW(skeletonhouse), HIGH(skeletonhouse), LOW(skeletonhousesprites), HIGH(skeletonhousesprites)
+  ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+  .db $03, $B8, $30, $01, $01, $00
+
+serverroomparams:
+  ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
+  .db LOW(serverroom), HIGH(serverroom), LOW(serverroomsprites), HIGH(serverroomsprites)
+  ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+  .db $04, $70, $2A, $01, $01, $00
+
+ghostroom1params:
+  ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
+  .db LOW(ghostroom), HIGH(ghostroom), LOW(ghostroom1sprites), HIGH(ghostroom1sprites)
+  ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+  .db $06, $60, $CC, $00, $01, $00
 
 startghost:
   ; $0D is a bad color. Do not use it
@@ -788,6 +780,47 @@ corporations:
   .db $85,$36,$3E,$43,$FF,$48,$3E,$44,$41,$42,$34,$3B,$35,$FF,$38,$3D,$43,$3E,$FF,$43,$41,$3E,$44,$31,$3B,$34,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$30,$36,$30,$38,$3D,$59,$FE
   ; i'm out of anxiety pills
   .db $65,$38,$53,$3C,$FF,$3E,$44,$43,$FF,$3E,$35,$FF,$30,$3D,$47,$38,$34,$43,$48,$FF,$3F,$38,$3B,$3B,$42,$FE
+
+office_ghost:
+  ; name your objective
+  .db $86,$3D,$30,$3C,$34,$FF,$48,$3E,$44,$41,$FF,$3E,$31,$39,$34,$32,$43,$38,$45,$34,$FE
+  ; a ghost pass
+  .db $85,$30,$FF,$36,$37,$3E,$42,$43,$FF,$3F,$30,$42,$42,$FE
+  ; isn't it a bit too early? you have neither split nor decomposed
+  .db $86,$38,$42,$3D,$53,$43,$FF,$38,$43,$FF,$30,$FF,$31,$38,$43,$FF,$43,$3E,$3E,$FF,$34,$30,$41,$3B,$48,$59,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$48,$3E,$44,$FF,$37,$30,$45,$34,$FF,$3D,$34,$38,$43,$37,$34,$41,$FF,$42,$3F,$3B,$38,$43,$FF,$3D,$3E,$41,$FF,$FF,$FF,$FF,$FF,$FF,$33,$34,$32,$3E,$3C,$3F,$3E,$42,$34,$33,$FE
+  ; you bet
+  .db $85,$48,$3E,$44,$FF,$31,$34,$43,$FE
+  ; can you contribute to our association? (community/organization?) (do you conform?)
+  ; do you have any practical skills to contribute to our association?
+  .db $86,$33,$3E,$FF,$48,$3E,$44,$FF,$37,$30,$45,$34,$FF,$30,$3D,$48,$FF,$3F,$41,$30,$32,$43,$38,$32,$30,$3B,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$42,$3A,$38,$3B,$3B,$42,$FF,$43,$3E,$FF,$32,$3E,$3D,$43,$41,$38,$31,$44,$43,$34,$FF,$43,$3E,$FF,$3E,$44,$41,$FF,$FF,$FF,$FF,$FF,$30,$42,$42,$3E,$32,$38,$30,$43,$38,$3E,$3D,$59,$FE
+  ; well yes, check out my github account. the username is *whisper whisper*
+  .db $85,$46,$34,$3B,$3B,$FF,$48,$34,$42,$55,$FF,$32,$37,$34,$32,$3A,$FF,$3E,$44,$43,$FF,$3C,$48,$FF,$36,$38,$43,$37,$44,$31,$FF,$FF,$FF,$30,$32,$32,$3E,$44,$3D,$43,$54,$FF,$43,$37,$34,$FF,$44,$42,$34,$41,$3D,$30,$3C,$34,$FF,$38,$42,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$58,$46,$37,$38,$42,$3F,$34,$41,$FF,$46,$37,$38,$42,$3F,$34,$41,$58,$FE
+  ; one moment, sir
+  .db $86,$3E,$3D,$34,$FF,$3C,$3E,$3C,$34,$3D,$43,$55,$FF,$42,$38,$41,$FE
+  ; ...
+  .db $86,$54,$54,$54,$FE
+  ; so you know assembly. wow
+  .db $86,$42,$3E,$FF,$48,$3E,$44,$FF,$3A,$3D,$3E,$46,$FF,$30,$42,$42,$34,$3C,$31,$3B,$48,$54,$FF,$46,$3E,$46,$FE
+  ; the king of control
+  .db $86,$43,$37,$34,$FF,$3A,$38,$3D,$36,$FF,$3E,$35,$FF,$32,$3E,$3D,$43,$41,$3E,$3B,$FE
+  ; bow low to the master
+  .db $86,$31,$3E,$46,$FF,$3B,$3E,$46,$FF,$43,$3E,$FF,$43,$37,$34,$FF,$3C,$30,$42,$43,$34,$41,$FE
+  ; i believe now
+  .db $86,$38,$FF,$31,$34,$3B,$38,$34,$45,$34,$FF,$3D,$3E,$46,$FE
+  ; so this is yes
+  .db $85,$42,$3E,$FF,$43,$37,$38,$42,$FF,$38,$42,$FF,$48,$34,$42,$FE
+  ; fortunately, we considered starting a rehabilitation program exactly for creatures like you
+  .db $86,$35,$3E,$41,$43,$44,$3D,$30,$43,$34,$3B,$48,$55,$FF,$46,$34,$FF,$32,$3E,$3D,$42,$38,$33,$34,$41,$34,$33,$FF,$FF,$FF,$FF,$FF,$FF,$42,$43,$30,$41,$43,$38,$3D,$36,$FF,$30,$FF,$41,$34,$37,$30,$31,$38,$3B,$38,$43,$30,$43,$38,$3E,$3D,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$3F,$41,$3E,$36,$41,$30,$3C,$FF,$34,$47,$30,$32,$43,$3B,$48,$FF,$35,$3E,$41,$FF,$32,$41,$34,$30,$43,$44,$41,$34,$42,$FF,$FF,$FF,$3B,$38,$3A,$34,$FF,$48,$3E,$44,$FE
+  ; you can get a limited access
+  .db $86,$48,$3E,$44,$FF,$32,$30,$3D,$FF,$36,$34,$43,$FF,$30,$FF,$3B,$38,$3C,$38,$43,$34,$33,$FF,$30,$32,$32,$34,$42,$42,$FE
+  ; limited ghost pass acquired
+  .db $FF,$3B,$38,$3C,$38,$43,$34,$33,$FF,$36,$37,$3E,$42,$43,$FF,$3F,$30,$42,$42,$FF,$30,$32,$40,$44,$38,$41,$34,$33,$FE
+  ; you are free to go
+  .db $86,$48,$3E,$44,$FF,$30,$41,$34,$FF,$35,$41,$34,$34,$FF,$43,$3E,$FF,$36,$3E,$FE
+
+nightmare:
+  ; this hits like a nightmare
+  .db $85,$43,$37,$38,$42,$FF,$37,$38,$43,$42,$FF,$3B,$38,$3A,$34,$FF,$30,$FF,$3D,$38,$36,$37,$43,$3C,$30,$41,$34,$FE
 
 satan_talk:
   ; Hello

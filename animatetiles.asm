@@ -31,6 +31,8 @@ AnimateTiles:
  	BEQ AnimateSkeletonHouse
  	CMP #$04
  	BEQ AnimateServerRoom
+ 	CMP #$06
+ 	BEQ AnimateGhostRoom1
  	RTS
 
 AnimateVillage1:
@@ -47,6 +49,9 @@ AnimateSkeletonHouse:
 	RTS
 AnimateServerRoom:
 	JSR AnimateServerRoomSubroutine
+	RTS
+AnimateGhostRoom1:
+	JSR AnimateGhostRoom1Subroutine
 	RTS
 
 AnimateVillage1Subroutine:
@@ -263,5 +268,24 @@ AnimateDiodes:
 	LDX #$81
 	LDA #$89
 	STA trnsfrmcompare
+	JSR ObjectTransformLoop
+	RTS
+
+AnimateGhostRoom1Subroutine:
+	LDA objectframenum
+	BEQ MoveOfficeGhostDown
+MoveOfficeGhostUp:
+	LDA #$00
+	STA objectframenum
+	STA trnsfrm       ; decrement via transform loop
+ 	JMP MoveOfficeGhost
+MoveOfficeGhostDown:
+	LDA #$01
+	STA objectframenum
+	STA trnsfrm       ; increment via transform loop
+MoveOfficeGhost:
+	LDA #$6C          ; compare pointer to $6C via transform loop
+	STA trnsfrmcompare
+	LDX #$54          ; ghost tiles are stored at address 0200 + this number
 	JSR ObjectTransformLoop
 	RTS

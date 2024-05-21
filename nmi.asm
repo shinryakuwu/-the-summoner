@@ -29,5 +29,5 @@ EndOfNMI:
   LDA #$00         ; tell the ppu there is no background scrolling
   STA $2005
   STA $2005
-  
   RTI             ; return from interrupt
+

@@ -12,8 +12,10 @@ ExitMainLoopSubroutines:
   JMP Forever
 
 ChangeLocation:
+  ; CRITICAL!
+  ; TODO: Divide into smaller parts
   JSR DisableNMIRendering
-  JSR PerformBgRender
+  JSR LoadBackground
   JSR LoadAttribute
   JSR ChangeCatCoordinates
   JSR LoadSprites
@@ -28,21 +30,9 @@ ReloadLocation:
   JSR LoadPalettes
   JMP ExitMainLoopSubroutines
 
-PerformBgRender:
-  LDA currentbghigh
-  PHA
-  JSR LoadBackground
-  PLA
-  STA currentbghigh
-  RTS
-
 ClearBG:
   JSR DisableNMIRendering
-  LDA $2002             ; read PPU status to reset the high/low latch
-  LDA #$20
-  STA $2006             ; write the high byte of $2000 address
-  LDA #$00
-  STA $2006             ; write the low byte of $2000 address
+  JSR InitializeLoadBackground
   LDX #$00
 ClearBgLoop:
   LDA #$FF
