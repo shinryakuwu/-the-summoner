@@ -52,11 +52,9 @@ AddXpointerToCurrentBg:
   LDA currentXtile
   ADC currenttilelow
   STA currenttilelow
-  STA $91 ; debug
   LDA currenttilehigh
   ADC #$00              ; add 0 and carry from previous add
   STA currenttilehigh
-  STA $90 ; debug
 
   LDA emptytilescount
   BEQ DefinePassabilityOfTile

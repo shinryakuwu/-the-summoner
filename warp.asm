@@ -123,14 +123,23 @@ Village2Village1WarpCheck:
 Village2ServerRoomWarpCheck:
   LDA currentYtile
   CMP #$0D
-  BNE Village2ExHouseWarpCheck
+  BNE Village2GhostRoom1WarpCheck
   LDA currentXtile
   CMP #$05
   BEQ Village2ServerRoomWarp
   CMP #$06
   BEQ Village2ServerRoomWarp
+Village2GhostRoom1WarpCheck:
+  LDA currentYtile
+  CMP #$11
+  BNE Village2ExHouseWarpCheck
+  LDA currentXtile
+  CMP #$13
+  BEQ Village2GhostRoom1Warp
+  CMP #$14
+  BEQ Village2GhostRoom1Warp
 Village2ExHouseWarpCheck:
-	RTS
+  RTS
 
 Village2Village1Warp:
   JSR SetVillage1Params
@@ -150,6 +159,26 @@ Village2ServerRoomWarp:
   STA warpXYlow
   LDA #HIGH(village2serverroomwarp)
   STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
+Village2GhostRoom1Warp:
+  LDA #LOW(ghostroom1params)
+  STA currentbgparams
+  LDA #HIGH(ghostroom1params)
+  STA currentbgparams+1
+  LDA #LOW(village2ghostroom1warp)
+  STA warpXYlow
+  LDA #HIGH(village2ghostroom1warp)
+  STA warpXYhigh
+  LDA #LOW(office_ghost)
+  STA currenttextlow
+  LDA #HIGH(office_ghost)
+  STA currenttexthigh
+  LDA #$10
+  STA textpartscounter
+  LDA #$04
+  STA action
   JSR PrepareForBGRender
   RTS
 

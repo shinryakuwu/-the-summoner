@@ -6,13 +6,15 @@ currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
 curntspriteshigh .rs 1
 location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
-                        ; 4 - server room, 5 - bsod)
+                        ; 4 - server room, 5 - bsod, 6 - ghost room)
 spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
 loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
 attributenumber  .rs 1  ; define single attribute to load
 buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button state in this variable
                         ; A B select start up down left right
+sleeping         .rs 1  ; main program sets this and waits for the NMI to clear it.
+                        ; Ensures the main program is run only once per frame.
 mainloop         .rs 1  ; 0 - don't perform main loop logic, 1 - perform
 action           .rs 1  ; action state ( 1 - action active, 0 - not, 2 - text render done, 3 - timeout state)
 bgrender         .rs 1  ; 0 - don't perform bg render, 1 - perform, 2 - bg render with loading palette

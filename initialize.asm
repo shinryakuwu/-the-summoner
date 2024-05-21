@@ -108,7 +108,7 @@ StoreEmptyTilesRowAddress:
 ClearRemainingBG:
   LDY #$00
 ClearRemainingBGLoop:
-  LDA #$FE
+  LDA #$FF
   STA $2007
   INY
   CPY clearbgcompare
@@ -260,6 +260,7 @@ ReturnToNMI:
   STA $2001
 
 Forever:
+  ; INC sleeping    ; go to sleep (wait for NMI)
   LDA mainloop
   CMP #$01
   BEQ MainLoopSubroutines

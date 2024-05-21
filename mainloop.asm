@@ -12,6 +12,8 @@ ExitMainLoopSubroutines:
   JMP Forever
 
 ChangeLocation:
+  ; CRITICAL!
+  ; TODO: Divide into smaller parts
   JSR DisableNMIRendering
   JSR LoadBackground
   JSR LoadAttribute

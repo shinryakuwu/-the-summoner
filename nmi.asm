@@ -30,3 +30,4 @@ EndOfNMI:
   STA $2005
   STA $2005
   RTI             ; return from interrupt
+
