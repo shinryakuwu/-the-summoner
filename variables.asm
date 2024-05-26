@@ -6,7 +6,7 @@ currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
 curntspriteshigh .rs 1
 location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
-                        ; 4 - server room, 5 - bsod, 6 - ghost room)
+                        ; 4 - server room, 5 - bsod, 6 - ghost room 1, 7 - ghost room 2, 8 - park)
 spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
 loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number

@@ -108,7 +108,7 @@ StoreEmptyTilesRowAddress:
 ClearRemainingBG:
   LDY #$00
 ClearRemainingBGLoop:
-  LDA #$FF
+  LDA #$FE
   STA $2007
   INY
   CPY clearbgcompare

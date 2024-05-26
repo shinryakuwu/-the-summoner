@@ -10,6 +10,8 @@ Warp:
   BEQ SkeletonHouseWarpCheck
   CMP #$04
   BEQ ServerRoomWarpCheck
+  CMP #$08
+  BEQ ParkWarpCheck
 	RTS
 
 Village1WarpCheck:
@@ -26,6 +28,9 @@ SkeletonHouseWarpCheck:
   RTS
 ServerRoomWarpCheck:
   JSR ServerRoomVillage2WarpCheck
+  RTS
+ParkWarpCheck:
+  JSR ParkVillage1WarpCheck
   RTS
 
 
@@ -52,11 +57,14 @@ Village1Village2WarpCheck:
 Village1SkeletonHouseWarpCheck:
   LDA currentXtile
   CMP #$17
-  BNE Village1ForestWarpCheck
+  BNE Village1ParkWarpCheck
   LDA currentYtile
   CMP #$0F
   BEQ Village1SkeletonHouseWarp
-Village1ForestWarpCheck:
+Village1ParkWarpCheck:
+  LDA currentYtile
+  CMP #$01
+  BEQ Village1ParkWarp
 	RTS
 
 Village1CatHouseWarp:
@@ -89,6 +97,15 @@ Village1SkeletonHouseWarp:
   LDA #LOW(village1skeletonhousewarp)
   STA warpXYlow
   LDA #HIGH(village1skeletonhousewarp)
+  STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
+Village1ParkWarp:
+  JSR SetParkParams
+  LDA #LOW(village1parkwarp)
+  STA warpXYlow
+  LDA #HIGH(village1parkwarp)
   STA warpXYhigh
   JSR PrepareForBGRender
   RTS
@@ -224,6 +241,25 @@ ServerRoomVillage2Warp:
   JSR PrepareForBGRender
   RTS
 
+ParkVillage1WarpCheck:
+  LDA currentYtile
+  CMP #$16
+  BNE ParkVillage1WarpCheckDone
+  LDA currentXtile
+  CMP #$08
+  BCC ParkVillage1Warp
+ParkVillage1WarpCheckDone:
+  RTS
+
+ParkVillage1Warp:
+  JSR SetVillage1Params
+  LDA #LOW(parkvillage1warp)
+  STA warpXYlow
+  LDA #HIGH(parkvillage1warp)
+  STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
 SetVillage1Params:
   LDA #LOW(village1params)
   STA currentbgparams
@@ -235,6 +271,13 @@ SetVillage2Params:
   LDA #LOW(village2params)
   STA currentbgparams
   LDA #HIGH(village2params)
+  STA currentbgparams+1
+  RTS
+
+SetParkParams:
+  LDA #LOW(parkparams)
+  STA currentbgparams
+  LDA #HIGH(parkparams)
   STA currentbgparams+1
   RTS
 
