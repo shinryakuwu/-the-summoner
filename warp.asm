@@ -10,6 +10,10 @@ Warp:
   BEQ SkeletonHouseWarpCheck
   CMP #$04
   BEQ ServerRoomWarpCheck
+  CMP #$07
+  BEQ GhostRoom2WarpCheck
+  CMP #$08
+  BEQ ParkWarpCheck
 	RTS
 
 Village1WarpCheck:
@@ -26,6 +30,12 @@ SkeletonHouseWarpCheck:
   RTS
 ServerRoomWarpCheck:
   JSR ServerRoomVillage2WarpCheck
+  RTS
+GhostRoom2WarpCheck:
+  JSR GhostRoom2Village2WarpCheck
+  RTS
+ParkWarpCheck:
+  JSR ParkVillage1WarpCheck
   RTS
 
 
@@ -52,11 +62,14 @@ Village1Village2WarpCheck:
 Village1SkeletonHouseWarpCheck:
   LDA currentXtile
   CMP #$17
-  BNE Village1ForestWarpCheck
+  BNE Village1ParkWarpCheck
   LDA currentYtile
   CMP #$0F
   BEQ Village1SkeletonHouseWarp
-Village1ForestWarpCheck:
+Village1ParkWarpCheck:
+  LDA currentYtile
+  CMP #$01
+  BEQ Village1ParkWarp
 	RTS
 
 Village1CatHouseWarp:
@@ -93,6 +106,15 @@ Village1SkeletonHouseWarp:
   JSR PrepareForBGRender
   RTS
 
+Village1ParkWarp:
+  JSR SetParkParams
+  LDA #LOW(village1parkwarp)
+  STA warpXYlow
+  LDA #HIGH(village1parkwarp)
+  STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
 CatHouseVillage1WarpCheck:
 	LDA currentXtile
 	CMP #$0F
@@ -123,21 +145,21 @@ Village2Village1WarpCheck:
 Village2ServerRoomWarpCheck:
   LDA currentYtile
   CMP #$0D
-  BNE Village2GhostRoom1WarpCheck
+  BNE Village2GhostRoom2WarpCheck
   LDA currentXtile
   CMP #$05
   BEQ Village2ServerRoomWarp
   CMP #$06
   BEQ Village2ServerRoomWarp
-Village2GhostRoom1WarpCheck:
+Village2GhostRoom2WarpCheck:
   LDA currentYtile
   CMP #$11
   BNE Village2ExHouseWarpCheck
   LDA currentXtile
   CMP #$13
-  BEQ Village2GhostRoom1Warp
+  BEQ Village2GhostRoom2Warp
   CMP #$14
-  BEQ Village2GhostRoom1Warp
+  BEQ Village2GhostRoom2Warp
 Village2ExHouseWarpCheck:
   RTS
 
@@ -155,6 +177,10 @@ Village2ServerRoomWarp:
   STA currentbgparams
   LDA #HIGH(serverroomparams)
   STA currentbgparams+1
+  LDA #LOW(serverroomattributes)
+  STA currentattrlow
+  LDA #HIGH(serverroomattributes)
+  STA currentattrhigh
   LDA #LOW(village2serverroomwarp)
   STA warpXYlow
   LDA #HIGH(village2serverroomwarp)
@@ -162,23 +188,15 @@ Village2ServerRoomWarp:
   JSR PrepareForBGRender
   RTS
 
-Village2GhostRoom1Warp:
-  LDA #LOW(ghostroom1params)
+Village2GhostRoom2Warp:
+  LDA #LOW(ghostroom2params)
   STA currentbgparams
-  LDA #HIGH(ghostroom1params)
+  LDA #HIGH(ghostroom2params)
   STA currentbgparams+1
-  LDA #LOW(village2ghostroom1warp)
+  LDA #LOW(ghostroomwarp)
   STA warpXYlow
-  LDA #HIGH(village2ghostroom1warp)
+  LDA #HIGH(ghostroomwarp)
   STA warpXYhigh
-  LDA #LOW(office_ghost)
-  STA currenttextlow
-  LDA #HIGH(office_ghost)
-  STA currenttexthigh
-  LDA #$10
-  STA textpartscounter
-  LDA #$04
-  STA action
   JSR PrepareForBGRender
   RTS
 
@@ -224,17 +242,89 @@ ServerRoomVillage2Warp:
   JSR PrepareForBGRender
   RTS
 
+GhostRoom2Village2WarpCheck:
+  LDA currentXtile
+  CMP #$0F
+  BNE GhostRoom2Village2WarpCheckDone
+  LDA currentYtile
+  CMP #$12
+  BNE GhostRoom2Village2WarpCheckDone
+  LDA direction
+  BEQ GhostRoom2Village2Warp ; when equals zero
+GhostRoom2Village2WarpCheckDone:
+  RTS
+
+GhostRoom2Village2Warp:
+  JSR SetVillage2Params
+  LDA #LOW(ghostroom2village2warp)
+  STA warpXYlow
+  LDA #HIGH(ghostroom2village2warp)
+  STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
+ParkVillage1WarpCheck:
+  LDA currentYtile
+  CMP #$16
+  BNE ParkVillage1WarpCheckDone
+  LDA currentXtile
+  CMP #$08
+  BCC ParkVillage1Warp
+ParkVillage1WarpCheckDone:
+  RTS
+
+ParkVillage1Warp:
+  JSR SetVillage1Params
+  LDA #LOW(parkvillage1warp)
+  STA warpXYlow
+  LDA #HIGH(parkvillage1warp)
+  STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
+ParkGhostRoom1Warp:
+  LDA #LOW(ghostroom1params)
+  STA currentbgparams
+  LDA #HIGH(ghostroom1params)
+  STA currentbgparams+1
+  LDA #LOW(ghostroomwarp)
+  STA warpXYlow
+  LDA #HIGH(ghostroomwarp)
+  STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
+GhostRoom1ParkWarp:
+  JSR SetParkParams
+  LDA #LOW(ghostroom1parkwarp)
+  STA warpXYlow
+  LDA #HIGH(ghostroom1parkwarp)
+  STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
 SetVillage1Params:
   LDA #LOW(village1params)
   STA currentbgparams
   LDA #HIGH(village1params)
   STA currentbgparams+1
+  LDA #LOW(village1attributes)
+  STA currentattrlow
+  LDA #HIGH(village1attributes)
+  STA currentattrhigh
   RTS
 
 SetVillage2Params:
   LDA #LOW(village2params)
   STA currentbgparams
   LDA #HIGH(village2params)
+  STA currentbgparams+1
+  RTS
+
+SetParkParams:
+  LDA #LOW(parkparams)
+  STA currentbgparams
+  LDA #HIGH(parkparams)
   STA currentbgparams+1
   RTS
 

@@ -6,7 +6,7 @@ currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
 curntspriteshigh .rs 1
 location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
-                        ; 4 - server room, 5 - bsod, 6 - ghost room)
+                        ; 4 - server room, 5 - bsod, 6 - ghost room 1, 7 - ghost room 2, 8 - park)
 spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
 loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
@@ -62,7 +62,7 @@ candyswitches    .rs 1  ; stores switches for collecting candy
 eventnumber      .rs 1  ; stores the identificator of an event that is going to be performed
 walkbackwards    .rs 1  ; 0 - no, 1 - yes
 walkcounter      .rs 1  ; defines for how many frames the cat will move automatically during an event
-glitchstate      .rs 1  ; stores the state of satan glitch event
+eventstate       .rs 1  ; stores the state of an event
 glitchcount      .rs 1  ; stores counter for satan glitch event
 emptytilesnumber .rs 1  ; number of empty bg tiles in a row
 emptytilescount  .rs 1  ; number of empty tile rows before the current tile (required in passability checker)
@@ -86,3 +86,4 @@ EMPTYBGTILEATTRIBUTE = $0F
 EMPTYTILEROWADDRESSES = $80
 BGPARAMSADDRESS = $06
 BGPARAMSCOMPARE = $0A
+DELAYAFTERGHOSTROOM1 = $A0

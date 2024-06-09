@@ -33,6 +33,8 @@ AnimateTiles:
  	BEQ AnimateServerRoom
  	CMP #$06
  	BEQ AnimateGhostRoom1
+ 	CMP #$08
+ 	BEQ AnimatePark
  	RTS
 
 AnimateVillage1:
@@ -52,6 +54,9 @@ AnimateServerRoom:
 	RTS
 AnimateGhostRoom1:
 	JSR AnimateGhostRoom1Subroutine
+	RTS
+AnimatePark:
+	JSR AnimateParkSubroutine
 	RTS
 
 AnimateVillage1Subroutine:
@@ -287,5 +292,14 @@ MoveOfficeGhost:
 	LDA #$6C          ; compare pointer to $6C via transform loop
 	STA trnsfrmcompare
 	LDX #$54          ; ghost tiles are stored at address 0200 + this number
+	JSR ObjectTransformLoop
+	RTS
+
+AnimateParkSubroutine:
+	LDA #$00
+	STA trnsfrm       ; decrement via transform loop
+	LDA #$73          ; compare pointer to $73 via transform loop
+	STA trnsfrmcompare
+	LDX #$43          ; cloud tiles are stored at address 0200 + this number
 	JSR ObjectTransformLoop
 	RTS

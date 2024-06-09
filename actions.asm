@@ -130,6 +130,8 @@ CheckActionTile:
 	BEQ SkeletonHouseEvents
 	CMP #$04
 	BEQ ServerRoomEvents
+	CMP #$08
+	BEQ ParkEvents
 	RTS
 
 Village1Events:
@@ -143,6 +145,9 @@ SkeletonHouseEvents:
 	RTS
 ServerRoomEvents:
 	JSR ServerRoomEventsSubroutine
+	RTS
+ParkEvents:
+	JSR ParkEventsSubroutine
 	RTS
 
 Village1EventsSubroutine:
@@ -301,6 +306,19 @@ BucketHatGuyParams:
 	STA currenttexthigh
 	LDA #$02
 	STA textpartscounter
+	JSR SettingEventParamsDone
+	RTS
+
+ParkEventsSubroutine:
+	LDX #$16
+	LDY #$09
+	JSR CheckTilesForEvent
+	BNE OfficeWarpParams
+	RTS
+
+OfficeWarpParams:
+	LDA #$41
+	STA eventnumber
 	JSR SettingEventParamsDone
 	RTS
 
