@@ -62,7 +62,7 @@ candyswitches    .rs 1  ; stores switches for collecting candy
 eventnumber      .rs 1  ; stores the identificator of an event that is going to be performed
 walkbackwards    .rs 1  ; 0 - no, 1 - yes
 walkcounter      .rs 1  ; defines for how many frames the cat will move automatically during an event
-glitchstate      .rs 1  ; stores the state of satan glitch event
+eventstate       .rs 1  ; stores the state of an event
 glitchcount      .rs 1  ; stores counter for satan glitch event
 emptytilesnumber .rs 1  ; number of empty bg tiles in a row
 emptytilescount  .rs 1  ; number of empty tile rows before the current tile (required in passability checker)
@@ -86,3 +86,4 @@ EMPTYBGTILEATTRIBUTE = $0F
 EMPTYTILEROWADDRESSES = $80
 BGPARAMSADDRESS = $06
 BGPARAMSCOMPARE = $0A
+DELAYAFTERGHOSTROOM1 = $A0

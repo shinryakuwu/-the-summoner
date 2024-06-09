@@ -5,12 +5,13 @@ NonTextEvents:
 	BEQ CandymanHand
 	CMP #$02
 	BEQ SatanGlitch
+	CMP #$03
+	BEQ Office
 	CMP #$40
-	BEQ OldLadyWalk
+	BEQ OldLady
 	CMP #$41
-	BEQ OldLadyAppear
-	CMP #$42
-	BEQ OldLadyDisappear
+	BEQ Office
+	; cmp...
 	CMP #$43
 	BEQ SatanWalk
 NonTextEventsDone:
@@ -22,16 +23,12 @@ CandymanHand:
 	JSR CandymanHandSubroutine
 	RTS
 
-OldLadyWalk:
-	JSR OldLadyWalkSubroutine
+OldLady:
+	JSR OldLadySubroutine
 	RTS
 
-OldLadyAppear:
-	JSR OldLadyAppearSubroutine
-	RTS
-
-OldLadyDisappear:
-	JSR OldLadyDisappearSubroutine
+Office:
+	JSR OfficeSubroutine
 	RTS
 
 SatanWalk:
@@ -56,25 +53,34 @@ CandymanHandSubroutine:
 	JSR PerformNonTextEventDone
 	RTS
 
-OldLadyWalkSubroutine:
+OldLadySubroutine:
+	LDA eventstate
+	BEQ OldLadyWalk
+	CMP #$01
+	BEQ OldLadyAppear
+	CMP #$02
+	BEQ OldLadyDisappear
+	RTS
+
+OldLadyWalk:
 	LDA walkcounter
-	BEQ OldLadyWalkSubroutineDone
+	BEQ OldLadyWalkDone
 	LDA #$01
   STA walkbackwards
 	DEC walkcounter
 	LDA #MVUP
 	STA buttons
 	RTS
-OldLadyWalkSubroutineDone:
+OldLadyWalkDone:
 	LDA #$00
   STA walkbackwards
 	LDA #$05
   STA action
-	LDA #$41
-	STA eventnumber
+	LDA #$01
+	STA eventstate
 	RTS
 
-OldLadyAppearSubroutine:
+OldLadyAppear:
 	INC candycounter
 	LDA #$FF
 	STA $0245
@@ -93,13 +99,13 @@ OldLadyAppearSubroutine:
   STA currenttexthigh
   LDA #$01
   STA textpartscounter
-  LDA #$42
-	STA eventnumber
+	LDA #$02
+	STA eventstate
   LDA #$01
   STA action
 	RTS
 
-OldLadyDisappearSubroutine:
+OldLadyDisappear:
 	LDA #$67
 	STA $0245
 	LDA #$06          ; switch tiles via transform loop
@@ -118,6 +124,8 @@ OldLadyDisappearSubroutine:
   STA action
   LDA #$18
   STA ramspriteslow  ; return default ppu pointer position
+  LDA #$00
+	STA eventstate
 	JSR PerformNonTextEventDone
 	RTS
 
@@ -143,7 +151,7 @@ SatanWalkSubroutineDone:
 	RTS
 
 SatanGlitchSubroutine:
-	LDA glitchstate
+	LDA eventstate
 	BEQ SatanGlitchInitiate
 	CMP #$16
 	BEQ EndGlitch      ; branch depends on whether the state number is even/odd
@@ -167,7 +175,7 @@ EndGlitch:
   LDA #HIGH(satan_talk)
   STA currenttexthigh
   LDA #$00
-  STA glitchstate
+  STA eventstate
 	JSR PerformNonTextEventDone
 	LDA #$18
   STA ramspriteslow  ; return default ppu pointer position
@@ -181,7 +189,7 @@ LoadGlitchText:
 
 SatanGlitchInitiate:
 	LDA #$01
-	STA glitchstate
+	STA eventstate
 	STA glitchcount
 	LDA #LOW(satan)
   STA curntspriteslow
@@ -196,11 +204,11 @@ SatanGlitchInitiate:
 	RTS
 
 RenderSatan:
-	LDA glitchstate
+	LDA eventstate
 	CMP #$02
 	BEQ GlitchClearSprites ; should clear sprites first because there would be no place in memory for all the objects
 ProceedSatanRender:
-	LDA glitchstate        ; use glitchstate / 2 as poiner
+	LDA eventstate         ; use eventstate / 2 as poiner
 	LSR A
 	TAY
 	LDA satantilesperline, y
@@ -228,7 +236,7 @@ RenderSatanLoop:
   ADC #$00              ; add 0 and carry from previous add
   STA ramspriteshigh
 
-	INC glitchstate
+	INC eventstate
 	RTS
 
 GlitchClearSprites:
@@ -270,9 +278,149 @@ LoadGlitchTextLoop:
   STA textppuaddrhigh
   RTS
 LoadGlitchTextDone:
-  INC glitchstate
+  INC eventstate
   LDA #$00
   STA glitchcount
+	RTS
+
+OfficeSubroutine:
+	LDA eventstate
+	BEQ OfficeTeleport
+	CMP #$01
+	BEQ OfficeLookUp
+	CMP #$02
+	BEQ OfficeGhostMovesLeft
+	CMP #$03
+	BEQ OfficeCatMovesLeft
+	CMP #$04
+	BEQ OfficeCatMovesRight
+	CMP #$05
+	BEQ OfficeCatMovesDown
+	CMP #$06
+	BEQ OfficeGhostMovesRight
+	CMP #$07
+	BEQ ParkTeleport
+	RTS
+
+ParkTeleport:
+	JSR ParkTeleportSubroutine
+	RTS
+
+OfficeTeleport:
+	JSR ParkGhostRoom1Warp
+	LDA #MVDOWN
+	STA buttons
+	LDA #$40
+	STA eventwaitcounter
+	LDA #$01
+	STA eventstate
+	RTS
+
+OfficeLookUp:
+	LDA #MVUP
+	STA buttons
+	LDA #LOW(office_ghost)
+  STA currenttextlow
+  LDA #HIGH(office_ghost)
+  STA currenttexthigh
+  LDA #$06
+  STA textpartscounter
+  LDA #$01
+  STA action
+  LDA #$02
+	STA eventstate
+	LDA #$03
+	STA eventnumber
+	RTS
+
+OfficeGhostMovesLeft:
+	LDA #$00
+	STA trnsfrm             ; decrement via transform loop
+	JSR OfficeGhostMoves
+	LDA #$60
+	STA eventwaitcounter
+	LDA #$03
+	STA eventstate
+	LDA #$41
+	STA eventnumber
+	RTS
+
+OfficeCatMovesLeft:
+	LDX #MVLEFT
+	JSR OfficeCatMoves
+	LDA #$04
+	STA eventstate
+	RTS
+
+OfficeCatMovesRight:
+	LDX #MVRIGHT
+	JSR OfficeCatMoves
+	LDA #$05
+	STA eventstate
+	RTS
+
+OfficeCatMovesDown:
+	LDX #MVDOWN
+	JSR OfficeCatMoves
+	LDA #$06
+	STA eventstate
+	RTS
+
+OfficeGhostMovesRight:
+	LDA #$01
+	STA trnsfrm             ; increment via transform loop
+	JSR OfficeGhostMoves
+	LDA #MVUP
+	STA buttons
+	LDA #LOW(office_ghost2)
+  STA currenttextlow
+  LDA #HIGH(office_ghost2)
+  STA currenttexthigh
+  LDA #$09
+  STA textpartscounter
+  LDA #$01
+  STA action
+  LDA #$07
+	STA eventstate
+	LDA #$03
+	STA eventnumber
+	RTS
+
+OfficeGhostMoves:
+	LDA #$6F                ; compare pointer to $6F via transform loop
+	STA trnsfrmcompare
+	LDY #$00
+OfficeGhostMovesLoop:
+	LDX #$57                ; ghost tiles are stored at address 0200 + this number
+	JSR ObjectTransformLoop
+	INY
+	CPY #$04
+	BNE OfficeGhostMovesLoop
+	RTS
+
+OfficeCatMoves:
+	TXA
+	STA buttons
+	LDA #$60
+	STA eventwaitcounter
+	RTS
+
+ParkTeleportSubroutine:
+	JSR GhostRoom1ParkWarp
+  LDA #LOW(nightmare)
+  STA currenttextlow
+  LDA #HIGH(nightmare)
+  STA currenttexthigh
+  LDA #$01
+  STA action
+  LDA #$00
+	STA eventstate
+  JSR PerformNonTextEventDone
+  LDA #MVLEFT
+	STA buttons
+  ; TODO: add different values for PAL/NTSC
+  LDA #DELAYAFTERGHOSTROOM1
+  STA nmiwaitcounter
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional
