@@ -260,8 +260,11 @@ ReturnToNMI:
   STA $2001
 
 Forever:
-  ; INC sleeping    ; go to sleep (wait for NMI)
-  LDA mainloop
-  CMP #$01
-  BEQ MainLoopSubroutines
+  INC sleeping    ; go to sleep (wait for NMI)
+ForeverLoop:
+  LDA sleeping
+  BNE ForeverLoop
+
+  ; when NMI wakes us up, perform the following code and go back to sleep
+  JSR BgRenderSubroutine
   JMP Forever     ; jump back to Forever, infinite loop

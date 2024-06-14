@@ -353,7 +353,12 @@ ghostroom1sprites:
   .db $30, $89, $00, $60
 
 ghostroom2sprites:
-  ; TODO: add sprites
+  ; big ghost
+  .db $56, $4C, $00, $7B
+  .db $4D, $76, $00, $78
+  .db $4D, $76, $40, $80
+  .db $55, $86, $00, $78
+  .db $55, $86, $40, $80
 
 parksprites:
   ; bench
@@ -815,7 +820,7 @@ ghostroom2params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(ghostroom), HIGH(ghostroom), LOW(ghostroom2sprites), HIGH(ghostroom2sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $07, $00, $CC, $00, $01, $00
+  .db $07, $14, $CC, $00, $01, $00
 
 parkparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh

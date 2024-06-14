@@ -163,7 +163,6 @@ SatanGlitchSubroutine:
 EndGlitch:
 	LDA #$01
 	STA action
-  STA mainloop
   STA textpartscounter
   LDA #$02
   STA bgrender        ; activate background rendering and perform it via main loop (outside of NMI)
@@ -394,7 +393,7 @@ OfficeGhostMovesLoop:
 	LDX #$57                ; ghost tiles are stored at address 0200 + this number
 	JSR ObjectTransformLoop
 	INY
-	CPY #$04
+	CPY #$05
 	BNE OfficeGhostMovesLoop
 	RTS
 
