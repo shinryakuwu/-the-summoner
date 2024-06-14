@@ -68,7 +68,7 @@ Village1SkeletonHouseWarpCheck:
   BEQ Village1SkeletonHouseWarp
 Village1ParkWarpCheck:
   LDA currentYtile
-  CMP #$01
+  CMP #$02
   BEQ Village1ParkWarp
 	RTS
 
