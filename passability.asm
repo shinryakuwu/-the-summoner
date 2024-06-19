@@ -97,7 +97,7 @@ IncrementEmptyTileAddress2:
   LDA EMPTYTILEROWADDRESSES, y
   STA emptytilerowaddr+1
   INC emptytilerowaddr
-  BCC GetEmptyTilesAttrValue     ; branch if carry clear
+  BNE GetEmptyTilesAttrValue     ; branch unless emptytilerowaddr equals zero
   INC emptytilerowaddr+1         ; add carry to high byte
 GetEmptyTilesAttrValue:
   TYA                   ; move y to stack

@@ -354,12 +354,38 @@ ghostroom1sprites:
 
 ghostroom2sprites:
   ; big ghost
-  .db $56, $4C, $00, $7B
-  .db $4D, $76, $00, $78
-  .db $4D, $76, $40, $80
-  .db $55, $86, $00, $78
-  .db $55, $86, $40, $80
+  .db $56, $4C, $00, $6B
+  .db $4D, $76, $00, $68
+  .db $4D, $76, $40, $70
+  .db $55, $86, $00, $68
+  .db $55, $86, $40, $70
 
+  ; expression
+  .db $21, $98, $80, $60
+  .db $1F, $A0, $00, $80
+  .db $20, $A1, $00, $8B
+  .db $1F, $B2, $00, $95
+  .db $21, $B3, $00, $9A
+
+  .db $29, $90, $00, $60
+  .db $29, $91, $00, $68
+  .db $26, $92, $00, $70
+  .db $27, $93, $00, $78
+  .db $27, $94, $00, $80
+  .db $28, $95, $00, $89
+  .db $26, $96, $00, $91
+  .db $26, $97, $00, $99
+
+  .db $31, $98, $00, $60
+  .db $2E, $A7, $00, $71
+  .db $30, $A6, $00, $79
+  .db $30, $A6, $00, $81
+  .db $30, $A6, $00, $89
+  .db $30, $A6, $00, $91
+  .db $2E, $B5, $00, $99
+  .db $30, $B3, $00, $82
+
+  .db $38, $B0, $00, $66
 parksprites:
   ; bench
   .db $7C, $4D, $00, $25
@@ -511,7 +537,7 @@ village2:
   .db $0F,$09,$02,$0F,$06  ;;row 3
   .db $02,$FF,$C0,$C1,$C2,$FF,$A0,$A2,$A3,$B8,$B9,$A1,$A1,$BA,$FF,$FF
 
-  .db $FF,$C0,$C1,$C2,$FF,$03,$0F,$04,$02,$0F,$07  ;;row 4
+  .db $FF,$C0,$C1,$C2,$FF,$03,$0F,$0C  ;;row 4
   .db $D0,$D1,$D2,$FF,$B0,$B2,$B3,$BB,$BC,$B1,$B1,$BD,$FF,$FF
 
   .db $00,$D0,$D1,$D2,$00,$00,$00,$02,$00,$00,$00,$00,$FF,$FF,$00,$03  ;;row 5
@@ -677,13 +703,12 @@ serverroom:
 
   .db $0F,$0F,$97,$97,$97,$97,$97,$97,$97,$FF,$FF,$97,$97,$97,$97,$97,$97,$97,$0F,$1E  ;;row 18-22
 
-
 ghostroom:
   .db $0F,$6A,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B          ;;row 1-4
 
-  .db $0F,$13,$9C,$0F,$0C,$9A,$0F,$12,$9C,$0F,$0C,$9A,$0F,$12,$9C      ;;row 4-7
+  .db $0F,$13,$9C,$0F,$0C,$9A,$0F,$12,$9C,$FF,$6F,$0F,$0A,$9A,$0F,$12,$9C      ;;row 4-7
 
-  .db $0F,$0C,$9A,$0F,$12,$9C,$0F,$0C,$9A,$0F,$12,$9C,$0F,$0C,$9A      ;;row 7-9
+  .db $FF,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$FF,$FF,$9A,$0F,$12,$9C,$0F,$0C,$9A,$0F,$12,$9C,$0F,$0C,$9A      ;;row 7-9
 
   .db $0F,$12,$9C,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$9A  ;;row 9-10
 
@@ -704,6 +729,33 @@ ghostroom:
   .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 17-18
 
   .db $0F,$13,$97,$97,$97,$97,$97,$FF,$FF,$97,$97,$97,$97,$97,$0F,$8A  ;;row 18-23
+
+; ghostroom:
+;   .db $0F,$6A,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B          ;;row 1-4
+
+;   .db $0F,$13,$9C,$0F,$0C,$9A,$0F,$12,$9C,$0F,$0C,$9A,$0F,$12,$9C      ;;row 4-7
+
+;   .db $0F,$0C,$9A,$0F,$12,$9C,$0F,$0C,$9A,$0F,$12,$9C,$0F,$0C,$9A      ;;row 7-9
+
+;   .db $0F,$12,$9C,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$9A  ;;row 9-10
+
+;   .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 10-11
+
+;   .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 11-12
+
+;   .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 12-13
+
+;   .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 13-14
+
+;   .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 14-15
+
+;   .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 15-16
+
+;   .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 16-17
+
+;   .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 17-18
+
+;   .db $0F,$13,$97,$97,$97,$97,$97,$FF,$FF,$97,$97,$97,$97,$97,$0F,$8A  ;;row 18-23
 
 park:
   .db $0F,$85,$C0,$C1,$C2,$0F,$19,$C0,$C1,$C2,$FF,$D0,$D1,$D2,$FF,$C0,$C1,$C2,$0F,$14 ;;row 1-6
@@ -784,7 +836,7 @@ village1params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(village1), HIGH(village1), LOW(village1sprites), HIGH(village1sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $00, $30, $7D, $02, $00
+  .db $00, $30, $79, $02, $00
 
 cathouseparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
@@ -796,7 +848,7 @@ village2params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(village2), HIGH(village2), LOW(village2sprites), HIGH(village2sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $02, $DC, $84, $02, $01, $00
+  .db $02, $DC, $70, $02, $01, $00
 
 skeletonhouseparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
@@ -816,11 +868,17 @@ ghostroom1params:
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
   .db $06, $60, $CC, $00, $01, $00
 
+; ghostroom2params:
+;   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
+;   .db LOW(ghostroom), HIGH(ghostroom), LOW(ghostroom2sprites), HIGH(ghostroom2sprites)
+;   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
+;   .db $07, $84, $CC, $00, $01, $00
+
 ghostroom2params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(ghostroom), HIGH(ghostroom), LOW(ghostroom2sprites), HIGH(ghostroom2sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $07, $14, $CC, $00, $01, $00
+  .db $07, $84, $D7, $00, $01, $00
 
 parkparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
