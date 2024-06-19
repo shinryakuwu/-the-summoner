@@ -68,7 +68,9 @@ Village1SkeletonHouseWarpCheck:
   BEQ Village1SkeletonHouseWarp
 Village1ParkWarpCheck:
   LDA currentYtile
-  CMP #$02
+  ; TODO: investigate a strange bug here - if compare to #$02 and warp from the right corner
+  ; while pressing both right and up, you get stuck in the next location
+  CMP #$01
   BEQ Village1ParkWarp
 	RTS
 
