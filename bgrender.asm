@@ -1,15 +1,15 @@
-MainLoopSubroutines:
+BgRenderSubroutine:
 	LDA bgrender
 	CMP #$01
 	BEQ ChangeLocation
   CMP #$02
   BEQ ReloadLocation ; after the glitch event
+  RTS
 
-ExitMainLoopSubroutines:
+EndBgRenderSubroutine:
 	LDA #$00
-	STA mainloop
 	STA bgrender
-  JMP Forever
+  RTS
 
 ChangeLocation:
   ; CRITICAL!
@@ -22,14 +22,14 @@ ChangeLocation:
   JSR AdditionalRender
   LDA #OBJECTSANIMATIONSPEED ; renew the animation counter
   STA animatecounter
-  JMP ExitMainLoopSubroutines
+  JMP EndBgRenderSubroutine
 
 ReloadLocation:
   JSR DisableNMIRendering
   JSR ClearBG
   JSR LoadAttribute
   JSR LoadPalettes
-  JMP ExitMainLoopSubroutines
+  JMP EndBgRenderSubroutine
 
 ClearBG:
   JSR DisableNMIRendering

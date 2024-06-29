@@ -26,8 +26,8 @@ NMISubroutines:
   JSR CheckAnimateTiles
 
 EndOfNMI:
-  LDA #$00         ; tell the ppu there is no background scrolling
-  STA $2005
+  LDA #$00
+  sta sleeping    ; wake up the main program
+  STA $2005       ; tell the ppu there is no background scrolling
   STA $2005
   RTI             ; return from interrupt
-

@@ -15,7 +15,6 @@ buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button st
                         ; A B select start up down left right
 sleeping         .rs 1  ; main program sets this and waits for the NMI to clear it.
                         ; Ensures the main program is run only once per frame.
-mainloop         .rs 1  ; 0 - don't perform main loop logic, 1 - perform
 action           .rs 1  ; action state ( 1 - action active, 0 - not, 2 - text render done, 3 - timeout state)
 bgrender         .rs 1  ; 0 - don't perform bg render, 1 - perform, 2 - bg render with loading palette
 nmiwaitcounter   .rs 1  ; defines how many frames nmi should wait
