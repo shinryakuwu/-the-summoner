@@ -58,9 +58,11 @@ textcursor       .rs 1  ; stores cursor that should be rendered in current text 
 cleartextstate   .rs 1  ; defines a line to be cleared within a frame
 candycounter     .rs 1  ; stores the number of candy left to collect
 candyswitches    .rs 1  ; stores switches for collecting candy
+switches         .rs 1  ; stores other switches
+                        ; 0 - ghost candy drop
 eventnumber      .rs 1  ; stores the identificator of an event that is going to be performed
 walkbackwards    .rs 1  ; 0 - no, 1 - yes
-walkcounter      .rs 1  ; defines for how many frames the cat will move automatically during an event
+movecounter      .rs 1  ; defines for how many frames the object will move during an event
 eventstate       .rs 1  ; stores the state of an event
 glitchcount      .rs 1  ; stores counter for satan glitch event
 emptytilesnumber .rs 1  ; number of empty bg tiles in a row

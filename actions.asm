@@ -177,7 +177,7 @@ OldLadyParams:
 	LDA #$40
 	STA eventnumber
 	LDA #$15
-	STA walkcounter
+	STA movecounter
 	JSR SettingEventParamsDone
 	RTS
 

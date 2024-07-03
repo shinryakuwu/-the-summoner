@@ -197,6 +197,24 @@ Village2GhostRoom2Warp:
   STA warpXYlow
   LDA #HIGH(ghostroomwarp)
   STA warpXYhigh
+  ; TODO: add switch check here
+  ; LDA switches
+  ; AND #somenumber
+  ; CMP #somenumber
+  ; BNE skip this
+  LDA #$04
+  STA eventnumber
+  LDA #$20
+  STA eventwaitcounter
+  LDA #$04
+  STA action
+  LDA #LOW(math_ghost)
+  STA currenttextlow
+  LDA #HIGH(math_ghost)
+  STA currenttexthigh
+  LDA #$02
+  STA textpartscounter
+  ; jump here when no action
   JSR PrepareForBGRender
   RTS
 
@@ -336,7 +354,7 @@ SatanEventParams:
   LDA #$43
   STA eventnumber
   LDA #$0F
-  STA walkcounter
+  STA movecounter
   LDA #$20
   STA eventwaitcounter
   LDA #$08

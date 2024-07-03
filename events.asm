@@ -7,11 +7,14 @@ NonTextEvents:
 	BEQ SatanGlitch
 	CMP #$03
 	BEQ Office
+	CMP #$04
+	BEQ Math
 	CMP #$40
 	BEQ OldLady
 	CMP #$41
 	BEQ Office
-	; cmp...
+	; CMP #$42
+	; BEQ ...
 	CMP #$43
 	BEQ SatanWalk
 NonTextEventsDone:
@@ -29,6 +32,10 @@ OldLady:
 
 Office:
 	JSR OfficeSubroutine
+	RTS
+
+Math:
+	JSR MathSubroutine
 	RTS
 
 SatanWalk:
@@ -63,11 +70,11 @@ OldLadySubroutine:
 	RTS
 
 OldLadyWalk:
-	LDA walkcounter
+	LDA movecounter
 	BEQ OldLadyWalkDone
 	LDA #$01
   STA walkbackwards
-	DEC walkcounter
+	DEC movecounter
 	LDA #MVUP
 	STA buttons
 	RTS
@@ -123,16 +130,16 @@ OldLadyDisappear:
 	LDA #$01
   STA action
   LDA #$18
-  STA ramspriteslow  ; return default ppu pointer position
+  STA ramspriteslow  ; restore default ppu pointer position
   LDA #$00
 	STA eventstate
 	JSR PerformNonTextEventDone
 	RTS
 
 SatanWalkSubroutine:
-	LDA walkcounter
+	LDA movecounter
 	BEQ SatanWalkSubroutineDone
-	DEC walkcounter
+	DEC movecounter
 	LDA #MVUP
 	STA buttons
 	RTS
@@ -177,7 +184,7 @@ EndGlitch:
   STA eventstate
 	JSR PerformNonTextEventDone
 	LDA #$18
-  STA ramspriteslow  ; return default ppu pointer position
+  STA ramspriteslow  ; restore default ppu pointer position
   LDA #$02
   STA ramspriteshigh
 	RTS
@@ -219,21 +226,7 @@ RenderSatanLoop:
   INY
   CPY spritescompare
   BNE RenderSatanLoop
-  ; TODO: refactor, maybe add a separate subroutine for 16-bit adding
-  LDA curntspriteslow   ; add spritescompare to curntsprites and ramsprites
-  CLC
-  ADC spritescompare
-  STA curntspriteslow
-  LDA curntspriteshigh
-  ADC #$00              ; add 0 and carry from previous add
-  STA curntspriteshigh
-  LDA ramspriteslow
-  CLC
-  ADC spritescompare
-  STA ramspriteslow
-  LDA ramspriteshigh
-  ADC #$00              ; add 0 and carry from previous add
-  STA ramspriteshigh
+  JSR AddSpritesComparetoSprites
 
 	INC eventstate
 	RTS
@@ -386,7 +379,7 @@ OfficeGhostMovesRight:
 	RTS
 
 OfficeGhostMoves:
-	LDA #$6F                ; compare pointer to $6F via transform loop
+	LDA #$77                ; compare pointer to this number via transform loop
 	STA trnsfrmcompare
 	LDY #$00
 OfficeGhostMovesLoop:
@@ -420,6 +413,135 @@ ParkTeleportSubroutine:
   ; TODO: add different values for PAL/NTSC
   LDA #DELAYAFTERGHOSTROOM1
   STA nmiwaitcounter
+	RTS
+
+MathSubroutine:
+	LDA eventstate
+	CMP #$07
+	BCC DrawExpression ; if eventstate < 7
+	CMP #$07
+	BEQ DropCandy
+	CMP #$08
+	BEQ CandyFalls
+	RTS
+
+DropCandy:
+	INC eventstate
+	LDA switches
+	ORA #%00000001
+	STA switches
+	LDA #$15
+  STA movecounter
+	RTS
+
+CandyFalls:
+	LDA movecounter
+	BEQ CandyFallsDone
+	DEC movecounter
+	INC $0218       ; alter candy horizontal coordinates
+	RTS
+CandyFallsDone:
+	LDA #$00
+  STA eventstate
+  JSR PerformNonTextEventDone
+	RTS
+
+DrawExpression:
+	LDA eventstate
+	CMP #$01
+	BEQ DrawExpressionSkipDelay
+	LDA #$30
+  STA eventwaitcounter ; add delay
+DrawExpressionSkipDelay:
+	LDA eventstate
+	BEQ DrawExpressionFrame0
+	CMP #$01
+	BEQ DrawExpressionFrame1bg
+	CMP #$02
+	BEQ DrawExpressionSprites ; frame 1 sprites only
+	CMP #$03
+	BEQ DrawExpressionSprites ; frame 2
+	CMP #$04
+	BEQ DrawExpressionFrame3
+	CMP #$05
+	BEQ DrawExpressionSprites ; frame 4
+	CMP #$06
+	BEQ DrawExpressionDone
+DrawExpressionFrame0:
+	; initiating some render params here
+  LDA #LOW(expression)
+  STA curntspriteslow
+  LDA #HIGH(expression)
+  STA curntspriteshigh
+  LDA #$4C
+  STA ramspriteslow  ; load into ram starting from this address
+  JMP DrawExpressionSprites
+DrawExpressionFrame1bg:
+	LDX #$20
+  LDY #$AB
+	JSR SetPPUAddrSubroutine
+	LDA #$6F
+  STA $2007
+  JMP SkipDrawingExpressionSprites
+DrawExpressionFrame3:
+	LDX #$20
+  LDY #$CB
+	JSR SetPPUAddrSubroutine
+	LDX #$09
+DrawExpressionLineLoop:
+	LDA #$9B
+  STA $2007
+  DEX
+  BNE DrawExpressionLineLoop
+	JMP SkipDrawingExpressionSprites
+DrawExpressionSprites:
+  JSR DrawExpressionSpritesSubroutine
+SkipDrawingExpressionSprites:
+  INC eventstate
+  RTS
+
+DrawExpressionDone:
+	INC eventstate
+	LDA #$18
+  STA ramspriteslow  ; restore default ppu pointer position
+	LDA #$01
+  STA action
+  LDA #LOW(math_ghost2)
+  STA currenttextlow
+  LDA #HIGH(math_ghost2)
+  STA currenttexthigh
+  LDA #$03
+  STA textpartscounter
+	RTS
+
+DrawExpressionSpritesSubroutine:
+	LDY eventstate
+	LDA expressiontilesperline, y
+  STA spritescompare
+  LDY #$00
+DrawExpressionSpritesLoop:
+  LDA [curntspriteslow], y
+  STA [ramspriteslow], y
+  INY
+  CPY spritescompare
+  BNE DrawExpressionSpritesLoop
+  ; yeah proceed to the code below, it's ok
+
+AddSpritesComparetoSprites:
+  LDA curntspriteslow   ; add spritescompare to curntsprites and ramsprites
+  CLC
+  ADC spritescompare
+  STA curntspriteslow
+  LDA curntspriteshigh
+  ADC #$00              ; add 0 and carry from previous add
+  STA curntspriteshigh
+  LDA ramspriteslow
+  CLC
+  ADC spritescompare
+  STA ramspriteslow
+  LDA ramspriteshigh
+  ADC #$00              ; add 0 and carry from previous add
+  STA ramspriteshigh
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional
