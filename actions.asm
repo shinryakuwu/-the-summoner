@@ -130,6 +130,8 @@ CheckActionTile:
 	BEQ SkeletonHouseEvents
 	CMP #$04
 	BEQ ServerRoomEvents
+	CMP #$07
+	BEQ GhostRoom2Events
 	CMP #$08
 	BEQ ParkEvents
 	RTS
@@ -148,6 +150,9 @@ ServerRoomEvents:
 	RTS
 ParkEvents:
 	JSR ParkEventsSubroutine
+	RTS
+GhostRoom2Events:
+	JSR GhostRoom2EventsSubroutine
 	RTS
 
 Village1EventsSubroutine:
@@ -318,6 +323,52 @@ ParkEventsSubroutine:
 
 OfficeWarpParams:
 	LDA #$41
+	STA eventnumber
+	JSR SettingEventParamsDone
+	RTS
+
+GhostRoom2EventsSubroutine:
+	LDX #$0D
+	LDY #$0C
+	JSR CheckTilesForEvent
+	BNE Ghost1Params
+	LDX #$0B
+	LDY #$0F
+	JSR CheckTilesForEvent
+	BNE Ghost2Params
+	LDX #$12
+	LDY #$0D
+	JSR CheckTilesForEvent
+	BNE BigGhostParams
+	LDX #$12
+	LDY #$0F
+	JSR CheckTilesForEvent
+	BNE MathCandyParams
+	RTS
+
+Ghost1Params:
+	LDA #LOW(ghost1)
+	STA currenttextlow
+	LDA #HIGH(ghost1)
+	STA currenttexthigh
+	JSR SettingEventParamsDone
+	RTS
+Ghost2Params:
+	LDA #LOW(ghost2)
+	STA currenttextlow
+	LDA #HIGH(ghost2)
+	STA currenttexthigh
+	JSR SettingEventParamsDone
+	RTS
+BigGhostParams:
+	LDA #LOW(math_ghost3)
+	STA currenttextlow
+	LDA #HIGH(math_ghost3)
+	STA currenttexthigh
+	JSR SettingEventParamsDone
+	RTS
+MathCandyParams:
+	LDA #$42
 	STA eventnumber
 	JSR SettingEventParamsDone
 	RTS

@@ -738,17 +738,17 @@ ghostroom:
 
   .db $0F,$12,$9C,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$9A  ;;row 9-10
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 10-11
+  .db $0F,$12,$9C,$0F,$0C,$9A                                          ;;row 10-11
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 11-12
+  .db $0F,$12,$9C,$0F,$06,$00,$00,$FF,$FF,$00,$00,$9A                  ;;row 11-12
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 12-13
+  .db $0F,$12,$9C,$0F,$06,$00,$00,$FF,$FF,$00,$00,$9A                  ;;row 12-13
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 13-14
+  .db $0F,$12,$9C,$0F,$04,$00,$00,$00,$00,$FF,$FF,$00,$00,$9A  ;;row 13-14
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 14-15
+  .db $0F,$12,$9C,$0F,$04,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 14-15
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 15-16
+  .db $0F,$12,$9C,$0F,$04,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 15-16
 
   .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 16-17
 
@@ -847,7 +847,7 @@ village2params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(village2), HIGH(village2), LOW(village2sprites), HIGH(village2sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $02, $DC, $70, $02, $01, $00
+  .db $02, $DC, $6D, $02, $01, $00
 
 skeletonhouseparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
@@ -865,13 +865,13 @@ ghostroom1params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(ghostroom), HIGH(ghostroom), LOW(ghostroom1sprites), HIGH(ghostroom1sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $06, $68, $CC, $00, $01, $00
+  .db $06, $68, $B4, $00, $01, $00
 
 ghostroom2params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(ghostroom), HIGH(ghostroom), LOW(ghostroom2sprites), HIGH(ghostroom2sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $07, $34, $CC, $00, $01, $00
+  .db $07, $34, $B4, $00, $01, $00
 
 parkparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
@@ -986,7 +986,7 @@ nightmare:
   .db $85,$43,$37,$38,$42,$FF,$37,$38,$43,$42,$FF,$3B,$38,$3A,$34,$FF,$30,$FF,$3D,$38,$36,$37,$43,$3C,$30,$41,$34,$FE
 
 math_ghost:
-  ; welcome, newcomer! i've prepared the first test task for you!
+  ; welcome, newcomer. i've prepared the first test task for you!
   .db $86,$46,$34,$3B,$32,$3E,$3C,$34,$55,$FF,$3D,$34,$46,$32,$3E,$3C,$34,$41,$54,$FF,$38,$53,$45,$34,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$3F,$41,$34,$3F,$30,$41,$34,$33,$FF,$43,$37,$34,$FF,$35,$38,$41,$42,$43,$FF,$43,$34,$42,$43,$FF,$43,$30,$42,$3A,$FF,$FF,$FF,$FF,$35,$3E,$41,$FF,$48,$3E,$44,$FE
   ; which of you is talking?
   .db $85,$46,$37,$38,$32,$37,$FF,$3E,$35,$FF,$48,$3E,$44,$FF,$38,$42,$FF,$43,$30,$3B,$3A,$38,$3D,$36,$59,$FE
@@ -1001,6 +1001,21 @@ math_ghost2:
   .db $85,$36,$38,$45,$34,$FF,$3C,$34,$FF,$30,$FF,$42,$30,$35,$34,$FF,$46,$3E,$41,$33,$FF,$35,$38,$41,$42,$43,$FE
   ; please accept this gift as my sincere apology
   .db $86,$3F,$3B,$34,$30,$42,$34,$FF,$30,$32,$32,$34,$3F,$43,$FF,$43,$37,$38,$42,$FF,$36,$38,$35,$43,$FF,$30,$42,$FF,$3C,$48,$FF,$FF,$FF,$42,$38,$3D,$32,$34,$41,$34,$FF,$30,$3F,$3E,$3B,$3E,$36,$48,$FE
+
+math_ghost3:
+  ; i'm passionate about exact sciences
+  .db $86,$38,$53,$3C,$FF,$3F,$30,$42,$42,$38,$3E,$3D,$30,$43,$34,$FF,$30,$31,$3E,$44,$43,$FF,$34,$47,$30,$32,$43,$FF,$FF,$FF,$FF,$FF,$FF,$42,$32,$38,$34,$3D,$32,$34,$42,$FE
+
+ghost1:
+  ; death itself is no pain by any means, it's a redemption
+  .db $86,$33,$34,$30,$43,$37,$FF,$38,$43,$42,$34,$3B,$35,$FF,$38,$42,$FF,$3D,$3E,$FF,$3F,$30,$38,$3D,$FF,$31,$48,$FF,$30,$3D,$48,$FF,$FF,$3C,$34,$30,$3D,$42,$55,$FF,$38,$43,$53,$42,$FF,$30,$FF,$41,$34,$33,$34,$3C,$3F,$43,$38,$3E,$3D,$FE
+ghost2:
+  ; biological problems and urge for gene distribution don't stay on my way to eternal comprehensive cognition anymore
+  .db $86,$31,$38,$3E,$3B,$3E,$36,$38,$32,$30,$3B,$FF,$3F,$41,$3E,$31,$3B,$34,$3C,$42,$FF,$30,$3D,$33,$FF,$44,$41,$36,$34,$FF,$FF,$FF,$FF,$35,$3E,$41,$FF,$36,$34,$3D,$34,$FF,$33,$38,$42,$43,$41,$38,$31,$44,$43,$38,$3E,$3D,$FF,$33,$3E,$3D,$53,$43,$FF,$FF,$FF,$FF,$FF,$42,$43,$30,$48,$FF,$3E,$3D,$FF,$3C,$48,$FF,$46,$30,$48,$FF,$43,$3E,$FF,$34,$43,$34,$41,$3D,$30,$3B,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$32,$3E,$3C,$3F,$41,$34,$37,$34,$3D,$42,$38,$45,$34,$FF,$32,$3E,$36,$3D,$38,$43,$38,$3E,$3D,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$30,$3D,$48,$3C,$3E,$41,$34,$FE
+
+forgot:
+  ; i have a nagging feeling that i forgot something important. what in the universe could that be?
+  .db $85,$38,$FF,$37,$30,$45,$34,$FF,$30,$FF,$3D,$30,$36,$36,$38,$3D,$36,$FF,$35,$34,$34,$3B,$38,$3D,$36,$FF,$43,$37,$30,$43,$FF,$38,$FF,$35,$3E,$41,$36,$3E,$43,$FF,$42,$3E,$3C,$34,$43,$37,$38,$3D,$36,$FF,$38,$3C,$3F,$3E,$41,$43,$30,$3D,$43,$54,$FF,$46,$37,$30,$43,$FF,$38,$3D,$FF,$43,$37,$34,$FF,$44,$3D,$38,$45,$34,$41,$42,$34,$FF,$32,$3E,$44,$3B,$33,$FF,$43,$37,$30,$43,$FF,$31,$34,$59,$FE
 
 satan_talk:
   ; Hello

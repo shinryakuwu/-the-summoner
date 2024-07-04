@@ -13,8 +13,8 @@ NonTextEvents:
 	BEQ OldLady
 	CMP #$41
 	BEQ Office
-	; CMP #$42
-	; BEQ ...
+	CMP #$42
+	BEQ MathCandy
 	CMP #$43
 	BEQ SatanWalk
 NonTextEventsDone:
@@ -36,6 +36,10 @@ Office:
 
 Math:
 	JSR MathSubroutine
+	RTS
+
+MathCandy:
+	JSR MathCandySubroutine
 	RTS
 
 SatanWalk:
@@ -542,6 +546,19 @@ AddSpritesComparetoSprites:
   LDA ramspriteshigh
   ADC #$00              ; add 0 and carry from previous add
   STA ramspriteshigh
+	RTS
+
+MathCandySubroutine:
+	INC candycounter
+	LDA #$00
+	STA $0219             ; candy disappears
+	LDA #LOW(candy_left)
+	STA currenttextlow
+	LDA #HIGH(candy_left)
+	STA currenttexthigh
+	LDA #$01
+  STA action
+  JSR PerformNonTextEventDone
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional
