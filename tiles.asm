@@ -340,6 +340,8 @@ ghostroom1sprites:
   ; ghost
   .db $50, $4B, $02, $78
   .db $50, $4B, $42, $80
+  .db $54, $67, $00, $78
+  .db $54, $67, $00, $7E
   .db $4D, $76, $00, $78
   .db $4D, $76, $40, $80
   .db $55, $86, $00, $78
@@ -353,7 +355,62 @@ ghostroom1sprites:
   .db $30, $89, $00, $60
 
 ghostroom2sprites:
-  ; TODO: add sprites
+  ; big ghost
+  ; .db $4D, $67, $00, $90
+  ; .db $4D, $67, $00, $96
+  .db $60, $4C, $00, $93
+  .db $58, $76, $00, $90
+  .db $58, $76, $40, $98
+  .db $60, $86, $00, $90
+  .db $60, $86, $40, $98
+
+  ; ghosts
+  .db $50, $1C, $00, $68
+  .db $50, $1C, $40, $70
+  .db $58, $2C, $00, $68
+  .db $58, $2C, $40, $70
+
+  .db $68, $1C, $00, $58
+  .db $68, $1C, $40, $60
+  .db $70, $2C, $00, $58
+  .db $70, $2C, $40, $60
+
+expression:
+  .db $21, $98, $80, $60
+  .db $1F, $A0, $00, $80
+  .db $20, $A1, $00, $8B
+  .db $1F, $B2, $00, $95
+  .db $21, $B3, $00, $9A
+
+  .db $29, $90, $00, $60
+  .db $29, $91, $00, $68
+  .db $26, $92, $00, $70
+  .db $27, $93, $00, $78
+  .db $27, $94, $00, $80
+  .db $28, $95, $00, $89
+  .db $26, $96, $00, $91
+  .db $26, $97, $00, $99
+
+  .db $31, $98, $00, $60
+  .db $2E, $A7, $00, $71
+  .db $30, $A6, $00, $79
+  .db $30, $A6, $00, $81
+  .db $30, $A6, $00, $89
+  .db $30, $A6, $00, $91
+  .db $2E, $B5, $00, $99
+  .db $30, $B3, $00, $82
+
+  .db $38, $B0, $00, $63
+  .db $38, $B1, $00, $6B
+  .db $39, $B4, $00, $6C
+  .db $38, $A2, $00, $75
+  .db $38, $A3, $00, $7D
+  .db $38, $A4, $00, $85
+  .db $38, $A5, $00, $8D
+  .db $39, $B4, $40, $93
+
+expressiontilesperline:
+  .db $14, $00, $20, $20, $00, $20
 
 parksprites:
   ; bench
@@ -442,7 +499,7 @@ village1:
   .db $B4,$A4,$0F,$03,$C0,$C1,$C2,$FF,$FF,$02,$0F,$09
 
   .db $00,$00,$00,$01,$00,$00,$03,$00,$A0,$A1,$A2,$A3,$C4,$B8,$B9,$A1  ;;row 4
-  .db $BA,$D0,$D1,$D2,$00,$02,$00,$C0,$C1,$C2,$00,$00,$FF,$FF,$00,$00
+  .db $BA,$D0,$D1,$D2,$FF,$02,$FF,$C0,$C1,$C2,$0F,$06
 
   .db $00,$02,$00,$01,$00,$00,$00,$00,$B0,$B1,$B2,$B3,$C6,$BB,$BC,$B1  ;;row 5
   .db $BD,$E0,$E1,$E2,$00,$00,$00,$D0,$D1,$D2,$00,$00,$FF,$FF,$00,$00
@@ -503,11 +560,11 @@ village1:
 village2:
   .db $0F, $40 ;;row 1-2
 
-  .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$02,$00,$00,$FF,$FF,$00,$00  ;;row 3
-  .db $02,$00,$C0,$C1,$C2,$00,$A0,$A2,$A3,$B8,$B9,$A1,$A1,$BA,$00,$00
+  .db $0F,$09,$02,$0F,$06  ;;row 3
+  .db $02,$FF,$C0,$C1,$C2,$FF,$A0,$A2,$A3,$B8,$B9,$A1,$A1,$BA,$FF,$FF
 
-  .db $00,$C0,$C1,$C2,$00,$03,$00,$00,$00,$00,$02,$00,$FF,$FF,$00,$00  ;;row 4
-  .db $00,$00,$D0,$D1,$D2,$00,$B0,$B2,$B3,$BB,$BC,$B1,$B1,$BD,$00,$00
+  .db $FF,$C0,$C1,$C2,$FF,$03,$0F,$0C  ;;row 4
+  .db $D0,$D1,$D2,$FF,$B0,$B2,$B3,$BB,$BC,$B1,$B1,$BD,$FF,$FF
 
   .db $00,$D0,$D1,$D2,$00,$00,$00,$02,$00,$00,$00,$00,$FF,$FF,$00,$03  ;;row 5
   .db $00,$00,$E0,$F0,$E2,$00,$C3,$9E,$9E,$9E,$9E,$9E,$9E,$C8,$00,$00
@@ -672,7 +729,6 @@ serverroom:
 
   .db $0F,$0F,$97,$97,$97,$97,$97,$97,$97,$FF,$FF,$97,$97,$97,$97,$97,$97,$97,$0F,$1E  ;;row 18-22
 
-
 ghostroom:
   .db $0F,$6A,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B,$9B          ;;row 1-4
 
@@ -682,17 +738,17 @@ ghostroom:
 
   .db $0F,$12,$9C,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$04,$9A  ;;row 9-10
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 10-11
+  .db $0F,$12,$9C,$0F,$0C,$9A                                          ;;row 10-11
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 11-12
+  .db $0F,$12,$9C,$0F,$06,$00,$00,$FF,$FF,$00,$00,$9A                  ;;row 11-12
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 12-13
+  .db $0F,$12,$9C,$0F,$06,$00,$00,$FF,$FF,$00,$00,$9A                  ;;row 12-13
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 13-14
+  .db $0F,$12,$9C,$0F,$04,$00,$00,$00,$00,$FF,$FF,$00,$00,$9A  ;;row 13-14
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 14-15
+  .db $0F,$12,$9C,$0F,$04,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 14-15
 
-  .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 15-16
+  .db $0F,$12,$9C,$0F,$04,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 15-16
 
   .db $0F,$12,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 16-17
 
@@ -779,7 +835,7 @@ village1params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(village1), HIGH(village1), LOW(village1sprites), HIGH(village1sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $00, $30, $7D, $02, $00
+  .db $00, $30, $79, $02, $00
 
 cathouseparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
@@ -791,7 +847,7 @@ village2params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(village2), HIGH(village2), LOW(village2sprites), HIGH(village2sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $02, $DC, $84, $02, $01, $00
+  .db $02, $DC, $6D, $02, $01, $00
 
 skeletonhouseparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
@@ -809,13 +865,13 @@ ghostroom1params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(ghostroom), HIGH(ghostroom), LOW(ghostroom1sprites), HIGH(ghostroom1sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $06, $60, $CC, $00, $01, $00
+  .db $06, $68, $B4, $00, $01, $00
 
 ghostroom2params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(ghostroom), HIGH(ghostroom), LOW(ghostroom2sprites), HIGH(ghostroom2sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $07, $00, $CC, $00, $01, $00
+  .db $07, $34, $B4, $00, $01, $00
 
 parkparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
@@ -930,20 +986,36 @@ nightmare:
   .db $85,$43,$37,$38,$42,$FF,$37,$38,$43,$42,$FF,$3B,$38,$3A,$34,$FF,$30,$FF,$3D,$38,$36,$37,$43,$3C,$30,$41,$34,$FE
 
 math_ghost:
-  ; welcome, newcomer! i've prepared the first test task for you!
-  .db $86,$46,$34,$3B,$32,$3E,$3C,$34,$55,$FF,$3D,$34,$46,$32,$3E,$3C,$34,$41,$FF,$38,$53,$45,$34,$FF,$3F,$41,$34,$3F,$30,$41,$34,$33,$FF,$43,$37,$34,$FF,$35,$38,$41,$42,$43,$FF,$43,$34,$42,$43,$FF,$43,$30,$42,$3A,$FF,$35,$3E,$41,$FF,$48,$3E,$44,$FE
+  ; welcome, newcomer. i've prepared the first test task for you!
+  .db $86,$46,$34,$3B,$32,$3E,$3C,$34,$55,$FF,$3D,$34,$46,$32,$3E,$3C,$34,$41,$54,$FF,$38,$53,$45,$34,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$3F,$41,$34,$3F,$30,$41,$34,$33,$FF,$43,$37,$34,$FF,$35,$38,$41,$42,$43,$FF,$43,$34,$42,$43,$FF,$43,$30,$42,$3A,$FF,$FF,$FF,$FF,$35,$3E,$41,$FF,$48,$3E,$44,$FE
   ; which of you is talking?
   .db $85,$46,$37,$38,$32,$37,$FF,$3E,$35,$FF,$48,$3E,$44,$FF,$38,$42,$FF,$43,$30,$3B,$3A,$38,$3D,$36,$59,$FE
   ; could you please resolve this expression?
-  .db $86,$32,$3E,$44,$3B,$33,$FF,$48,$3E,$44,$FF,$3F,$3B,$34,$30,$42,$34,$FF,$41,$34,$42,$3E,$3B,$45,$34,$FF,$43,$37,$38,$42,$FF,$34,$47,$3F,$41,$34,$42,$42,$38,$3E,$3D,$59,$FE
+  .db $86,$32,$3E,$44,$3B,$33,$FF,$48,$3E,$44,$FF,$3F,$3B,$34,$30,$42,$34,$FF,$41,$34,$42,$3E,$3B,$45,$34,$FF,$43,$37,$38,$42,$FF,$FF,$FF,$34,$47,$3F,$41,$34,$42,$42,$38,$3E,$3D,$59,$FE
+math_ghost2:
   ; umm... 4?
   .db $85,$44,$3C,$3C,$54,$54,$54,$FF,$4D,$59,$FE
   ; please forgive me for my utter ignorance, i had no idea you were mentally disabled
-  .db $86,$3F,$3B,$34,$30,$42,$34,$FF,$35,$3E,$41,$36,$38,$45,$34,$FF,$3C,$34,$FF,$35,$3E,$41,$FF,$3C,$48,$FF,$44,$43,$43,$34,$41,$FF,$38,$36,$3D,$3E,$41,$30,$3D,$32,$34,$55,$FF,$38,$FF,$37,$30,$33,$FF,$3D,$3E,$FF,$38,$33,$34,$30,$FF,$48,$3E,$44,$FF,$46,$34,$41,$34,$FF,$3C,$34,$3D,$43,$30,$3B,$3B,$48,$FF,$33,$38,$42,$30,$31,$3B,$34,$33,$FE
+  .db $86,$3F,$3B,$34,$30,$42,$34,$FF,$35,$3E,$41,$36,$38,$45,$34,$FF,$3C,$34,$FF,$35,$3E,$41,$FF,$3C,$48,$FF,$44,$43,$43,$34,$41,$FF,$FF,$38,$36,$3D,$3E,$41,$30,$3D,$32,$34,$55,$FF,$38,$FF,$37,$30,$33,$FF,$3D,$3E,$FF,$38,$33,$34,$30,$FF,$48,$3E,$44,$FF,$FF,$FF,$FF,$46,$34,$41,$34,$FF,$3C,$34,$3D,$43,$30,$3B,$3B,$48,$FF,$33,$38,$42,$30,$31,$3B,$34,$33,$FE
   ; give me a safe word first
   .db $85,$36,$38,$45,$34,$FF,$3C,$34,$FF,$30,$FF,$42,$30,$35,$34,$FF,$46,$3E,$41,$33,$FF,$35,$38,$41,$42,$43,$FE
   ; please accept this gift as my sincere apology
-  .db $86,$3F,$3B,$34,$30,$42,$34,$FF,$30,$32,$32,$34,$3F,$43,$FF,$43,$37,$38,$42,$FF,$36,$38,$35,$43,$FF,$30,$42,$FF,$3C,$48,$FF,$42,$38,$3D,$32,$34,$41,$34,$FF,$30,$3F,$3E,$3B,$3E,$36,$48,$FE
+  .db $86,$3F,$3B,$34,$30,$42,$34,$FF,$30,$32,$32,$34,$3F,$43,$FF,$43,$37,$38,$42,$FF,$36,$38,$35,$43,$FF,$30,$42,$FF,$3C,$48,$FF,$FF,$FF,$42,$38,$3D,$32,$34,$41,$34,$FF,$30,$3F,$3E,$3B,$3E,$36,$48,$FE
+
+math_ghost3:
+  ; i'm passionate about exact sciences
+  .db $86,$38,$53,$3C,$FF,$3F,$30,$42,$42,$38,$3E,$3D,$30,$43,$34,$FF,$30,$31,$3E,$44,$43,$FF,$34,$47,$30,$32,$43,$FF,$FF,$FF,$FF,$FF,$FF,$42,$32,$38,$34,$3D,$32,$34,$42,$FE
+
+ghost1:
+  ; death itself is no pain by any means, it's a redemption
+  .db $86,$33,$34,$30,$43,$37,$FF,$38,$43,$42,$34,$3B,$35,$FF,$38,$42,$FF,$3D,$3E,$FF,$3F,$30,$38,$3D,$FF,$31,$48,$FF,$30,$3D,$48,$FF,$FF,$3C,$34,$30,$3D,$42,$55,$FF,$38,$43,$53,$42,$FF,$30,$FF,$41,$34,$33,$34,$3C,$3F,$43,$38,$3E,$3D,$FE
+ghost2:
+  ; biological problems and urge for gene distribution don't stay on my way to eternal comprehensive cognition anymore
+  .db $86,$31,$38,$3E,$3B,$3E,$36,$38,$32,$30,$3B,$FF,$3F,$41,$3E,$31,$3B,$34,$3C,$42,$FF,$30,$3D,$33,$FF,$44,$41,$36,$34,$FF,$FF,$FF,$FF,$35,$3E,$41,$FF,$36,$34,$3D,$34,$FF,$33,$38,$42,$43,$41,$38,$31,$44,$43,$38,$3E,$3D,$FF,$33,$3E,$3D,$53,$43,$FF,$FF,$FF,$FF,$FF,$42,$43,$30,$48,$FF,$3E,$3D,$FF,$3C,$48,$FF,$46,$30,$48,$FF,$43,$3E,$FF,$34,$43,$34,$41,$3D,$30,$3B,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$32,$3E,$3C,$3F,$41,$34,$37,$34,$3D,$42,$38,$45,$34,$FF,$32,$3E,$36,$3D,$38,$43,$38,$3E,$3D,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$30,$3D,$48,$3C,$3E,$41,$34,$FE
+
+forgot:
+  ; i have a nagging feeling that i forgot something important. what in the universe could that be?
+  .db $85,$38,$FF,$37,$30,$45,$34,$FF,$30,$FF,$3D,$30,$36,$36,$38,$3D,$36,$FF,$35,$34,$34,$3B,$38,$3D,$36,$FF,$43,$37,$30,$43,$FF,$38,$FF,$35,$3E,$41,$36,$3E,$43,$FF,$42,$3E,$3C,$34,$43,$37,$38,$3D,$36,$FF,$38,$3C,$3F,$3E,$41,$43,$30,$3D,$43,$54,$FF,$46,$37,$30,$43,$FF,$38,$3D,$FF,$43,$37,$34,$FF,$44,$3D,$38,$45,$34,$41,$42,$34,$FF,$32,$3E,$44,$3B,$33,$FF,$43,$37,$30,$43,$FF,$31,$34,$59,$FE
 
 satan_talk:
   ; Hello

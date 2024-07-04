@@ -15,7 +15,6 @@ buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button st
                         ; A B select start up down left right
 sleeping         .rs 1  ; main program sets this and waits for the NMI to clear it.
                         ; Ensures the main program is run only once per frame.
-mainloop         .rs 1  ; 0 - don't perform main loop logic, 1 - perform
 action           .rs 1  ; action state ( 1 - action active, 0 - not, 2 - text render done, 3 - timeout state)
 bgrender         .rs 1  ; 0 - don't perform bg render, 1 - perform, 2 - bg render with loading palette
 nmiwaitcounter   .rs 1  ; defines how many frames nmi should wait
@@ -59,9 +58,11 @@ textcursor       .rs 1  ; stores cursor that should be rendered in current text 
 cleartextstate   .rs 1  ; defines a line to be cleared within a frame
 candycounter     .rs 1  ; stores the number of candy left to collect
 candyswitches    .rs 1  ; stores switches for collecting candy
+switches         .rs 1  ; stores other switches
+                        ; 0 - ghost candy drop
 eventnumber      .rs 1  ; stores the identificator of an event that is going to be performed
 walkbackwards    .rs 1  ; 0 - no, 1 - yes
-walkcounter      .rs 1  ; defines for how many frames the cat will move automatically during an event
+movecounter      .rs 1  ; defines for how many frames the object will move during an event
 eventstate       .rs 1  ; stores the state of an event
 glitchcount      .rs 1  ; stores counter for satan glitch event
 emptytilesnumber .rs 1  ; number of empty bg tiles in a row

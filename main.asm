@@ -5,10 +5,10 @@
 
   .include "variables.asm"      ; and also constants
   .include "initialize.asm"     ; RESET vector, load palette/background/attributes
-  .include "mainloop.asm"       ; main loop subroutines
+  .include "bgrender.asm"       ; bg rendering subroutine
   .include "nmi.asm"            ; NMI vector
   .include "readcontroller.asm"
-  .include "multiply.asm"
+  .include "math.asm"
   .include "passability.asm"
   .include "calculate_tile"     ; subroutine to calculate tile in front of the cat
   .include "movement.asm"       ; character movement and animation

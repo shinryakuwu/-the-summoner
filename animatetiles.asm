@@ -33,6 +33,8 @@ AnimateTiles:
  	BEQ AnimateServerRoom
  	CMP #$06
  	BEQ AnimateGhostRoom1
+ 	CMP #$07
+ 	BEQ AnimateGhostRoom2
  	CMP #$08
  	BEQ AnimatePark
  	RTS
@@ -55,6 +57,9 @@ AnimateServerRoom:
 AnimateGhostRoom1:
 	JSR AnimateGhostRoom1Subroutine
 	RTS
+AnimateGhostRoom2:
+	JSR AnimateGhostRoom2Subroutine
+	RTS
 AnimatePark:
 	JSR AnimateParkSubroutine
 	RTS
@@ -74,7 +79,7 @@ MoveGhostDown:
 	STA objectframenum
 	STA trnsfrm       ; increment via transform loop
 MoveGhost:
-	LDA #$44          ; compare pointer to $44 via transform loop
+	LDA #$44          ; compare pointer to this number via transform loop
 	STA trnsfrmcompare
 	LDX #$34          ; ghost tiles are stored at address 0200 + this number
 	JSR ObjectTransformLoop
@@ -289,16 +294,112 @@ MoveOfficeGhostDown:
 	STA objectframenum
 	STA trnsfrm       ; increment via transform loop
 MoveOfficeGhost:
-	LDA #$6C          ; compare pointer to $6C via transform loop
+	LDA #$74          ; compare pointer to this number via transform loop
 	STA trnsfrmcompare
 	LDX #$54          ; ghost tiles are stored at address 0200 + this number
 	JSR ObjectTransformLoop
 	RTS
 
+AnimateGhostRoom2Subroutine:
+	LDA objectframenum
+	BEQ AnimateGhostsFrame0 ; when equals 0
+	CMP #$01
+ 	BEQ AnimateGhostsFrame1
+ 	CMP #$02
+ 	BEQ AnimateGhostsFrame2
+AnimateGhostsFrame3:
+	LDA #$00
+	STA objectframenum
+	JSR Ghost1MovesDown
+	JSR Ghost2MovesUp
+	RTS
+AnimateGhostsFrame0:
+	INC objectframenum
+	JSR Ghost1MovesUp
+	JSR Ghost2MovesDown
+	JSR BigGhostMovesUp
+	RTS
+AnimateGhostsFrame1:
+	INC objectframenum
+	JSR Ghost1MovesDown
+	JSR Ghost2MovesUp
+	RTS
+AnimateGhostsFrame2:
+	INC objectframenum
+	JSR Ghost1MovesUp
+	JSR Ghost2MovesDown
+	JSR BigGhostMovesDown
+	RTS
+
+Ghost1MovesUp:
+	LDA #$00
+	STA trnsfrm       ; decrement via transform loop
+	JSR Ghost1Moves
+	RTS
+
+Ghost1MovesDown:
+	LDA #$01
+	STA trnsfrm       ; increment via transform loop
+	JSR Ghost1Moves
+	RTS
+
+Ghost2MovesUp:
+	LDA #$00
+	STA trnsfrm       ; decrement via transform loop
+	JSR Ghost2Moves
+	RTS
+
+Ghost2MovesDown:
+	LDA #$01
+	STA trnsfrm       ; increment via transform loop
+	JSR Ghost2Moves
+	RTS
+
+BigGhostMovesUp:
+	LDA #$00
+	STA trnsfrm       ; decrement via transform loop
+	JSR BigGhostMoves
+	RTS
+
+BigGhostMovesDown:
+	LDA #$01
+	STA trnsfrm       ; increment via transform loop
+	JSR BigGhostMoves
+	RTS
+
+Ghost1Moves:
+	LDA #$3C          ; compare pointer to this number via transform loop
+	STA trnsfrmcompare
+	LDX #$2C          ; ghost tiles are stored at address 0200 + this number
+	JSR ObjectTransformLoop
+	RTS
+
+Ghost2Moves:
+	LDA #$4C          ; compare pointer to this number via transform loop
+	STA trnsfrmcompare
+	LDX #$3C          ; ghost tiles are stored at address 0200 + this number
+	JSR ObjectTransformLoop
+	RTS
+
+BigGhostMoves:
+	LDA #$2C          ; compare pointer to this number via transform loop
+	STA trnsfrmcompare
+	LDA switches
+	AND #%00000001
+	BNE BigGhostTilesWithoutCandy
+	LDX #$18          ; ghost tiles are stored at address 0200 + this number
+TransformBigGhost:
+	JSR ObjectTransformLoop
+	RTS
+
+BigGhostTilesWithoutCandy:
+	LDX #$1C
+	JMP TransformBigGhost
+
 AnimateParkSubroutine:
 	LDA #$00
 	STA trnsfrm       ; decrement via transform loop
-	LDA #$73          ; compare pointer to $73 via transform loop
+	LDA #$73          ; compare pointer to this number via transform loop
 	STA trnsfrmcompare
 	LDX #$43          ; cloud tiles are stored at address 0200 + this number
 	JSR ObjectTransformLoop

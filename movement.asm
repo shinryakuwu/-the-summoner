@@ -22,7 +22,7 @@ CheckMVup:
   STA direction     ; direction is set to 'up'
   LDA #$00          ; decrement via transform loop
   STA trnsfrm
-  LDA #$18          ; compare pointer to $18 via transform loop
+  LDA #$18          ; compare pointer to this number via transform loop
   STA trnsfrmcompare
   LDX #$00
   JSR TransformIfPassable
@@ -34,7 +34,7 @@ CheckMVdown:
   STA direction     ; direction is set to 'down'
   LDA #$01          ; increment via transform loop
   STA trnsfrm
-  LDA #$18          ; compare pointer to $18 via transform loop
+  LDA #$18          ; compare pointer to this number via transform loop
   STA trnsfrmcompare
   LDX #$00
   JSR TransformIfPassable
@@ -46,7 +46,7 @@ CheckMVleft:
   STA direction     ; direction is set to 'left'
   LDA #$00          ; decrement via transform loop
   STA trnsfrm
-  LDA #$1B          ; compare pointer to $1B via transform loop
+  LDA #$1B          ; compare pointer to this number via transform loop
   STA trnsfrmcompare
   LDX #$03
   JSR TransformIfPassable
@@ -58,7 +58,7 @@ CheckMVright:
   STA direction     ; direction is set to 'right'
   LDA #$01          ; increment via transform loop
   STA trnsfrm
-  LDA #$1B          ; compare pointer to $1B via transform loop
+  LDA #$1B          ; compare pointer to this number via transform loop
   STA trnsfrmcompare
   LDX #$03
   JSR TransformIfPassable

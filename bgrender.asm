@@ -1,15 +1,15 @@
-MainLoopSubroutines:
+BgRenderSubroutine:
 	LDA bgrender
 	CMP #$01
 	BEQ ChangeLocation
   CMP #$02
   BEQ ReloadLocation ; after the glitch event
+  RTS
 
-ExitMainLoopSubroutines:
+EndBgRenderSubroutine:
 	LDA #$00
-	STA mainloop
 	STA bgrender
-  JMP Forever
+  RTS
 
 ChangeLocation:
   ; CRITICAL!
@@ -22,14 +22,14 @@ ChangeLocation:
   JSR AdditionalRender
   LDA #OBJECTSANIMATIONSPEED ; renew the animation counter
   STA animatecounter
-  JMP ExitMainLoopSubroutines
+  JMP EndBgRenderSubroutine
 
 ReloadLocation:
   JSR DisableNMIRendering
   JSR ClearBG
   JSR LoadAttribute
   JSR LoadPalettes
-  JMP ExitMainLoopSubroutines
+  JMP EndBgRenderSubroutine
 
 ClearBG:
   JSR DisableNMIRendering
@@ -55,7 +55,7 @@ DisableNMIRendering:
 ChangeCatCoordinates:
   LDA #$04          ; warp via transform loop
   STA trnsfrm
-  LDA #$18          ; compare pointer to $18 via transform loop
+  LDA #$18          ; compare pointer to this number via transform loop
   STA trnsfrmcompare
   LDX #$00
   LDY #$00
@@ -71,18 +71,18 @@ AdditionalRender:
 GhostRoom1AdditionalRender:
   LDX #$21
   LDY #$34
-  JSR AdditionalRenderSetPPUAddr
+  JSR SetPPUAddrSubroutine
   LDA #$FF              ; add empty tile behind the plant
   STA $2007
   LDX #$22
   LDY #$4F
-  JSR AdditionalRenderSetPPUAddr
+  JSR SetPPUAddrSubroutine
   LDA #$97              ; remove exit
   STA $2007
   STA $2007
   RTS
 
-AdditionalRenderSetPPUAddr:
+SetPPUAddrSubroutine:
   ; high byte in X, low byte in Y
   LDA $2002             ; read PPU status to reset the high/low latch
   TXA
