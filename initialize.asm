@@ -266,5 +266,13 @@ ForeverLoop:
   BNE ForeverLoop
 
   ; when NMI wakes us up, perform the following code and go back to sleep
+
+  LDA nmiwaitcounter ; when nmi waits, the logic below will wait too
+  BNE SkipMainLogicSubroutines
+
+  JSR CheckMovement
+  JSR Warp
+
+SkipMainLogicSubroutines:
   JSR BgRenderSubroutine
   JMP Forever     ; jump back to Forever, infinite loop

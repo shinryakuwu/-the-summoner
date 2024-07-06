@@ -1,6 +1,6 @@
 ;; DECLARE SOME VARIABLES HERE
   .rsset $0000  ;;start variables at ram location 0
-catcache         .rs 6
+catcache         .rs 24
 currentbglow     .rs 1  ; 16-bit variable to point to current background
 currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
@@ -85,6 +85,6 @@ INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
 EMPTYBGTILEATTRIBUTE = $0F
 EMPTYTILEROWADDRESSES = $80
-BGPARAMSADDRESS = $06
-BGPARAMSCOMPARE = $0A
+BGPARAMSADDRESS = $18
+BGPARAMSCOMPARE = $1C
 DELAYAFTERGHOSTROOM1 = $A0

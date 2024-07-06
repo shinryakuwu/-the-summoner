@@ -218,27 +218,27 @@ DecrementCoordinates:
   LDA walkbackwards
   BNE ReallyIncrement
 ReallyDecrement:
-  DEC $0200, x
+  DEC $0000, x
   JMP TrnsfrmBranchDone
 IncrementCoordinates:
   LDA walkbackwards
   BNE ReallyDecrement
 ReallyIncrement:
-  INC $0200, x
+  INC $0000, x
   JMP TrnsfrmBranchDone
 RenderObject: ; render cat?
   LDA [cattileslow], y
-  STA $0200, x
+  STA $0000, x
   INY
   JMP TrnsfrmBranchDone
 WarpObject:
   LDA [warpXYlow], y
-  STA $0200, x
+  STA $0000, x
   INY
   JMP TrnsfrmBranchDone
 ChangeGraphics: ; it can change both tile address and tile attribute
   LDA switchtile
-  STA $0200, x
+  STA $0000, x
   JMP TrnsfrmBranchDone
 
 
