@@ -1010,8 +1010,8 @@ ghost1:
   ; death itself is no pain by any means, it's a redemption
   .db $86,$33,$34,$30,$43,$37,$FF,$38,$43,$42,$34,$3B,$35,$FF,$38,$42,$FF,$3D,$3E,$FF,$3F,$30,$38,$3D,$FF,$31,$48,$FF,$30,$3D,$48,$FF,$FF,$3C,$34,$30,$3D,$42,$55,$FF,$38,$43,$53,$42,$FF,$30,$FF,$41,$34,$33,$34,$3C,$3F,$43,$38,$3E,$3D,$FE
 ghost2:
-  ; biological problems and urge for gene distribution don't stay on my way to eternal comprehensive cognition anymore
-  .db $86,$31,$38,$3E,$3B,$3E,$36,$38,$32,$30,$3B,$FF,$3F,$41,$3E,$31,$3B,$34,$3C,$42,$FF,$30,$3D,$33,$FF,$44,$41,$36,$34,$FF,$FF,$FF,$FF,$35,$3E,$41,$FF,$36,$34,$3D,$34,$FF,$33,$38,$42,$43,$41,$38,$31,$44,$43,$38,$3E,$3D,$FF,$33,$3E,$3D,$53,$43,$FF,$FF,$FF,$FF,$FF,$42,$43,$30,$48,$FF,$3E,$3D,$FF,$3C,$48,$FF,$46,$30,$48,$FF,$43,$3E,$FF,$34,$43,$34,$41,$3D,$30,$3B,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$32,$3E,$3C,$3F,$41,$34,$37,$34,$3D,$42,$38,$45,$34,$FF,$32,$3E,$36,$3D,$38,$43,$38,$3E,$3D,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$30,$3D,$48,$3C,$3E,$41,$34,$FE
+  ; biological problems and urge for gene distribution don't stand in my way to eternal comprehensive cognition anymore
+  .db $86,$31,$38,$3E,$3B,$3E,$36,$38,$32,$30,$3B,$FF,$3F,$41,$3E,$31,$3B,$34,$3C,$42,$FF,$30,$3D,$33,$FF,$44,$41,$36,$34,$FF,$FF,$FF,$FF,$35,$3E,$41,$FF,$36,$34,$3D,$34,$FF,$33,$38,$42,$43,$41,$38,$31,$44,$43,$38,$3E,$3D,$FF,$33,$3E,$3D,$53,$43,$FF,$FF,$FF,$FF,$FF,$42,$43,$30,$3D,$33,$FF,$38,$3D,$FF,$3C,$48,$FF,$46,$30,$48,$FF,$43,$3E,$FF,$34,$43,$34,$41,$3D,$30,$3B,$FF,$FF,$FF,$FF,$FF,$FF,$32,$3E,$3C,$3F,$41,$34,$37,$34,$3D,$42,$38,$45,$34,$FF,$32,$3E,$36,$3D,$38,$43,$38,$3E,$3D,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$30,$3D,$48,$3C,$3E,$41,$34,$FE
 
 forgot:
   ; i have a nagging feeling that i forgot something important. what in the universe could that be?

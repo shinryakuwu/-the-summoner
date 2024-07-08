@@ -14,7 +14,7 @@ Already implemented:
 
 To be implemented in the near future:
  - More locations and interactions
- - Event switches
+ - Event switches (no candy duping anymore!)
  - Move part of the game's logic out of nmi, cache cat's coordinates
  - Sounds
 

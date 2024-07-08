@@ -18,6 +18,7 @@ ChangeLocation:
   JSR LoadBackground
   JSR LoadAttribute
   JSR ChangeCatCoordinates
+  JSR DrawCatFromCache
   JSR LoadSprites
   JSR AdditionalRender
   LDA #OBJECTSANIMATIONSPEED ; renew the animation counter

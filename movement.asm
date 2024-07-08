@@ -190,13 +190,13 @@ ObjectTransformLoop:       ; main sprite transform subroutine
   CMP #$01
   BEQ IncrementCoordinates
   CMP #$02
-  BEQ RenderObject
+  BEQ RenderCat
   CMP #$03
-  BEQ RenderObject
+  BEQ RenderCat
   CMP #$04
-  BEQ WarpObject
+  BEQ WarpCat
   CMP #$05
-  BEQ WarpObject
+  BEQ WarpCat
   CMP #$06
   BEQ ChangeGraphics
 TrnsfrmBranchDone:
@@ -218,22 +218,32 @@ DecrementCoordinates:
   LDA walkbackwards
   BNE ReallyIncrement
 ReallyDecrement:
+  LDA cachedisable
+  BEQ DecrementWithCache
   DEC $0200, x
+  JMP TrnsfrmBranchDone
+DecrementWithCache:
+  DEC catcache, x
   JMP TrnsfrmBranchDone
 IncrementCoordinates:
   LDA walkbackwards
   BNE ReallyDecrement
 ReallyIncrement:
+  LDA cachedisable
+  BEQ IncrementWithCache
   INC $0200, x
   JMP TrnsfrmBranchDone
-RenderObject: ; render cat?
+IncrementWithCache:
+  INC catcache, x
+  JMP TrnsfrmBranchDone
+RenderCat:
   LDA [cattileslow], y
-  STA $0200, x
+  STA catcache, x
   INY
   JMP TrnsfrmBranchDone
-WarpObject:
+WarpCat:
   LDA [warpXYlow], y
-  STA $0200, x
+  STA catcache, x
   INY
   JMP TrnsfrmBranchDone
 ChangeGraphics: ; it can change both tile address and tile attribute
@@ -280,4 +290,12 @@ SetAnimationParametersAlmostDone:
   ADC #$0C             ; adding the number to reach the animation tiles via the db
   TAY                  ; frame number is transformed into a pointer to the cat tile db
   JSR ObjectTransformLoop
+  RTS
+
+ObjectTransformNoCache:
+  LDA #$01
+  STA cachedisable
+  JSR ObjectTransformLoop
+  LDA #$00
+  STA cachedisable
   RTS
