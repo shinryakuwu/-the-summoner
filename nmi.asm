@@ -20,10 +20,7 @@ NMISubroutines:
 
   JSR ReadController
 
-  JSR CheckAction
-
-  ; JSR CheckMovement
-  ; JSR Warp
+  JSR CheckActionNMI
 
   JSR CheckAnimateTiles
 

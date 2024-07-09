@@ -281,6 +281,7 @@ ForeverLoop:
   LDA nmiwaitcounter ; when nmi waits, the logic below will wait too
   BNE SkipMainLogicSubroutines
 
+  JSR CheckActionMainLoop
   JSR CheckMovement
   JSR Warp
 

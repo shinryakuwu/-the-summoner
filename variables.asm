@@ -69,6 +69,7 @@ emptytilescount  .rs 1  ; number of empty tile rows before the current tile (req
 emptytilerowaddr .rs 2  ; 16-bit variable to temporarily store the address of empty tile row 
                         ; (used in StoreEmptyTilesRowAddress and AddEmptyTilesToCurrentTile)
 currentbgparams  .rs 2  ; used for setting params for current location during warp
+actionnmi        .rs 1  ; 0 - action check happens in main logic, 1 - action check happens in nmi
 cachedisable     .rs 1  ; 0 - yes, 1 - no (use cache for updating cat graphics and no cache for all the rest)
 catcache         .rs 24
 

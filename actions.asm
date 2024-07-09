@@ -1,3 +1,12 @@
+CheckActionNMI:
+	LDA #$01
+	STA actionnmi
+	JMP CheckAction
+
+CheckActionMainLoop:
+	LDA #$00
+	STA actionnmi
+
 CheckAction:
 	LDA eventwaitcounter
 	BNE EventWait          ; do nothing in this frame unless eventwaitcounter is zero
@@ -6,7 +15,7 @@ CheckAction:
 	LDA action
 	BEQ CanCheckForAction  ; allow movement only when no action is happening
 EventWaitDone:
-	JSR BlockButtons
+	JSR BlockMovement
 	RTS
 
 EventWait:
@@ -14,20 +23,29 @@ EventWait:
 	JMP EventWaitDone
 
 CanCheckForAction:
+	LDA actionnmi
+	BEQ CheckActionStatus
+
+CheckActionStatusNMI:
+	; check for statuses that will be processed within nmi
 	LDA action
-	BEQ CheckActionButtons ; if zero action state
 	CMP #$01
 	BEQ PerformTextEvent
+	CMP #$05
+	BEQ PerformNonTextEvent
+	CMP #$06
+	BEQ ClearTextSection
+	RTS
+
+CheckActionStatus:
+	LDA action
+	BEQ CheckActionButtons ; if zero action state
 	CMP #$02
 	BEQ ActionTimeout
 	CMP #$03
 	BEQ CheckActionButtonReleased
 	CMP #$04
 	BEQ CheckActionButtonReleased
-	CMP #$05
-	BEQ PerformNonTextEvent
-	CMP #$06
-	BEQ ClearTextSection
 	CMP #$07
 	BEQ ClearTextSectionDone
 	CMP #$08
@@ -52,7 +70,12 @@ ClearTextSection:
 CheckActionButtons:
 	LDA buttons
 	AND #ACTIONBUTTONS
-	BNE BlockMovement
+	BNE CheckTileForAction
+	RTS
+
+CheckTileForAction:
+	JSR BlockMovement
+	JSR CheckActionTile
 	RTS
 
 ActionTimeout:
@@ -113,10 +136,6 @@ NextTextPart:
 	STA action ; enable action
 	RTS
 
-BlockMovement:
-	LDA buttons        ; blocks movement if action button is pressed
-	AND #ACTIONBUTTONS
-	STA buttons
 CheckActionTile:
 	LDX $0213          ; load horizontal coordinate of the cat's left bottom tile into X
 	LDY $0210          ; load vertical coordinate of the cat's left bottom tile into Y
@@ -387,6 +406,12 @@ PostEvent:
 
 BlockButtons:
 	LDA #$00    ; blocks buttons if action is in process
+	STA buttons
+	RTS
+
+BlockMovement:
+	LDA buttons        ; blocks movement if action button is pressed
+	AND #ACTIONBUTTONS
 	STA buttons
 	RTS
 
