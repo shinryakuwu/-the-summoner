@@ -175,7 +175,7 @@ EndGlitch:
 	LDA #$01
 	STA action
   STA textpartscounter
-  LDA #$02
+  LDA #$04
   STA bgrender        ; activate background rendering and perform it via main loop (outside of NMI)
   LDA #$80            ; TODO: add different values for PAL/NTSC
   STA nmiwaitcounter  ; skip nmi subroutines in the first 32 frames after bg is changed

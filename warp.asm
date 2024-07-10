@@ -366,7 +366,7 @@ SatanEventParamsDone:
 PrepareForBGRender:
   LDA #$01            ; activate background rendering and perform it via main loop (outside of NMI)
   STA bgrender
-  LDA #$02
+  LDA #$03
   STA nmiwaitcounter  ; skip nmi subroutines in the first n frames after bg is changed
 SetBgParams:
   LDY #$00

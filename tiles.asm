@@ -682,13 +682,13 @@ skeletonhouse:
 
   .db $0F,$0E,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A  ;;row 12-13
 
-  .db $0F,$0E,$9C,$0F,$03,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$0F,$03,$9A          ;;row 13-14
+  .db $0F,$0E,$9C,$0F,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$0F,$03,$9A              ;;row 13-14
 
-  .db $0F,$0E,$9C,$0F,$03,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$0F,$03,$9A          ;;row 14-15
+  .db $0F,$0E,$9C,$0F,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$0F,$03,$9A              ;;row 14-15
 
-  .db $0F,$0E,$9C,$0F,$03,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A      ;;row 15-16
+  .db $0F,$0E,$9C,$0F,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A          ;;row 15-16
 
-  .db $0F,$0E,$9C,$0F,$03,$00,$00,$00,$00,$FF,$FF,$9C,$97,$97,$97,$97,$97,$97          ;;row 16-17
+  .db $0F,$0E,$9C,$0F,$04,$00,$00,$00,$FF,$FF,$9C,$97,$97,$97,$97,$97,$97              ;;row 16-17
 
   .db $0F,$0F,$9C,$00,$00,$00,$00,$00,$00,$00,$FF,$FF,$9C                              ;;row 17-18
 
@@ -853,7 +853,7 @@ skeletonhouseparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(skeletonhouse), HIGH(skeletonhouse), LOW(skeletonhousesprites), HIGH(skeletonhousesprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $03, $B8, $30, $01, $01, $00
+  .db $03, $B8, $2C, $01, $01, $00
 
 serverroomparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
