@@ -18,6 +18,7 @@
   .include "actions.asm"        ; checks and params for performing events
   .include "rendertext.asm"
   .include "events.asm"         ; logic for performing any events aside from rendering text
+  .include "dots.asm"           ; logic for drawing dots identifying that the action is possible
   .include "tiles.asm"
 
   .org $FFFA     ;first of the three vectors starts here

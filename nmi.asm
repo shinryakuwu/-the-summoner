@@ -18,6 +18,8 @@ NMISubroutines:
 
   JSR DrawCatFromCache
 
+  JSR DrawDots
+
   JSR ReadController
 
   JSR CheckActionNMI

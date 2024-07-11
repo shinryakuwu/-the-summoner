@@ -393,6 +393,8 @@ MathCandyParams:
 	RTS
 
 SettingEventParamsDone:
+	LDA dotsstate        ; if dotstate is not zero, it means that the logic is processed from CheckActionDots
+	BNE ClearEventParams ; so the real event is not happening
 	LDA eventnumber
 	CMP #$40             ; 1-39 - postevent (happens after text), 40 and more - initial event (happens before text)
 	BCC PostEvent ; post event (or noevent if 0)
@@ -402,6 +404,12 @@ SettingEventParamsDone:
 PostEvent:
 	LDA #$04
 	STA action
+	RTS
+
+ClearEventParams:
+	LDA #$00
+	STA eventnumber
+	STA textpartscounter
 	RTS
 
 BlockButtons:
@@ -417,24 +425,36 @@ BlockMovement:
 
 CheckTilesForEvent:
 	; x coordinate in X, y coordinate in Y
-	TYA
-	CMP currentYtile
+	CPY currentYtile
 	BNE EventFalse
 	LDA direction
 	CMP #$02
 	BCS SkipExtraCheckForX ; if 2 or more
-	TXA                    ; if cat looks to the side, check one x tile
-	CMP currentXtile       ; if looks up or down, check x and the next tile to the right
-	BEQ EventTrue
+	CPX currentXtile       ; if cat looks to the side, check one x tile
+	BEQ EventTrue          ; if looks up or down, check x and the next tile to the right
 SkipExtraCheckForX:
-	TXA
-	CLC
-	ADC #$01
-	CMP currentXtile
+	INX
+	CPX currentXtile
 	BNE EventFalse
 EventTrue:
+	LDA buttons
+	BEQ ActivateDots       ; if no buttons are pressed, then this logic is called from CheckActionDots subroutine
 	LDA #$01
 	RTS
 EventFalse:
+	LDA buttons
+	BEQ DeactivateDots     ; if no buttons are pressed, then this logic is called from CheckActionDots subroutine
 	LDA #$00
+	RTS
+
+ActivateDots:
+	INC dotsstate
+	LDA #$01
+	RTS
+
+DeactivateDots:
+	LDA dotsstate
+	STA olddotsstate
+	LDA #$00
+	STA dotsstate
 	RTS

@@ -70,6 +70,9 @@ emptytilerowaddr .rs 2  ; 16-bit variable to temporarily store the address of em
                         ; (used in StoreEmptyTilesRowAddress and AddEmptyTilesToCurrentTile)
 currentbgparams  .rs 2  ; used for setting params for current location during warp
 actionnmi        .rs 1  ; 0 - action check happens in main logic, 1 - action check happens in nmi
+dotsstate        .rs 1  ; stores state for action dots, 0 - inactive
+olddotsstate     .rs 1  ; stores previous state for action dots
+dotsframe        .rs 1  ; stores the number of dots frame (0-3)
 cachedisable     .rs 1  ; 0 - yes, 1 - no (use cache for updating cat graphics and no cache for all the rest)
 catcache         .rs 24
 
