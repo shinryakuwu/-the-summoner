@@ -16,12 +16,13 @@ NMISubroutines:
   LDA #%00011110   ; enable sprites, enable background, no clipping on left side
   STA $2001
 
+  JSR DrawCatFromCache
+
+  JSR DrawDots
+
   JSR ReadController
 
-  JSR CheckAction
-
-  JSR CheckMovement
-  JSR Warp
+  JSR CheckActionNMI
 
   JSR CheckAnimateTiles
 

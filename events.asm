@@ -126,7 +126,7 @@ OldLadyDisappear:
 	STA trnsfrmcompare
 	LDA #$FF
 	STA switchtile
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	LDA #LOW(candy_left)
   STA currenttextlow
   LDA #HIGH(candy_left)
@@ -175,7 +175,7 @@ EndGlitch:
 	LDA #$01
 	STA action
   STA textpartscounter
-  LDA #$02
+  LDA #$04
   STA bgrender        ; activate background rendering and perform it via main loop (outside of NMI)
   LDA #$80            ; TODO: add different values for PAL/NTSC
   STA nmiwaitcounter  ; skip nmi subroutines in the first 32 frames after bg is changed
@@ -388,7 +388,7 @@ OfficeGhostMoves:
 	LDY #$00
 OfficeGhostMovesLoop:
 	LDX #$57                ; ghost tiles are stored at address 0200 + this number
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	INY
 	CPY #$05
 	BNE OfficeGhostMovesLoop

@@ -43,15 +43,13 @@ TileRight:
   ADC #$10
 
 CalculateBgPointer:    ; vert is stored in Y, horiz is stored in A
-  LSR A                ; need to devide both vert and horiz values by 8
+  LSR A                ; need to divide both vert and horiz values by 8
   LSR A 
   LSR A
   STA currentXtile
-  STA $66              ; for debugging purposes
   TYA
   LSR A
   LSR A
   LSR A
   STA currentYtile     ; saving this value before multiplying it for future use in other subroutines
-  STA $67              ; for debugging purposes
   RTS

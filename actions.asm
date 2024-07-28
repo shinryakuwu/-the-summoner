@@ -1,3 +1,12 @@
+CheckActionNMI:
+	LDA #$01
+	STA actionnmi
+	JMP CheckAction
+
+CheckActionMainLoop:
+	LDA #$00
+	STA actionnmi
+
 CheckAction:
 	LDA eventwaitcounter
 	BNE EventWait          ; do nothing in this frame unless eventwaitcounter is zero
@@ -6,28 +15,39 @@ CheckAction:
 	LDA action
 	BEQ CanCheckForAction  ; allow movement only when no action is happening
 EventWaitDone:
-	JSR BlockButtons
+	JSR BlockMovement
 	RTS
 
 EventWait:
 	DEC eventwaitcounter
-	JMP EventWaitDone
+	LDA actionnmi          ; block movement here only when check action is called from nmi
+	BNE EventWaitDone      ; because calling it in main loop messes up automovement
+	RTS                    ; (buttons are set to some direction and this code clears it before CheckMovement is called)
 
 CanCheckForAction:
+	LDA actionnmi
+	BEQ CheckActionStatus
+
+CheckActionStatusNMI:
+	; check for statuses that will be processed within nmi
 	LDA action
-	BEQ CheckActionButtons ; if zero action state
 	CMP #$01
 	BEQ PerformTextEvent
+	CMP #$05
+	BEQ PerformNonTextEvent
+	CMP #$06
+	BEQ ClearTextSection
+	RTS
+
+CheckActionStatus:
+	LDA action
+	BEQ CheckActionButtons ; if zero action state
 	CMP #$02
 	BEQ ActionTimeout
 	CMP #$03
 	BEQ CheckActionButtonReleased
 	CMP #$04
 	BEQ CheckActionButtonReleased
-	CMP #$05
-	BEQ PerformNonTextEvent
-	CMP #$06
-	BEQ ClearTextSection
 	CMP #$07
 	BEQ ClearTextSectionDone
 	CMP #$08
@@ -52,7 +72,12 @@ ClearTextSection:
 CheckActionButtons:
 	LDA buttons
 	AND #ACTIONBUTTONS
-	BNE BlockMovement
+	BNE CheckTileForAction
+	RTS
+
+CheckTileForAction:
+	JSR BlockMovement
+	JSR CheckActionTile
 	RTS
 
 ActionTimeout:
@@ -113,10 +138,6 @@ NextTextPart:
 	STA action ; enable action
 	RTS
 
-BlockMovement:
-	LDA buttons        ; blocks movement if action button is pressed
-	AND #ACTIONBUTTONS
-	STA buttons
 CheckActionTile:
 	LDX $0213          ; load horizontal coordinate of the cat's left bottom tile into X
 	LDY $0210          ; load vertical coordinate of the cat's left bottom tile into Y
@@ -134,6 +155,8 @@ CheckActionTile:
 	BEQ GhostRoom2Events
 	CMP #$08
 	BEQ ParkEvents
+	CMP #$09
+	BEQ ExHouseEvents
 	RTS
 
 Village1Events:
@@ -153,6 +176,9 @@ ParkEvents:
 	RTS
 GhostRoom2Events:
 	JSR GhostRoom2EventsSubroutine
+	RTS
+ExHouseEvents:
+	JSR ExHouseEventsSubroutine
 	RTS
 
 Village1EventsSubroutine:
@@ -373,10 +399,27 @@ MathCandyParams:
 	JSR SettingEventParamsDone
 	RTS
 
+ExHouseEventsSubroutine:
+	LDX #$0C
+	LDY #$0B
+	JSR CheckTilesForEvent
+	BNE ExParams
+	RTS
+
+ExParams:
+	LDA #LOW(your_fault)
+	STA currenttextlow
+	LDA #HIGH(your_fault)
+	STA currenttexthigh
+	JSR SettingEventParamsDone
+	RTS
+
 SettingEventParamsDone:
+	LDA buttons          ; if no buttons are pressed, it means that the logic is processed from CheckActionDots
+	BEQ ActivateDots     ; so the real event is not happening
 	LDA eventnumber
 	CMP #$40             ; 1-39 - postevent (happens after text), 40 and more - initial event (happens before text)
-	BCC PostEvent ; post event (or noevent if 0)
+	BCC PostEvent        ; post event (or noevent if 0)
 	LDA #$08
 	STA action
 	RTS
@@ -385,27 +428,37 @@ PostEvent:
 	STA action
 	RTS
 
+ActivateDots:
+	INC dotsstate   ; 0 becomes 1
+ClearEventParams:
+	LDA #$00
+	STA eventnumber
+	STA textpartscounter
+	RTS
+
 BlockButtons:
 	LDA #$00    ; blocks buttons if action is in process
 	STA buttons
 	RTS
 
+BlockMovement:
+	LDA buttons        ; blocks movement if action button is pressed
+	AND #ACTIONBUTTONS
+	STA buttons
+	RTS
+
 CheckTilesForEvent:
 	; x coordinate in X, y coordinate in Y
-	TYA
-	CMP currentYtile
+	CPY currentYtile
 	BNE EventFalse
 	LDA direction
 	CMP #$02
 	BCS SkipExtraCheckForX ; if 2 or more
-	TXA                    ; if cat looks to the side, check one x tile
-	CMP currentXtile       ; if looks up or down, check x and the next tile to the right
-	BEQ EventTrue
+	CPX currentXtile       ; if cat looks to the side, check one x tile
+	BEQ EventTrue          ; if looks up or down, check x and the next tile to the right
 SkipExtraCheckForX:
-	TXA
-	CLC
-	ADC #$01
-	CMP currentXtile
+	INX
+	CPX currentXtile
 	BNE EventFalse
 EventTrue:
 	LDA #$01

@@ -141,7 +141,8 @@ LoadSingleAttributeLoop:
   STX $2007                    ; write to PPU
   INY
   ; TODO: add different values for PAL/NTSC
-  CPY #$40                     ; load X to bg attributes table 64 times
+  ; CPY #$40                     ; load X to bg attributes table 64 times
+  CPY #$28
   BNE LoadSingleAttributeLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
   RTS
 
@@ -214,22 +215,33 @@ clrmem:
 
   JSR LoadPalettes
 
-SetDefaultSprites:
+SetCatCache:
   LDA #LOW(catsprites)
   STA curntspriteslow     ; put the low byte of the address of tiles into pointer
   LDA #HIGH(catsprites)
   STA curntspriteshigh    ; put the high byte of the address into pointer
-  LDA #$00
+  LDA #LOW(catcache)
   STA ramspriteslow
-  LDA #$02
+  LDA #HIGH(catcache)
   STA ramspriteshigh      ; load sprites starting from 0200 RAM address
-  LDA #$48
+  LDA #$18
   STA spritescompare
 
   JSR LoadSprites
 
+SetDefaultSprites:
+  LDA #LOW(village1sprites)
+  STA curntspriteslow     ; put the low byte of the address of tiles into pointer
+  LDA #HIGH(village1sprites)
+  STA curntspriteshigh    ; put the high byte of the address into pointer
   LDA #$18
   STA ramspriteslow       ; from now on load sprites starting from 0218 RAM address (without reloading cat sprites)
+  LDA #$02
+  STA ramspriteshigh      ; load sprites starting from 0200 RAM address
+  LDA #$30
+  STA spritescompare
+
+  JSR LoadSprites
 
 SetDefaultBackground:
   JSR SetVillage1Params
@@ -266,5 +278,15 @@ ForeverLoop:
   BNE ForeverLoop
 
   ; when NMI wakes us up, perform the following code and go back to sleep
+
+  LDA nmiwaitcounter ; when nmi waits, the logic below will wait too
+  BNE SkipMainLogicSubroutines
+
+  JSR CheckActionDots
+  JSR CheckActionMainLoop
+  JSR CheckMovement
+  JSR Warp
+
+SkipMainLogicSubroutines:
   JSR BgRenderSubroutine
   JMP Forever     ; jump back to Forever, infinite loop

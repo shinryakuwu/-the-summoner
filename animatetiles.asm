@@ -82,7 +82,7 @@ MoveGhost:
 	LDA #$44          ; compare pointer to this number via transform loop
 	STA trnsfrmcompare
 	LDX #$34          ; ghost tiles are stored at address 0200 + this number
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	RTS
 
 AnimateCatHouseSubroutine:
@@ -97,14 +97,14 @@ AnimateCatHouseSubroutine:
 	STA objectframenum
 	LDA #$0C
 	STA switchtile
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
  	RTS
 AnimateCandles:
 	LDA #$01
 	STA objectframenum
 	LDA #$0B
 	STA switchtile
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	RTS
 
 AnimateVillage2Subroutine:
@@ -118,27 +118,27 @@ AnimateVillage2Subroutine:
 	LDA #$00
 	STA objectframenum
 	STA switchtile
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	LDX #$3A          ; also animate festoon here
 	LDA #$46
 	STA trnsfrmcompare
 	LDA #$01
 	STA switchtile
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
  	RTS
 AnimateRiver:
 	LDA #$01
 	STA objectframenum
 	LDA #$80
 	STA switchtile
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 AnimateFestoon:
 	LDX #$3A
 	LDA #$46
 	STA trnsfrmcompare
 	LDA #$00
 	STA switchtile
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	RTS
 
 AnimateSkeletonHouseSubroutine:
@@ -256,13 +256,13 @@ AnimateServerRoomSubroutine:
 	LDX #$79
 	LDA #$81
 	STA trnsfrmcompare
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	LDA #$FF
 	STA switchtile
 	LDX #$81
 	LDA #$89
 	STA trnsfrmcompare
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
  	RTS
 AnimateDiodes:
 	LDA #$01
@@ -272,13 +272,13 @@ AnimateDiodes:
 	LDX #$79
 	LDA #$81
 	STA trnsfrmcompare
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	LDA #$4A
 	STA switchtile
 	LDX #$81
 	LDA #$89
 	STA trnsfrmcompare
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	RTS
 
 AnimateGhostRoom1Subroutine:
@@ -297,7 +297,7 @@ MoveOfficeGhost:
 	LDA #$74          ; compare pointer to this number via transform loop
 	STA trnsfrmcompare
 	LDX #$54          ; ghost tiles are stored at address 0200 + this number
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	RTS
 
 AnimateGhostRoom2Subroutine:
@@ -371,14 +371,14 @@ Ghost1Moves:
 	LDA #$3C          ; compare pointer to this number via transform loop
 	STA trnsfrmcompare
 	LDX #$2C          ; ghost tiles are stored at address 0200 + this number
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	RTS
 
 Ghost2Moves:
 	LDA #$4C          ; compare pointer to this number via transform loop
 	STA trnsfrmcompare
 	LDX #$3C          ; ghost tiles are stored at address 0200 + this number
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	RTS
 
 BigGhostMoves:
@@ -389,7 +389,7 @@ BigGhostMoves:
 	BNE BigGhostTilesWithoutCandy
 	LDX #$18          ; ghost tiles are stored at address 0200 + this number
 TransformBigGhost:
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	RTS
 
 BigGhostTilesWithoutCandy:
@@ -402,5 +402,5 @@ AnimateParkSubroutine:
 	LDA #$73          ; compare pointer to this number via transform loop
 	STA trnsfrmcompare
 	LDX #$43          ; cloud tiles are stored at address 0200 + this number
-	JSR ObjectTransformLoop
+	JSR ObjectTransformNoCache
 	RTS

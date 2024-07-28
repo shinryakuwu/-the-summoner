@@ -1,18 +1,23 @@
 ;; DECLARE SOME VARIABLES HERE
   .rsset $0000  ;;start variables at ram location 0
-catcache         .rs 6
+currentXtile     .rs 1  ; variable for determining the bg tile next to the cat
+currentYtile     .rs 1  ; variable for determining the bg tile next to the cat
+buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button state in this variable
+                        ; A B select start up down left right
+candycounter     .rs 1  ; stores the number of candy left to collect
+candyswitches    .rs 1  ; stores switches for collecting candy
+switches         .rs 1  ; stores other switches
+                        ; 0 - ghost candy drop
 currentbglow     .rs 1  ; 16-bit variable to point to current background
 currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
 curntspriteshigh .rs 1
 location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
-                        ; 4 - server room, 5 - bsod, 6 - ghost room 1, 7 - ghost room 2, 8 - park)
+                        ; 4 - server room, 5 - bsod, 6 - ghost room 1, 7 - ghost room 2, 8 - park, 9 - ex house)
 spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
 loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
 attributenumber  .rs 1  ; define single attribute to load
-buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button state in this variable
-                        ; A B select start up down left right
 sleeping         .rs 1  ; main program sets this and waits for the NMI to clear it.
                         ; Ensures the main program is run only once per frame.
 action           .rs 1  ; action state ( 1 - action active, 0 - not, 2 - text render done, 3 - timeout state)
@@ -43,8 +48,6 @@ passablecheck2   .rs 1  ; either true(1) or false(0)
 multiplier       .rs 1  ; variable for multiplication subroutine
 mathresultlow    .rs 1  ; 16-bit variable for storing multiplication result
 mathresulthigh   .rs 1
-currentXtile     .rs 1  ; variable for determining the bg tile next to the cat
-currentYtile     .rs 1  ; variable for determining the bg tile next to the cat
 currenttilelow   .rs 1  ; 16-bit variable for determining the bg tile next to the cat
 currenttilehigh  .rs 1
 switchtile       .rs 1  ; tile (and maybe attribute) for replacement used for object animation
@@ -56,10 +59,6 @@ textppuaddrhigh  .rs 1
 textpartscounter .rs 1
 textcursor       .rs 1  ; stores cursor that should be rendered in current text part
 cleartextstate   .rs 1  ; defines a line to be cleared within a frame
-candycounter     .rs 1  ; stores the number of candy left to collect
-candyswitches    .rs 1  ; stores switches for collecting candy
-switches         .rs 1  ; stores other switches
-                        ; 0 - ghost candy drop
 eventnumber      .rs 1  ; stores the identificator of an event that is going to be performed
 walkbackwards    .rs 1  ; 0 - no, 1 - yes
 movecounter      .rs 1  ; defines for how many frames the object will move during an event
@@ -70,6 +69,13 @@ emptytilescount  .rs 1  ; number of empty tile rows before the current tile (req
 emptytilerowaddr .rs 2  ; 16-bit variable to temporarily store the address of empty tile row 
                         ; (used in StoreEmptyTilesRowAddress and AddEmptyTilesToCurrentTile)
 currentbgparams  .rs 2  ; used for setting params for current location during warp
+actionnmi        .rs 1  ; 0 - action check happens in main logic, 1 - action check happens in nmi
+dotsstate        .rs 1  ; 0 - inactive, 1 - active
+dotscounter      .rs 1  ; stores counter for action dots to process animation
+dotsframe        .rs 1  ; stores the number of dots frame (0-3) for animation
+olddotsframe     .rs 1  ; stores previous number of dots frame
+cachedisable     .rs 1  ; 0 - yes, 1 - no (use cache for updating cat graphics and no cache for all the rest)
+catcache         .rs 24
 
 ;; DECLARE SOME CONSTANTS HERE
 

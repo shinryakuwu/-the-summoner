@@ -1,8 +1,12 @@
 BgRenderSubroutine:
 	LDA bgrender
 	CMP #$01
-	BEQ ChangeLocation
+	BEQ ActivateChangeLocationSequence
   CMP #$02
+  BEQ LoadBackgroundForLocation
+  CMP #$03
+  BEQ LoadSpritesForLocation
+  CMP #$04
   BEQ ReloadLocation ; after the glitch event
   RTS
 
@@ -11,13 +15,25 @@ EndBgRenderSubroutine:
 	STA bgrender
   RTS
 
-ChangeLocation:
-  ; CRITICAL!
-  ; TODO: Divide into smaller parts
+ActivateChangeLocationSequence:
+  ; via the same frame, set the needed status + disable NMI
+  LDA #$02
+  STA bgrender
   JSR DisableNMIRendering
+  RTS
+
+LoadBackgroundForLocation:
+  ; frame 1, load background and background attributes
+  LDA #$03
+  STA bgrender
   JSR LoadBackground
   JSR LoadAttribute
+  RTS
+
+LoadSpritesForLocation:
+  ; frame 2, load sprites + do some more things
   JSR ChangeCatCoordinates
+  JSR DrawCatFromCache
   JSR LoadSprites
   JSR AdditionalRender
   LDA #OBJECTSANIMATIONSPEED ; renew the animation counter
@@ -32,7 +48,6 @@ ReloadLocation:
   JMP EndBgRenderSubroutine
 
 ClearBG:
-  JSR DisableNMIRendering
   JSR InitializeLoadBackground
   LDX #$00
 ClearBgLoop:
