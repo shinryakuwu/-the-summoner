@@ -141,7 +141,8 @@ LoadSingleAttributeLoop:
   STX $2007                    ; write to PPU
   INY
   ; TODO: add different values for PAL/NTSC
-  CPY #$40                     ; load X to bg attributes table 64 times
+  ; CPY #$40                     ; load X to bg attributes table 64 times
+  CPY #$28
   BNE LoadSingleAttributeLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
   RTS
 

@@ -4,63 +4,86 @@ CheckActionDots:
 	BNE DotsInactive
 	LDA buttons
 	BNE DotsInactive
+	LDA #$00
+	STA dotsstate       ; inactive by default but will be redefined via CheckActionTile in case current tile contains event
 	JSR CheckActionTile
 	LDA dotsstate
+	BEQ DotsInactive
+	INC dotscounter
+	LDA dotscounter
 	CMP #$40            ; TODO: change to constant, add different values for PAL/NTSC
-	BEQ RenewDotsState
-	RTS
+	BEQ RenewDotsCounter
+	JMP DefineCurrentDotsFrame
 DotsInactive:
-	LDA dotsstate
-	STA olddotsstate    ; need to know if the state was already zero so that we don't need to clear dots each frame
 	LDA #$00
-	STA dotsstate
+	STA dotscounter
+	JMP DefineCurrentDotsFrame
+
+RenewDotsCounter:
+	LDA #$01
+	STA dotscounter
+
+DefineCurrentDotsFrame:
+	LDA dotscounter
+	BEQ SetDotsFrameToZero
+	CMP #$30               ; if dotsstate => this value
+	BCS SetDotsFrameToZero
+	CMP #$01
+	BEQ SetDotsFrameToOne
+	CMP #$10
+	BEQ SetDotsFrameToTwo
+	CMP #$20
+	BEQ SetDotsFrameToThree
 	RTS
 
-RenewDotsState:
-	LDA #$01
-	STA dotsstate
+SetDotsFrameToZero:
+	JSR StorePreviousDotsFrame
+	LDA #$00
+	STA dotsframe
 	RTS
+SetDotsFrameToOne:
+	JSR StorePreviousDotsFrame
+	LDA #$01
+	STA dotsframe
+	RTS
+SetDotsFrameToTwo:
+	JSR StorePreviousDotsFrame
+	LDA #$02
+	STA dotsframe
+	RTS
+SetDotsFrameToThree:
+	JSR StorePreviousDotsFrame
+	LDA #$03
+	STA dotsframe
+	RTS
+
+StorePreviousDotsFrame:
+	LDA dotsframe
+	STA olddotsframe  ; store the previous frame value so that we don't need to update dots graphics each frame
+	RTS
+
 
 DrawDots:
-	LDA dotsstate
-	BEQ CheckOldDotsState
-	CMP #$30               ; if dotsstate => this value, clear dots
-	BCS ClearDots
-	CMP #$01
-	BEQ DrawOneDot
-	CMP #$10
-	BEQ DrawOneDot
-	CMP #$20
-	BEQ DrawOneDot
+	LDA dotsframe
+	STA $70
+	CMP olddotsframe
+	BEQ SkipDrawDots
+	CMP #$00
+	BEQ ClearDots
+	JMP DrawOneDot
+SkipDrawDots:
 	RTS
 
 DrawOneDot:
-  LDA dotsstate
-  STA dotsframe
-  LDX #$04
-DivideDotsStateLoop: ; divide 4 times to get the needed pointer to add to text ppu address
-	LSR dotsframe
-	DEX
-	BNE DivideDotsStateLoop
   LDX #HIGH(INITIALTEXTPPUADDR)
   LDY #LOW(INITIALTEXTPPUADDR)
-  INY
   TYA
   CLC
-  ADC dotsframe
+  ADC dotsframe  ; use dotsframe value as a pointer to add to text ppu address
   TAY
 	JSR SetPPUAddrSubroutine
 	LDA #$54
   STA $2007
-	RTS
-
-CheckOldDotsState:
-	; if olddotsstate between 1 and n, jump to ClearDots
-	LDA olddotsstate
-	BEQ CheckOldDotsStateDone
-	CMP #$30
-	BCC ClearDots
-CheckOldDotsStateDone:
 	RTS
 
 ClearDots:

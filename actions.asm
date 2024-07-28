@@ -20,7 +20,9 @@ EventWaitDone:
 
 EventWait:
 	DEC eventwaitcounter
-	JMP EventWaitDone
+	LDA actionnmi          ; block movement here only when check action is called from nmi
+	BNE EventWaitDone      ; because calling it in main loop messes up automovement
+	RTS                    ; (buttons are set to some direction and this code clears it before CheckMovement is called)
 
 CanCheckForAction:
 	LDA actionnmi
@@ -153,6 +155,8 @@ CheckActionTile:
 	BEQ GhostRoom2Events
 	CMP #$08
 	BEQ ParkEvents
+	CMP #$09
+	BEQ ExHouseEvents
 	RTS
 
 Village1Events:
@@ -172,6 +176,9 @@ ParkEvents:
 	RTS
 GhostRoom2Events:
 	JSR GhostRoom2EventsSubroutine
+	RTS
+ExHouseEvents:
+	JSR ExHouseEventsSubroutine
 	RTS
 
 Village1EventsSubroutine:
@@ -392,12 +399,27 @@ MathCandyParams:
 	JSR SettingEventParamsDone
 	RTS
 
+ExHouseEventsSubroutine:
+	LDX #$0C
+	LDY #$0B
+	JSR CheckTilesForEvent
+	BNE ExParams
+	RTS
+
+ExParams:
+	LDA #LOW(your_fault)
+	STA currenttextlow
+	LDA #HIGH(your_fault)
+	STA currenttexthigh
+	JSR SettingEventParamsDone
+	RTS
+
 SettingEventParamsDone:
-	LDA dotsstate        ; if dotstate is not zero, it means that the logic is processed from CheckActionDots
-	BNE ClearEventParams ; so the real event is not happening
+	LDA buttons          ; if no buttons are pressed, it means that the logic is processed from CheckActionDots
+	BEQ ActivateDots     ; so the real event is not happening
 	LDA eventnumber
 	CMP #$40             ; 1-39 - postevent (happens after text), 40 and more - initial event (happens before text)
-	BCC PostEvent ; post event (or noevent if 0)
+	BCC PostEvent        ; post event (or noevent if 0)
 	LDA #$08
 	STA action
 	RTS
@@ -406,6 +428,8 @@ PostEvent:
 	STA action
 	RTS
 
+ActivateDots:
+	INC dotsstate   ; 0 becomes 1
 ClearEventParams:
 	LDA #$00
 	STA eventnumber
@@ -437,24 +461,8 @@ SkipExtraCheckForX:
 	CPX currentXtile
 	BNE EventFalse
 EventTrue:
-	LDA buttons
-	BEQ ActivateDots       ; if no buttons are pressed, then this logic is called from CheckActionDots subroutine
 	LDA #$01
 	RTS
 EventFalse:
-	LDA buttons
-	BEQ DeactivateDots     ; if no buttons are pressed, then this logic is called from CheckActionDots subroutine
 	LDA #$00
-	RTS
-
-ActivateDots:
-	INC dotsstate
-	LDA #$01
-	RTS
-
-DeactivateDots:
-	LDA dotsstate
-	STA olddotsstate
-	LDA #$00
-	STA dotsstate
 	RTS

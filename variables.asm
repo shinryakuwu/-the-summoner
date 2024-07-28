@@ -13,7 +13,7 @@ currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
 curntspriteshigh .rs 1
 location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
-                        ; 4 - server room, 5 - bsod, 6 - ghost room 1, 7 - ghost room 2, 8 - park)
+                        ; 4 - server room, 5 - bsod, 6 - ghost room 1, 7 - ghost room 2, 8 - park, 9 - ex house)
 spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
 loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
@@ -70,9 +70,10 @@ emptytilerowaddr .rs 2  ; 16-bit variable to temporarily store the address of em
                         ; (used in StoreEmptyTilesRowAddress and AddEmptyTilesToCurrentTile)
 currentbgparams  .rs 2  ; used for setting params for current location during warp
 actionnmi        .rs 1  ; 0 - action check happens in main logic, 1 - action check happens in nmi
-dotsstate        .rs 1  ; stores state for action dots, 0 - inactive
-olddotsstate     .rs 1  ; stores previous state for action dots
-dotsframe        .rs 1  ; stores the number of dots frame (0-3)
+dotsstate        .rs 1  ; 0 - inactive, 1 - active
+dotscounter      .rs 1  ; stores counter for action dots to process animation
+dotsframe        .rs 1  ; stores the number of dots frame (0-3) for animation
+olddotsframe     .rs 1  ; stores previous number of dots frame
 cachedisable     .rs 1  ; 0 - yes, 1 - no (use cache for updating cat graphics and no cache for all the rest)
 catcache         .rs 24
 

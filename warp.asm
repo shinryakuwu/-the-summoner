@@ -14,6 +14,8 @@ Warp:
   BEQ GhostRoom2WarpCheck
   CMP #$08
   BEQ ParkWarpCheck
+  CMP #$09
+  BEQ ExHouseWarpCheck
 	RTS
 
 Village1WarpCheck:
@@ -36,6 +38,9 @@ GhostRoom2WarpCheck:
   RTS
 ParkWarpCheck:
   JSR ParkVillage1WarpCheck
+  RTS
+ExHouseWarpCheck:
+  JSR ExHouseVillage2WarpCheck
   RTS
 
 
@@ -161,6 +166,13 @@ Village2GhostRoom2WarpCheck:
   CMP #$14
   BEQ Village2GhostRoom2Warp
 Village2ExHouseWarpCheck:
+  LDA currentYtile
+  CMP #$07
+  BNE Village2ExHouseWarpCheckDone
+  LDA currentXtile
+  CMP #$18
+  BEQ Village2ExHouseWarp
+Village2ExHouseWarpCheckDone:
   RTS
 
 Village2Village1Warp:
@@ -184,6 +196,18 @@ Village2ServerRoomWarp:
   LDA #LOW(village2serverroomwarp)
   STA warpXYlow
   LDA #HIGH(village2serverroomwarp)
+  STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
+Village2ExHouseWarp:
+  LDA #LOW(exhouseparams)
+  STA currentbgparams
+  LDA #HIGH(exhouseparams)
+  STA currentbgparams+1
+  LDA #LOW(village2exhousewarp)
+  STA warpXYlow
+  LDA #HIGH(village2exhousewarp)
   STA warpXYhigh
   JSR PrepareForBGRender
   RTS
@@ -321,6 +345,27 @@ GhostRoom1ParkWarp:
   JSR PrepareForBGRender
   RTS
 
+ExHouseVillage2WarpCheck:
+  LDA currentXtile
+  CMP #$0B
+  BNE ExHouseVillage2WarpCheckDone
+  LDA currentYtile
+  CMP #$13
+  BNE ExHouseVillage2WarpCheckDone
+  LDA direction
+  BEQ ExHouseVillage2Warp ; when equals zero
+ExHouseVillage2WarpCheckDone:
+  RTS
+
+ExHouseVillage2Warp:
+  JSR SetVillage2Params
+  LDA #LOW(exhousevillage2warp)
+  STA warpXYlow
+  LDA #HIGH(exhousevillage2warp)
+  STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
 SetVillage1Params:
   LDA #LOW(village1params)
   STA currentbgparams
@@ -337,6 +382,10 @@ SetVillage2Params:
   STA currentbgparams
   LDA #HIGH(village2params)
   STA currentbgparams+1
+  LDA #LOW(village2attributes)
+  STA currentattrlow
+  LDA #HIGH(village2attributes)
+  STA currentattrhigh
   RTS
 
 SetParkParams:
@@ -344,6 +393,10 @@ SetParkParams:
   STA currentbgparams
   LDA #HIGH(parkparams)
   STA currentbgparams+1
+  LDA #LOW(parkattributes)
+  STA currentattrlow
+  LDA #HIGH(parkattributes)
+  STA currentattrhigh
   RTS
 
 SatanEventParams:
