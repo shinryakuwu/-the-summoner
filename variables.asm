@@ -6,8 +6,21 @@ buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button st
                         ; A B select start up down left right
 candycounter     .rs 1  ; stores the number of candy left to collect
 candyswitches    .rs 1  ; stores switches for collecting candy
+                        ; 00000000
+                        ;   ||||||__ old lady candy
+                        ;   |||||__ candy man hand
+                        ;   ||||__ licorice
+                        ;   |||__ ghost candy
+                        ;   ||__ boss candy 1
+                        ;   |__ boss candy 2
 switches         .rs 1  ; stores other switches
-                        ; 0 - ghost candy drop
+                        ; 00000000
+                        ;   ||||||__ ghost candy drop
+                        ;   |||||__ talked to fren
+                        ;   ||||__ took meds
+                        ;   |||__ visited ghost house
+                        ;   ||__ got ghost pass hint
+                        ;   |__ got ghost pass
 currentbglow     .rs 1  ; 16-bit variable to point to current background
 currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites

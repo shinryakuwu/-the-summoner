@@ -152,9 +152,9 @@ Village2ServerRoomWarpCheck:
   CMP #$0D
   BNE Village2GhostRoom2WarpCheck
   LDA currentXtile
-  CMP #$05
+  CMP #$04
   BEQ Village2ServerRoomWarp
-  CMP #$06
+  CMP #$05
   BEQ Village2ServerRoomWarp
 Village2GhostRoom2WarpCheck:
   LDA currentYtile
@@ -213,6 +213,9 @@ Village2ExHouseWarp:
   RTS
 
 Village2GhostRoom2Warp:
+  ; LDA switches
+  ; AND #%00100000
+  ; BNE skip this ; if no ghost pass, cannot enter the house
   LDA #LOW(ghostroom2params)
   STA currentbgparams
   LDA #HIGH(ghostroom2params)
@@ -221,11 +224,9 @@ Village2GhostRoom2Warp:
   STA warpXYlow
   LDA #HIGH(ghostroomwarp)
   STA warpXYhigh
-  ; TODO: add switch check here
-  ; LDA switches
-  ; AND #somenumber
-  ; CMP #somenumber
-  ; BNE skip this
+  LDA candyswitches
+  AND #%00001000
+  BNE Village2GhostRoom2WarpNoEvent ; if got the ghost candy, skip the math cutscene
   LDA #$04
   STA eventnumber
   LDA #$20
@@ -238,7 +239,7 @@ Village2GhostRoom2Warp:
   STA currenttexthigh
   LDA #$02
   STA textpartscounter
-  ; jump here when no action
+Village2GhostRoom2WarpNoEvent:
   JSR PrepareForBGRender
   RTS
 

@@ -205,11 +205,15 @@ StartGhostParams:
 	RTS
 
 OldLadyParams:
+	LDA candyswitches
+	AND #%00000001
+  BNE OldLadyParamsDone ; if candy already gathered, skip event
 	LDA #$40
 	STA eventnumber
 	LDA #$15
 	STA movecounter
 	JSR SettingEventParamsDone
+OldLadyParamsDone:
 	RTS
 
 CatHouseEventsSubroutine:
@@ -251,6 +255,8 @@ MedicineParams:
 	STA currenttextlow
 	LDA #HIGH(medicine)
 	STA currenttexthigh
+	LDA #$44
+	STA eventnumber
 	JSR SettingEventParamsDone
 	RTS
 ColaParams:
@@ -301,6 +307,9 @@ SkeletonParams:
 	JSR SettingEventParamsDone
 	RTS
 CandymanParams:
+	LDA candyswitches
+	AND #%00000010
+  BNE CandymanParamsDone ; if candy already gathered, skip event
 	LDA #LOW(candyman)
 	STA currenttextlow
 	LDA #HIGH(candyman)
@@ -309,6 +318,7 @@ CandymanParams:
 	STA textpartscounter
 	STA eventnumber
 	JSR SettingEventParamsDone
+CandymanParamsDone:
 	RTS
 
 ServerRoomEventsSubroutine:
@@ -331,12 +341,8 @@ TVParams:
 	RTS
 
 BucketHatGuyParams:
-	LDA #LOW(corporations)
-	STA currenttextlow
-	LDA #HIGH(corporations)
-	STA currenttexthigh
-	LDA #$02
-	STA textpartscounter
+	LDA #$45
+	STA eventnumber
 	JSR SettingEventParamsDone
 	RTS
 
@@ -394,9 +400,13 @@ BigGhostParams:
 	JSR SettingEventParamsDone
 	RTS
 MathCandyParams:
+	LDA candyswitches
+	AND #%00001000
+  BNE MathCandyParamsDone ; if candy already gathered, skip event
 	LDA #$42
 	STA eventnumber
 	JSR SettingEventParamsDone
+MathCandyParamsDone:
 	RTS
 
 ExHouseEventsSubroutine:

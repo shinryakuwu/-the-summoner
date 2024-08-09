@@ -17,6 +17,10 @@ NonTextEvents:
 	BEQ MathCandy
 	CMP #$43
 	BEQ SatanWalk
+	CMP #$44
+	BEQ Meds
+	CMP #$45
+	BEQ BucketHatGuy
 NonTextEventsDone:
 	LDA #$00
   STA action
@@ -36,6 +40,14 @@ Office:
 
 Math:
 	JSR MathSubroutine
+	RTS
+
+Meds:
+	JSR MedsSubroutine
+	RTS
+
+BucketHatGuy:
+	JSR BucketHatGuySubroutine
 	RTS
 
 MathCandy:
@@ -58,6 +70,9 @@ CandymanHandSubroutine:
   STA currenttextlow
   LDA #HIGH(hand_acquired)
   STA currenttexthigh
+  LDA candyswitches
+  ORA #%00000010
+  STA candyswitches
   LDA #$01
   STA textpartscounter
   STA action
@@ -131,6 +146,9 @@ OldLadyDisappear:
   STA currenttextlow
   LDA #HIGH(candy_left)
   STA currenttexthigh
+  LDA candyswitches
+  ORA #%00000001
+  STA candyswitches
 	LDA #$01
   STA action
   LDA #$18
@@ -442,7 +460,7 @@ CandyFalls:
 	LDA movecounter
 	BEQ CandyFallsDone
 	DEC movecounter
-	INC $0218       ; alter candy horizontal coordinates
+	INC $0218       ; alter candy vertical coordinates
 	RTS
 CandyFallsDone:
 	LDA #$00
@@ -556,6 +574,86 @@ MathCandySubroutine:
 	STA currenttextlow
 	LDA #HIGH(candy_left)
 	STA currenttexthigh
+	LDA candyswitches
+	ORA #%00001000
+	STA candyswitches
+	LDA #$01
+  STA action
+  JSR PerformNonTextEventDone
+	RTS
+
+MedsSubroutine:
+	LDA switches
+	AND #%00000100
+	BNE MedsSubroutineDone
+	LDA switches
+	AND #%00000010
+	BEQ MedsSubroutineDone
+	LDA #$01
+	STA textpartscounter
+	LDA switches
+	ORA #%00000100
+  STA switches   ; take pills
+MedsSubroutineDone:
+	LDA #$01
+  STA action
+  JSR PerformNonTextEventDone
+	RTS
+
+BucketHatGuySubroutine:
+	LDA eventstate
+	BNE BucketHatGuyCandyAcquired ; it's basically the second part of BucketHatGuyState2
+	LDA candyswitches
+	AND #%00000100
+	BNE BucketHatGuyState3
+	LDA switches
+	AND #%00000100
+	BNE BucketHatGuyState2
+BucketHatGuyState1:
+	LDA #LOW(corporations)
+	STA currenttextlow
+	LDA #HIGH(corporations)
+	STA currenttexthigh
+	LDA #$02
+	STA textpartscounter
+	LDA switches
+  ORA #%00000010
+  STA switches  ; can go get pills after this event
+	JMP BucketHatGuySubroutineDone
+
+BucketHatGuyState2:
+	; when buckethat guy receives meds
+	LDA #LOW(chill_pill)
+	STA currenttextlow
+	LDA #HIGH(chill_pill)
+	STA currenttexthigh
+	LDA #$03
+	STA textpartscounter
+	LDA candyswitches
+  ORA #%00000100
+  STA candyswitches
+	LDA #$01
+  STA action
+  STA eventstate
+  RTS
+
+BucketHatGuyState3:
+	; after buckethat guy gives you licorice
+	LDA #LOW(no_love)
+	STA currenttextlow
+	LDA #HIGH(no_love)
+	STA currenttexthigh
+	JMP BucketHatGuySubroutineDone
+
+BucketHatGuyCandyAcquired:
+	DEC eventstate
+	INC candycounter
+	LDA #LOW(candy_left)
+  STA currenttextlow
+  LDA #HIGH(candy_left)
+  STA currenttexthigh
+
+BucketHatGuySubroutineDone:
 	LDA #$01
   STA action
   JSR PerformNonTextEventDone

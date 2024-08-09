@@ -79,8 +79,12 @@ ChangeCatCoordinates:
 
 AdditionalRender:
   LDA location
+  CMP #$03
+  BEQ SkeletonHouseAdditionalRender
   CMP #$06
   BEQ GhostRoom1AdditionalRender
+  CMP #$07
+  BEQ GhostRoom2AdditionalRender
   RTS
 
 GhostRoom1AdditionalRender:
@@ -95,6 +99,28 @@ GhostRoom1AdditionalRender:
   LDA #$97              ; remove exit
   STA $2007
   STA $2007
+  RTS
+
+GhostRoom2AdditionalRender:
+  LDA candyswitches
+  AND #%00001000
+  BNE GhostRoom2EraseCandyTile
+  RTS
+
+GhostRoom2EraseCandyTile:
+  LDA #$00
+  STA $0219
+  RTS
+
+SkeletonHouseAdditionalRender:
+  LDA candyswitches
+  AND #%00000010
+  BNE RenderTornOffHand
+  RTS
+
+RenderTornOffHand:
+  LDA #$34
+  STA $0221
   RTS
 
 SetPPUAddrSubroutine:

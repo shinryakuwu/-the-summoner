@@ -284,7 +284,7 @@ ForeverLoop:
 
   JSR CheckActionDots
   JSR CheckActionMainLoop
-  JSR CheckMovement
+  JSR MovementSubroutine
   JSR Warp
 
 SkipMainLogicSubroutines:
