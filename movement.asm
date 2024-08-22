@@ -1,11 +1,3 @@
-CheckMovement:
-  LDA location      ; need to skip one frame in skeleton house to change background attributes
-  CMP #$03          ; TODO: consider refactoring here
-  BNE MovementSubroutine
-  LDA animatecounter
-  BNE MovementSubroutine
-  RTS
-
 MovementSubroutine:
   LDA buttons
   AND #%00001111    ; check only the state of the arrow buttons
