@@ -125,6 +125,7 @@ AnimateVillage2Subroutine:
 	LDA #$01
 	STA switchtile
 	JSR ObjectTransformNoCache
+	INC $02F4        ; animate ghost guard
  	RTS
 AnimateRiver:
 	LDA #$01
@@ -139,6 +140,7 @@ AnimateFestoon:
 	LDA #$00
 	STA switchtile
 	JSR ObjectTransformNoCache
+	DEC $02F4        ; animate ghost guard
 	RTS
 
 AnimateSkeletonHouseSubroutine:

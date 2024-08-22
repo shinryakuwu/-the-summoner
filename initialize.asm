@@ -1,6 +1,3 @@
-  .bank 0
-  .org $C000
-
 vblankwait:
   BIT $2002
   BPL vblankwait
@@ -210,7 +207,7 @@ clrmem:
   STA $0300, x
   INX
   BNE clrmem
-   
+
   JSR vblankwait      ; Second wait for vblank, PPU is ready after this
 
   JSR LoadPalettes

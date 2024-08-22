@@ -12,7 +12,7 @@ NonTextEvents:
 	CMP #$40
 	BEQ OldLady
 	CMP #$41
-	BEQ Office
+	BEQ Forgot
 	CMP #$42
 	BEQ MathCandy
 	CMP #$43
@@ -21,6 +21,10 @@ NonTextEvents:
 	BEQ Meds
 	CMP #$45
 	BEQ BucketHatGuy
+	CMP #$46
+	BEQ GhostGuard
+	CMP #$47
+	BEQ StartGhost
 NonTextEventsDone:
 	LDA #$00
   STA action
@@ -36,6 +40,10 @@ OldLady:
 
 Office:
 	JSR OfficeSubroutine
+	RTS
+
+Forgot:
+	JSR ForgotSubroutine
 	RTS
 
 Math:
@@ -54,12 +62,20 @@ MathCandy:
 	JSR MathCandySubroutine
 	RTS
 
+GhostGuard:
+	JSR GhostGuardSubroutine
+	RTS
+
 SatanWalk:
 	JSR SatanWalkSubroutine
 	RTS
 
 SatanGlitch:
 	JSR SatanGlitchSubroutine
+	RTS
+
+StartGhost:
+	JSR StartGhostSubroutine
 	RTS
 
 CandymanHandSubroutine:
@@ -89,21 +105,8 @@ OldLadySubroutine:
 	RTS
 
 OldLadyWalk:
-	LDA movecounter
-	BEQ OldLadyWalkDone
-	LDA #$01
-  STA walkbackwards
-	DEC movecounter
-	LDA #MVUP
-	STA buttons
-	RTS
-OldLadyWalkDone:
-	LDA #$00
-  STA walkbackwards
-	LDA #$05
-  STA action
-	LDA #$01
-	STA eventstate
+	LDX #MVUP
+	JSR EventWalkSubroutine
 	RTS
 
 OldLadyAppear:
@@ -328,6 +331,8 @@ OfficeTeleport:
 	STA eventwaitcounter
 	LDA #$01
 	STA eventstate
+	LDA #DELAYGHOSTROOM1
+  STA nmiwaitcounter
 	RTS
 
 OfficeLookUp:
@@ -343,8 +348,6 @@ OfficeLookUp:
   STA action
   LDA #$02
 	STA eventstate
-	LDA #$03
-	STA eventnumber
 	RTS
 
 OfficeGhostMovesLeft:
@@ -355,8 +358,6 @@ OfficeGhostMovesLeft:
 	STA eventwaitcounter
 	LDA #$03
 	STA eventstate
-	LDA #$41
-	STA eventnumber
 	RTS
 
 OfficeCatMovesLeft:
@@ -396,8 +397,6 @@ OfficeGhostMovesRight:
   STA action
   LDA #$07
 	STA eventstate
-	LDA #$03
-	STA eventnumber
 	RTS
 
 OfficeGhostMoves:
@@ -420,6 +419,9 @@ OfficeCatMoves:
 	RTS
 
 ParkTeleportSubroutine:
+	LDA switches
+  ORA #%00100000
+  STA switches ; ghost pass trigger
 	JSR GhostRoom1ParkWarp
   LDA #LOW(nightmare)
   STA currenttextlow
@@ -433,7 +435,7 @@ ParkTeleportSubroutine:
   LDA #MVLEFT
 	STA buttons
   ; TODO: add different values for PAL/NTSC
-  LDA #DELAYAFTERGHOSTROOM1
+  LDA #DELAYGHOSTROOM1
   STA nmiwaitcounter
 	RTS
 
@@ -570,6 +572,9 @@ MathCandySubroutine:
 	INC candycounter
 	LDA #$00
 	STA $0219             ; candy disappears
+	LDA switches
+  AND #%11111110
+  STA switches          ; remove candy dropped trigger
 	LDA #LOW(candy_left)
 	STA currenttextlow
 	LDA #HIGH(candy_left)
@@ -659,7 +664,178 @@ BucketHatGuySubroutineDone:
   JSR PerformNonTextEventDone
 	RTS
 
+GhostGuardSubroutine:
+	LDA eventstate
+	BEQ GhostGuardWalk
+	CMP #$01
+	BEQ GhostGuardInitiateRender
+	CMP #$02
+	BEQ GhostGuardBlinks
+	CMP #$03
+	BEQ GhostGuardTalks
+	CMP #$04
+	BEQ GhostGuardHides
+	RTS
+
+GhostGuardWalk:
+	LDX #MVUP
+	JSR EventWalkSubroutine
+	RTS
+
+GhostGuardTalks:
+	LDA #LOW(proceed_no_more)
+  STA currenttextlow
+  LDA #HIGH(proceed_no_more)
+  STA currenttexthigh
+  LDA #$01
+  STA textpartscounter
+  STA action
+  INC eventstate
+  RTS
+
+GhostGuardHides:
+	LDA #$00
+  STA $02F5   ; erase ghost tile in ram
+	LDA #$00
+	STA eventstate
+	LDA switches
+	ORA #%00001000
+	STA switches
+	JSR PerformNonTextEventDone
+	RTS
+
+GhostGuardInitiateRender:
+	LDA #$F4
+	STA ramspriteslow
+	LDA #LOW(ghostguard)
+  STA curntspriteslow
+  LDA #HIGH(ghostguard)
+  STA curntspriteshigh
+  LDY #$00
+GhostGuardRenderLoop:
+	LDA [curntspriteslow], y
+  STA [ramspriteslow], y
+  INY
+  CPY #$03
+  BNE GhostGuardRenderLoop
+  ; calculate ghost's x coordinate here
+  LDA $0203 ; x coordinate of the first cat tile
+  SEC
+  SBC #$0A ; distance between a ghost and a cat
+  STA [ramspriteslow], y
+  LDA #$18
+  STA ramspriteslow  ; restore default ppu pointer position
+  LDA #$30
+	STA movecounter
+	INC eventstate
+	RTS
+
+GhostGuardBlinks:
+	LDA movecounter
+  AND #%00000001            ; branch depends on whether movecounter is even/odd
+  BNE GhostGuardDisappears  ; odd
+  LDA #$6B                  ; even
+  STA $02F5                 ; load ghost tile into ram
+GhostGuardBlinksDone:
+	LDA movecounter
+	BEQ GhostGuardChangeEventState ; if 0
+	DEC movecounter
+  RTS
+GhostGuardChangeEventState:
+	INC eventstate
+	RTS
+
+GhostGuardDisappears:
+	LDA #$00
+  STA $02F5               ; erase ghost tile in ram
+	JMP GhostGuardBlinksDone
+
+EventWalkSubroutine:
+	LDA movecounter
+	BEQ EventWalkDone
+	LDA #$01
+  STA walkbackwards
+	DEC movecounter
+	STX buttons
+	RTS
+EventWalkDone:
+	LDA #$00
+  STA walkbackwards
+	LDA #$05
+  STA action
+	INC eventstate
+	RTS
+
+StartGhostSubroutine:
+	; when ghost pass received
+	LDA switches
+  AND #%00100000
+  BNE StartGhostState3
+	; when house visited
+	LDA switches
+	AND #%00001000
+	BNE StartGhostState2
+	; else
+StartGhostState1:
+	LDA #LOW(startghost)
+	STA currenttextlow
+	LDA #HIGH(startghost)
+	STA currenttexthigh
+  JMP StartGhostSubroutineDone
+
+StartGhostState2:
+	LDA #LOW(ceo)
+	STA currenttextlow
+	LDA #HIGH(ceo)
+	STA currenttexthigh
+	LDA #$03
+  STA textpartscounter
+  LDA switches
+  ORA #%00010000
+  STA switches  ; can go to CEO after this event
+  JMP StartGhostSubroutineDone
+
+StartGhostState3:
+	LDA #LOW(predictions)
+	STA currenttextlow
+	LDA #HIGH(predictions)
+	STA currenttexthigh
+	JMP StartGhostSubroutineDone
+
+StartGhostSubroutineDone:
+	LDA #$01
+  STA action
+  JSR PerformNonTextEventDone
+	RTS
+
+ForgotSubroutine:
+	LDA eventstate
+	BEQ ForgotWalk
+	CMP #$01
+	BEQ ForgotTalk
+	LDA #$00
+	STA eventstate
+	JSR PerformNonTextEventDone
+	RTS
+
+ForgotWalk:
+	LDX #MVDOWN
+	JSR EventWalkSubroutine
+	RTS
+
+ForgotTalk:
+	LDA #LOW(forgot)
+	STA currenttextlow
+	LDA #HIGH(forgot)
+	STA currenttexthigh
+	LDA #$01
+  STA action
+	INC eventstate
+	JSR PerformNonTextEventDone
+	RTS
+
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional
+	; TODO: check if can move setting eventstate to zero here
 	LDA #$00
 	STA eventnumber
 	RTS
