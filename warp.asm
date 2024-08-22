@@ -213,9 +213,9 @@ Village2ExHouseWarp:
   RTS
 
 Village2GhostRoom2Warp:
-  ; LDA switches
-  ; AND #%00100000
-  ; BNE skip this ; if no ghost pass, cannot enter the house
+  LDA switches
+  AND #%00100000
+  BEQ GhostGuardEvent ; if no ghost pass, cannot enter the house
   LDA #LOW(ghostroom2params)
   STA currentbgparams
   LDA #HIGH(ghostroom2params)
@@ -227,12 +227,11 @@ Village2GhostRoom2Warp:
   LDA candyswitches
   AND #%00001000
   BNE Village2GhostRoom2WarpNoEvent ; if got the ghost candy, skip the math cutscene
-  LDA #$04
-  STA eventnumber
   LDA #$20
   STA eventwaitcounter
   LDA #$04
   STA action
+  STA eventnumber
   LDA #LOW(math_ghost)
   STA currenttextlow
   LDA #HIGH(math_ghost)
@@ -241,6 +240,18 @@ Village2GhostRoom2Warp:
   STA textpartscounter
 Village2GhostRoom2WarpNoEvent:
   JSR PrepareForBGRender
+  RTS
+
+GhostGuardEvent:
+  LDA action
+  BNE GhostGuardEventDone
+  LDA #$46
+  STA eventnumber
+  LDA #$0A
+  STA movecounter
+  LDA #$08
+  STA action
+GhostGuardEventDone:
   RTS
 
 SkeletonHouseVillage1WarpCheck:
@@ -298,12 +309,27 @@ GhostRoom2Village2WarpCheckDone:
   RTS
 
 GhostRoom2Village2Warp:
+  LDA switches
+  AND #%00000001      ; when candy dropped
+  BNE ForgotSomething
   JSR SetVillage2Params
   LDA #LOW(ghostroom2village2warp)
   STA warpXYlow
   LDA #HIGH(ghostroom2village2warp)
   STA warpXYhigh
   JSR PrepareForBGRender
+  RTS
+
+ForgotSomething:
+  LDA action
+  BNE ForgotSomethingDone
+  LDA #$41
+  STA eventnumber
+  LDA #$0A
+  STA movecounter
+  LDA #$08
+  STA action
+ForgotSomethingDone:
   RTS
 
 ParkVillage1WarpCheck:

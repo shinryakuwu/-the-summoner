@@ -197,10 +197,8 @@ Village1EventsSubroutine:
 	RTS
 
 StartGhostParams:
-	LDA #LOW(startghost)
-	STA currenttextlow
-	LDA #HIGH(startghost)
-	STA currenttexthigh
+	LDA #$47
+	STA eventnumber
 	JSR SettingEventParamsDone
 	RTS
 
@@ -347,16 +345,46 @@ BucketHatGuyParams:
 	RTS
 
 ParkEventsSubroutine:
+	LDX #$15
+	LDY #$0A
+	JSR CheckTilesForEvent
+	BNE OfficeWarpParams
+	LDA direction
+	CMP #$02
+	BEQ ParkEventsCheckLeft
+	CMP #$03
+	BEQ ParkEventsCheckRight
+	RTS
+
+ParkEventsCheckRight:
 	LDX #$16
-	LDY #$09
+	LDY #$0A
+	JSR CheckTilesForEvent
+	BNE OfficeWarpParams
+	RTS
+
+ParkEventsCheckLeft:
+	LDX #$14
+	LDY #$0A
 	JSR CheckTilesForEvent
 	BNE OfficeWarpParams
 	RTS
 
 OfficeWarpParams:
-	LDA #$41
+	LDA switches
+  AND #%00100000
+  BNE OfficeWarpParamsDone ; event appears when no ghost pass
+	LDA switches
+  AND #%00010000
+  BEQ OfficeWarpParamsDone ; event appears after getting a hint
+	LDA #$03
 	STA eventnumber
+	LDA #LOW(nothing)
+  STA currenttextlow
+  LDA #HIGH(nothing)
+  STA currenttexthigh
 	JSR SettingEventParamsDone
+OfficeWarpParamsDone:
 	RTS
 
 GhostRoom2EventsSubroutine:

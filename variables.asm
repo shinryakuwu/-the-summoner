@@ -1,5 +1,4 @@
 ;; DECLARE SOME VARIABLES HERE
-  .rsset $0000  ;;start variables at ram location 0
 currentXtile     .rs 1  ; variable for determining the bg tile next to the cat
 currentYtile     .rs 1  ; variable for determining the bg tile next to the cat
 buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button state in this variable
@@ -106,4 +105,4 @@ EMPTYBGTILEATTRIBUTE = $0F
 EMPTYTILEROWADDRESSES = $80
 BGPARAMSADDRESS = $06
 BGPARAMSCOMPARE = $0A
-DELAYAFTERGHOSTROOM1 = $A0
+DELAYGHOSTROOM1 = $A0

@@ -43,7 +43,7 @@ LoadSpritesForLocation:
 ReloadLocation:
   JSR DisableNMIRendering
   JSR ClearBG
-  JSR LoadAttribute
+  JSR LoadSatanBGAttributes
   JSR LoadPalettes
   JMP EndBgRenderSubroutine
 
@@ -77,6 +77,12 @@ ChangeCatCoordinates:
   JSR ObjectTransformLoop
   RTS
 
+LoadSatanBGAttributes: ; TODO: might need to remove or reconsider this mess
+  LDA #$00
+  STA singleattribute ; no need to set attributes address because it's already set to village1attributes
+  JSR LoadAttribute
+  RTS
+
 AdditionalRender:
   LDA location
   CMP #$03
@@ -85,6 +91,8 @@ AdditionalRender:
   BEQ GhostRoom1AdditionalRender
   CMP #$07
   BEQ GhostRoom2AdditionalRender
+  CMP #$08
+  BEQ ParkAdditionalRender
   RTS
 
 GhostRoom1AdditionalRender:
@@ -121,6 +129,20 @@ SkeletonHouseAdditionalRender:
 RenderTornOffHand:
   LDA #$34
   STA $0221
+  RTS
+
+ParkAdditionalRender:
+  LDA switches
+  AND #%00100000
+  BNE ParkAdditionalRenderDone ; when no ghost pass
+  LDA switches
+  AND #%00010000
+  BEQ ParkAdditionalRenderDone ; after getting a hint
+  LDA #$03
+  STA $0272
+  STA $0276
+  STA $027A
+ParkAdditionalRenderDone:
   RTS
 
 SetPPUAddrSubroutine:
