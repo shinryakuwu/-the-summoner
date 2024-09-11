@@ -166,16 +166,16 @@ LoadPalettes:
   STA $2006             ; write the high byte of $3F00 address
   LDA #$00
   STA $2006             ; write the low byte of $3F00 address
-  LDX #$00              ; start out at 0
+  LDY #$00              ; start out at 0
 LoadPalettesLoop:
-  LDA palette, x        ; load data from address (palette + the value in x)
+  LDA [curntpalette], y   ; load data from address (palette + the value in y)
                           ; 1st time through loop it will load palette+0
                           ; 2nd time through loop it will load palette+1
                           ; 3rd time through loop it will load palette+2
                           ; etc
   STA $2007             ; write to PPU
-  INX                   ; X = X + 1
-  CPX #$20              ; Compare X to hex $10, decimal 16 - copying 16 bytes = 4 sprites
+  INY                   ; Y = Y + 1
+  CPY #$20              ; Compare Y to hex $10, decimal 16 - copying 16 bytes = 4 sprites
   BNE LoadPalettesLoop  ; Branch to LoadPalettesLoop if compare was Not Equal to zero
                         ; if compare was equal to 32, keep going down
   RTS
@@ -210,6 +210,11 @@ clrmem:
 
   JSR vblankwait      ; Second wait for vblank, PPU is ready after this
 
+SetPalettes:
+  LDA #LOW(palette)
+  STA curntpalette
+  LDA #HIGH(palette)
+  STA curntpalette+1
   JSR LoadPalettes
 
 SetCatCache:
@@ -260,6 +265,9 @@ SetDefaultAttributes:
 
   ; LDA #$FF
   ; STA candyswitches
+
+  LDA #$01
+  STA loadcache
 
 ReturnToNMI:
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1

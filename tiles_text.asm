@@ -181,10 +181,10 @@ nothing:
   .db $85,$3E,$3A,$55,$FF,$42,$3E,$FF,$37,$34,$41,$34,$FF,$36,$3E,$34,$42,$FF,$3D,$3E,$43,$37,$38,$3D,$36,$54,$FE
 
 satan_talk:
-  ; Hello!
-  .db $85,$37,$34,$3B,$3B,$3E,$5A,$FE
-  ; Hi!
-  .db $77,$37,$38,$5A,$FE
+  ; Let's be friends.
+  .db $85,$3B,$34,$43,$53,$42,$FF,$31,$34,$FF,$35,$41,$38,$34,$3D,$33,$42,$54,$FE
+  ; Ok.
+  .db $77,$3E,$3A,$54,$FE
 
 satan_appear:
   ; Satan, oro te, appare te rosto. Veni, Satano. Ter oro te. Veni, Satano. Oro te pro arte.

@@ -93,6 +93,8 @@ AdditionalRender:
   BEQ GhostRoom2AdditionalRender
   CMP #$08
   BEQ ParkAdditionalRender
+  CMP #$0A
+  BEQ EndAdditionalRender
   RTS
 
 GhostRoom1AdditionalRender:
@@ -143,6 +145,14 @@ ParkAdditionalRender:
   STA $0276
   STA $027A
 ParkAdditionalRenderDone:
+  RTS
+
+EndAdditionalRender:
+  LDA #LOW(paletteend)
+  STA curntpalette
+  LDA #HIGH(paletteend)
+  STA curntpalette+1
+  JSR LoadPalettes
   RTS
 
 SetPPUAddrSubroutine:

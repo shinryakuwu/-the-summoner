@@ -152,9 +152,9 @@ Village2ServerRoomWarpCheck:
   CMP #$0D
   BNE Village2GhostRoom2WarpCheck
   LDA currentXtile
-  CMP #$04
-  BEQ Village2ServerRoomWarp
   CMP #$05
+  BEQ Village2ServerRoomWarp
+  CMP #$06
   BEQ Village2ServerRoomWarp
 Village2GhostRoom2WarpCheck:
   LDA currentYtile
@@ -390,6 +390,18 @@ ExHouseVillage2Warp:
   STA warpXYlow
   LDA #HIGH(exhousevillage2warp)
   STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
+CatHouseEndWarp:
+  LDA #LOW(endparams)
+  STA currentbgparams
+  LDA #HIGH(endparams)
+  STA currentbgparams+1
+  LDA #LOW(endattributes)
+  STA currentattrlow
+  LDA #HIGH(endattributes)
+  STA currentattrhigh
   JSR PrepareForBGRender
   RTS
 

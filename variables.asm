@@ -81,12 +81,15 @@ emptytilescount  .rs 1  ; number of empty tile rows before the current tile (req
 emptytilerowaddr .rs 2  ; 16-bit variable to temporarily store the address of empty tile row 
                         ; (used in StoreEmptyTilesRowAddress and AddEmptyTilesToCurrentTile)
 currentbgparams  .rs 2  ; used for setting params for current location during warp
+curntpalette     .rs 2  ; used for setting relevant palette address
 actionnmi        .rs 1  ; 0 - action check happens in main logic, 1 - action check happens in nmi
 dotsstate        .rs 1  ; 0 - inactive, 1 - active
 dotscounter      .rs 1  ; stores counter for action dots to process animation
 dotsframe        .rs 1  ; stores the number of dots frame (0-3) for animation
 olddotsframe     .rs 1  ; stores previous number of dots frame
 cachedisable     .rs 1  ; 0 - yes, 1 - no (use cache for updating cat graphics and no cache for all the rest)
+bgscrollposition .rs 1  ; self-explanatory
+loadcache        .rs 1  ; skip DrawCatFromCache when 0
 catcache         .rs 24
 
 ;; DECLARE SOME CONSTANTS HERE
@@ -106,3 +109,4 @@ EMPTYTILEROWADDRESSES = $80
 BGPARAMSADDRESS = $06
 BGPARAMSCOMPARE = $0A
 DELAYGHOSTROOM1 = $A0
+DELAYENDSCREEN = $80

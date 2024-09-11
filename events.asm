@@ -9,6 +9,8 @@ NonTextEvents:
 	BEQ Office
 	CMP #$04
 	BEQ Math
+	CMP #$05
+	BEQ Skating
 	CMP #$40
 	BEQ OldLady
 	CMP #$41
@@ -48,6 +50,10 @@ Forgot:
 
 Math:
 	JSR MathSubroutine
+	RTS
+
+Skating:
+	JSR SkatingSubroutine
 	RTS
 
 Meds:
@@ -178,7 +184,9 @@ SatanWalkSubroutineDone:
   LDA #$02
   STA textpartscounter
 	STA eventnumber
-	LDA #$21           ; TODO: cat puts down his bag
+	LDA #$00
+	STA loadcache      ; disable loading cat graphics from cache
+	LDA #$21           ; cat puts down his bag
 	STA $0211
 	RTS
 
@@ -205,11 +213,11 @@ EndGlitch:
   STA currenttextlow
   LDA #HIGH(satan_talk)
   STA currenttexthigh
-  LDA #$00
+	LDA #$05
+	STA eventnumber
+	LDA #$00
   STA eventstate
-	JSR PerformNonTextEventDone
-	LDA #$18
-  STA ramspriteslow  ; restore default ppu pointer position
+  STA ramspriteslow  ; set ppu pointer position
   LDA #$02
   STA ramspriteshigh
 	RTS
@@ -832,6 +840,18 @@ ForgotTalk:
   STA action
 	INC eventstate
 	JSR PerformNonTextEventDone
+	RTS
+
+SkatingSubroutine:
+	LDA eventstate
+	BEQ SkatingWarp
+	RTS
+
+SkatingWarp:
+	JSR CatHouseEndWarp
+	INC eventstate
+	LDA #DELAYENDSCREEN
+  STA nmiwaitcounter
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional

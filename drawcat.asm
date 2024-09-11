@@ -1,4 +1,6 @@
 DrawCatFromCache:
+	LDA loadcache
+	BEQ SkipDrawCatFromCache
 	LDX #$00
 DrawCatFromCacheLoop:
 	LDA catcache, x
@@ -6,4 +8,5 @@ DrawCatFromCacheLoop:
 	INX
 	CPX #$18
 	BNE DrawCatFromCacheLoop
+SkipDrawCatFromCache:
 	RTS

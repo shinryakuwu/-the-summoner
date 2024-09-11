@@ -1,7 +1,7 @@
   .inesprg 2   ; 1x 16KB PRG code
   .ineschr 1   ; 1x  8KB CHR data
   .inesmap 0   ; mapper 0 = NROM, no bank swapping
-  .inesmir 1   ; background mirroring
+  .inesmir 0   ; background mirroring
 
 ;;;;;;;;;;;;;;
 
@@ -28,6 +28,7 @@
   .include "rendertext.asm"
   .include "events.asm"         ; logic for performing any events aside from rendering text
   .include "dots.asm"           ; logic for drawing dots identifying that the action is possible
+  .include "scroll.asm"
 
 ;;;;;;;;;;;;;;
 
