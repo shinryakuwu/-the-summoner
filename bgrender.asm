@@ -8,6 +8,8 @@ BgRenderSubroutine:
   BEQ LoadSpritesForLocation
   CMP #$04
   BEQ ReloadLocation ; after the glitch event
+  CMP #$05
+  BEQ DrawEndScreen
   RTS
 
 EndBgRenderSubroutine:
@@ -47,6 +49,12 @@ ReloadLocation:
   JSR LoadPalettes
   JMP EndBgRenderSubroutine
 
+DrawEndScreen:
+  JSR DisableNMIRendering
+  JSR ClearBG
+  JSR LoadDeadCat
+  JMP EndBgRenderSubroutine
+
 ClearBG:
   JSR InitializeLoadBackground
   LDX #$00
@@ -81,6 +89,15 @@ LoadSatanBGAttributes: ; TODO: might need to remove or reconsider this mess
   LDA #$00
   STA singleattribute ; no need to set attributes address because it's already set to village1attributes
   JSR LoadAttribute
+  RTS
+
+LoadDeadCat:
+  LDA #$00
+  STA ramspriteslow
+  STA loadcache
+  JSR LoadSprites
+  LDA #$18
+  STA ramspriteslow
   RTS
 
 AdditionalRender:

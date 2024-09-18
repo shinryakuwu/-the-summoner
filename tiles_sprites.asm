@@ -552,6 +552,16 @@ endsprites:
   .db $BA, $DD, $00, $8E
   .db $BA, $DE, $00, $96
 
+deadsprites:
+  .db $62, $ED, $00, $74
+  .db $62, $EE, $00, $7C
+  .db $66, $EF, $00, $84
+  .db $6A, $FD, $00, $74
+  .db $6A, $FE, $00, $7C
+
+  ; ghost
+  .db $52, $6B, $00, $7C
+
 
 front:
       ;tiles                        ;attributes                   ;animation
@@ -611,3 +621,6 @@ village2exhousewarp:
 
 exhousevillage2warp:
   .db $30, $30, $38, $38, $40, $40, $C0, $C8, $C0, $C8, $C0, $C8
+
+deadcathousewarp:
+  .db $58, $58, $60, $60, $68, $68, $73, $7B, $73, $7B, $73, $7B

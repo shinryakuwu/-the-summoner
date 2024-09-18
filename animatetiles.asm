@@ -39,6 +39,8 @@ AnimateTiles:
  	BEQ AnimatePark
  	CMP #$0A
  	BEQ AnimateEnd
+ 	CMP #$0B
+ 	BEQ AnimateDead
  	RTS
 
 AnimateVillage1:
@@ -67,6 +69,9 @@ AnimatePark:
 	RTS
 AnimateEnd:
 	JSR AnimateEndSubroutine
+	RTS
+AnimateDead:
+	JSR AnimateDeadSubroutine
 	RTS
 
 AnimateVillage1Subroutine:
@@ -415,6 +420,17 @@ AnimateCatSkating:
 	INC objectframenum
 	LDA #$E4
 	STA $0209
+	RTS
+
+AnimateDeadSubroutine:
+	LDA objectframenum
+	BEQ AnimateCatGhost
+	DEC objectframenum
+	DEC $0214
+	RTS
+AnimateCatGhost:
+	INC objectframenum
+	INC $0214
 	RTS
 
 AnimateParkSubroutine:

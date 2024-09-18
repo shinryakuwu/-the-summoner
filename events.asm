@@ -27,6 +27,10 @@ NonTextEvents:
 	BEQ GhostGuard
 	CMP #$47
 	BEQ StartGhost
+	CMP #$48
+	BEQ Restart
+	CMP #$49
+	BEQ Death
 NonTextEventsDone:
 	LDA #$00
   STA action
@@ -84,6 +88,14 @@ StartGhost:
 	JSR StartGhostSubroutine
 	RTS
 
+Restart:
+	JSR RestartSubroutine
+	RTS
+
+Death:
+	JSR DeathSubroutine
+	RTS
+
 CandymanHandSubroutine:
 	INC candycounter
 	LDA #$34         ; tear off hand
@@ -112,6 +124,7 @@ OldLadySubroutine:
 
 OldLadyWalk:
 	LDX #MVUP
+	LDY #$01
 	JSR EventWalkSubroutine
 	RTS
 
@@ -687,6 +700,7 @@ GhostGuardSubroutine:
 
 GhostGuardWalk:
 	LDX #MVUP
+	LDY #$01
 	JSR EventWalkSubroutine
 	RTS
 
@@ -761,9 +775,8 @@ GhostGuardDisappears:
 EventWalkSubroutine:
 	LDA movecounter
 	BEQ EventWalkDone
-	LDA #$01
-  STA walkbackwards
 	DEC movecounter
+	STY walkbackwards
 	STX buttons
 	RTS
 EventWalkDone:
@@ -828,6 +841,7 @@ ForgotSubroutine:
 
 ForgotWalk:
 	LDX #MVDOWN
+	LDY #$01
 	JSR EventWalkSubroutine
 	RTS
 
@@ -852,6 +866,58 @@ SkatingWarp:
 	INC eventstate
 	LDA #DELAYENDSCREEN
   STA nmiwaitcounter
+	RTS
+
+RestartSubroutine:
+	LDA eventstate
+	BEQ RestartWarp
+	CMP #$01
+	BEQ RestartWalk
+	LDA #$00
+	STA eventstate
+	JSR PerformNonTextEventDone
+	RTS
+
+RestartWarp:
+	; TODO: add lives logic here
+	LDA #MVRIGHT
+  STA buttons
+	JSR DeadCatHouseWarp
+  LDA #$01
+  STA loadcache
+  STA eventstate
+  LDA #$04
+  STA movecounter
+	RTS
+
+RestartWalk:
+	LDX #MVRIGHT
+	LDY #$00
+	JSR EventWalkSubroutine
+	RTS
+
+DeathSubroutine:
+	LDA #$05
+  STA bgrender
+  LDA #$03
+  STA nmiwaitcounter
+  LDA #$0B
+  STA location
+  LDA #$18
+  STA spritescompare
+  LDA #LOW(deadsprites)
+  STA curntspriteslow     ; put the low byte of the address of tiles into pointer
+  LDA #HIGH(deadsprites)
+  STA curntspriteshigh    ; put the high byte of the address into pointer
+  LDA #LOW(dead)
+  STA currenttextlow
+  LDA #HIGH(dead)
+  STA currenttexthigh
+  LDA #MVRIGHT
+  STA buttons
+  LDA #$01
+  STA action
+  JSR PerformNonTextEventDone
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional

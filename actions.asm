@@ -52,6 +52,8 @@ CheckActionStatus:
 	BEQ ClearTextSectionDone
 	CMP #$08
 	BEQ CheckActionButtonReleased
+	CMP #$09
+	BEQ StartButtonLogic
 	RTS
 
 PerformTextEvent:
@@ -78,6 +80,10 @@ CheckActionButtons:
 CheckTileForAction:
 	JSR BlockMovement
 	JSR CheckActionTile
+	RTS
+
+StartButtonLogic:
+	JSR StartButtonLogicSubroutine
 	RTS
 
 ActionTimeout:
@@ -442,6 +448,10 @@ ExHouseEventsSubroutine:
 	LDY #$0B
 	JSR CheckTilesForEvent
 	BNE ExParams
+	LDX #$14
+	LDY #$0B
+	JSR CheckTilesForEvent
+	BNE DeathParams
 	RTS
 
 ExParams:
@@ -449,6 +459,12 @@ ExParams:
 	STA currenttextlow
 	LDA #HIGH(your_fault)
 	STA currenttexthigh
+	JSR SettingEventParamsDone
+	RTS
+
+DeathParams:
+	LDA #$49
+	STA eventnumber
 	JSR SettingEventParamsDone
 	RTS
 
@@ -503,4 +519,23 @@ EventTrue:
 	RTS
 EventFalse:
 	LDA #$00
+	RTS
+
+StartButtonLogicSubroutine:
+	LDA buttons
+	AND #STARTBUTTON
+	STA buttons
+	BEQ StartButtonNotPressed
+	LDA location
+  CMP #$0B
+  BEQ SetRestartEvent
+  ; TODO: add start screen logic here
+StartButtonNotPressed:
+	RTS
+
+SetRestartEvent:
+	LDA #$08
+	STA action
+	LDA #$48
+	STA eventnumber
 	RTS

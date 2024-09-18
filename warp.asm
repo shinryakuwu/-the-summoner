@@ -393,6 +393,18 @@ ExHouseVillage2Warp:
   JSR PrepareForBGRender
   RTS
 
+DeadCatHouseWarp:
+  LDA #LOW(cathouseparams)
+  STA currentbgparams
+  LDA #HIGH(cathouseparams)
+  STA currentbgparams+1
+  LDA #LOW(deadcathousewarp)
+  STA warpXYlow
+  LDA #HIGH(deadcathousewarp)
+  STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
 CatHouseEndWarp:
   LDA #LOW(endparams)
   STA currentbgparams

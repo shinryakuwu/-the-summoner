@@ -180,6 +180,18 @@ nothing:
   ; Ok, so here goes nothing.
   .db $85,$3E,$3A,$55,$FF,$42,$3E,$FF,$37,$34,$41,$34,$FF,$36,$3E,$34,$42,$FF,$3D,$3E,$43,$37,$38,$3D,$36,$54,$FE
 
+dead:
+  ; Looks like you are dead. Like, literally. What a loser. Press start if you want to be reborn.
+  .db $FF,$3B,$3E,$3E,$3A,$42,$FF,$3B,$38,$3A,$34,$FF,$48,$3E,$44,$FF,$30,$41,$34,$FF,$33,$34,$30,$33,$54,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$3B,$38,$3A,$34,$55,$FF,$3B,$38,$43,$34,$41,$30,$3B,$3B,$48,$54,$FF,$46,$37,$30,$43,$FF,$30,$FF,$3B,$3E,$42,$34,$41,$54,$FF,$FF,$3F,$41,$34,$42,$42,$FF,$42,$43,$30,$41,$43,$FF,$38,$35,$FF,$48,$3E,$44,$FF,$46,$30,$3D,$43,$FF,$43,$3E,$FF,$31,$34,$FF,$FF,$FF,$41,$34,$31,$3E,$41,$3D,$54,$FE
+
+deadd:
+  ; You know... It's over.
+  .db $FF,$48,$3E,$44,$FF,$3A,$3D,$3E,$46,$54,$54,$54,$FF,$38,$43,$53,$42,$FF,$3E,$45,$34,$41,$54,$FE
+
+deaddd:
+  ; XAHA
+  .db $FF,$47,$30,$37,$30,$FE
+
 satan_talk:
   ; Let's be friends.
   .db $85,$3B,$34,$43,$53,$42,$FF,$31,$34,$FF,$35,$41,$38,$34,$3D,$33,$42,$54,$FE
