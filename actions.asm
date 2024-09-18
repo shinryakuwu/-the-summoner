@@ -534,8 +534,11 @@ StartButtonNotPressed:
 	RTS
 
 SetRestartEvent:
+	LDA lives
+	BEQ SkipSetRestartEvent ; no restart when no lives
 	LDA #$08
 	STA action
 	LDA #$48
 	STA eventnumber
+SkipSetRestartEvent:
 	RTS

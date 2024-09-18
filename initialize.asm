@@ -269,6 +269,9 @@ SetDefaultAttributes:
   LDA #$01
   STA loadcache
 
+  LDA #CATLIVES
+  STA lives
+
 ReturnToNMI:
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
   STA $2000

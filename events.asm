@@ -879,7 +879,6 @@ RestartSubroutine:
 	RTS
 
 RestartWarp:
-	; TODO: add lives logic here
 	LDA #MVRIGHT
   STA buttons
 	JSR DeadCatHouseWarp
@@ -897,27 +896,55 @@ RestartWalk:
 	RTS
 
 DeathSubroutine:
+	LDA lives
+	BEQ SkipLivesDecrement ; do not decrement lives when there are no more
+	DEC lives
+SkipLivesDecrement:
+	LDA animatecounter
+	STA randomnumber
 	LDA #$05
   STA bgrender
   LDA #$03
   STA nmiwaitcounter
   LDA #$0B
   STA location
-  LDA #$18
+  LDA #$20
   STA spritescompare
   LDA #LOW(deadsprites)
   STA curntspriteslow     ; put the low byte of the address of tiles into pointer
   LDA #HIGH(deadsprites)
   STA curntspriteshigh    ; put the high byte of the address into pointer
-  LDA #LOW(dead)
-  STA currenttextlow
-  LDA #HIGH(dead)
-  STA currenttexthigh
   LDA #MVRIGHT
   STA buttons
   LDA #$01
   STA action
+  JSR SetDeathText
   JSR PerformNonTextEventDone
+	RTS
+
+SetDeathText:
+	LDA lives
+	BNE RestartText
+	LDA randomnumber
+	CMP #XAHASCREENCHANCE
+	BCC XahaText            ; if randomnumber < XAHASCREENCHANCE
+ItsOverText:
+	LDA #LOW(deadd)
+  STA currenttextlow
+  LDA #HIGH(deadd)
+  STA currenttexthigh
+	RTS
+XahaText:
+	LDA #LOW(deaddd)
+  STA currenttextlow
+  LDA #HIGH(deaddd)
+  STA currenttexthigh
+	RTS
+RestartText:
+	LDA #LOW(dead)
+  STA currenttextlow
+  LDA #HIGH(dead)
+  STA currenttexthigh
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional

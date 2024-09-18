@@ -91,10 +91,13 @@ olddotsframe     .rs 1  ; stores previous number of dots frame
 cachedisable     .rs 1  ; 0 - yes, 1 - no (use cache for updating cat graphics and no cache for all the rest)
 bgscrollposition .rs 1  ; self-explanatory
 loadcache        .rs 1  ; skip DrawCatFromCache when 0
+randomnumber     .rs 1  ; used for death screen
+lives            .rs 1
 catcache         .rs 24
 
 ;; DECLARE SOME CONSTANTS HERE
 
+CATLIVES = $09
 MVRIGHT = %00000001
 MVLEFT = %00000010
 MVDOWN = %00000100
@@ -104,6 +107,7 @@ STARTBUTTON = %00010000
 CANDYGATHERED = %00111111
 CATANIMATIONSPEED = $0A
 OBJECTSANIMATIONSPEED = $18
+XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
 EMPTYBGTILEATTRIBUTE = $0F

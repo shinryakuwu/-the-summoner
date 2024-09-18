@@ -426,11 +426,11 @@ AnimateDeadSubroutine:
 	LDA objectframenum
 	BEQ AnimateCatGhost
 	DEC objectframenum
-	DEC $0214
+	DEC $021C
 	RTS
 AnimateCatGhost:
 	INC objectframenum
-	INC $0214
+	INC $021C
 	RTS
 
 AnimateParkSubroutine:
