@@ -1,6 +1,6 @@
-vblankwait:
+Vblankwait:
   BIT $2002
-  BPL vblankwait
+  BPL Vblankwait
   RTS
 
 LoadBackground:
@@ -152,11 +152,16 @@ LoadSpritesLoop:
   CPY spritescompare       ; Compare Y to the needed value
   BNE LoadSpritesLoop      ; Branch to LoadSpritesLoop if compare was Not Equal to zero
 
+ClearSprites:
+  LDA #$00                 ; add the needed offset not to clear further than $02FF
+  SEC
+  SBC ramspriteslow
+  STA spritescompare
 ClearSpritesLoop:
   LDA #$00                 ; fill the rest of sprite addresses with zeros
   STA [ramspriteslow], y
   INY
-  CPY #$00
+  CPY spritescompare
   BNE ClearSpritesLoop
   RTS
 
@@ -192,9 +197,9 @@ RESET:
   STX $2001    ; disable rendering
   STX $4010    ; disable DMC IRQs
 
-  JSR vblankwait       ; First wait for vblank to make sure PPU is ready
+  JSR Vblankwait       ; First wait for vblank to make sure PPU is ready
 
-clrmem:
+Clrmem:
   LDA #$00
   STA $0000, x
   STA $0100, x
@@ -206,9 +211,11 @@ clrmem:
   LDA #$FE
   STA $0300, x
   INX
-  BNE clrmem
+  BNE Clrmem
 
-  JSR vblankwait      ; Second wait for vblank, PPU is ready after this
+  JSR Vblankwait      ; Second wait for vblank, PPU is ready after this
+
+  JSR SoundInit
 
 SetPalettes:
   LDA #LOW(palette)
@@ -294,6 +301,7 @@ ForeverLoop:
   JSR CheckActionMainLoop
   JSR MovementSubroutine
   JSR Warp
+  JSR SoundPlayFrame
 
 SkipMainLogicSubroutines:
   JSR BgRenderSubroutine

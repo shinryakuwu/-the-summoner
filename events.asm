@@ -279,7 +279,7 @@ RenderSatanLoop:
 
 GlitchClearSprites:
 	LDY #$00
-	JSR ClearSpritesLoop
+	JSR ClearSprites
 	JMP ProceedSatanRender
 	RTS
 

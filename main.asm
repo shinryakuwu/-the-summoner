@@ -35,7 +35,7 @@
   .bank 1
   .org $A000
 
-  ; nothing here yet
+  .include "sound_engine.asm"
 
 ;;;;;;;;;;;;;;
 

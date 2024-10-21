@@ -100,6 +100,8 @@ Village1Village2Warp:
   RTS
 
 Village1SkeletonHouseWarp:
+  LDA #$01
+  JSR SoundLoad
   LDA #LOW(skeletonhouseparams)
   STA currentbgparams
   LDA #HIGH(skeletonhouseparams)
@@ -267,6 +269,8 @@ SkeletonHouseVillage1WarpCheckDone:
   RTS
 
 SkeletonHouseVillage1Warp:
+  LDA #$00
+  JSR SoundLoad
   JSR SetVillage1Params
   LDA #LOW(skeletonhousevillage1warp)
   STA warpXYlow

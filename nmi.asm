@@ -28,4 +28,5 @@ NMISubroutines:
 
 EndOfNMI:
   JSR BgScroll
+
   RTI             ; return from interrupt
