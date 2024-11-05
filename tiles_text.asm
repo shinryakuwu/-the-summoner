@@ -137,8 +137,8 @@ math_ghost:
 math_ghost2:
   ; umm... 4?
   .db $85,$44,$3C,$3C,$54,$54,$54,$FF,$4D,$59,$FE
-  ; please forgive me for my utter ignorance, i had no idea you were mentally disabled.
-  .db $86,$3F,$3B,$34,$30,$42,$34,$FF,$35,$3E,$41,$36,$38,$45,$34,$FF,$3C,$34,$FF,$35,$3E,$41,$FF,$3C,$48,$FF,$44,$43,$43,$34,$41,$FF,$FF,$38,$36,$3D,$3E,$41,$30,$3D,$32,$34,$55,$FF,$38,$FF,$37,$30,$33,$FF,$3D,$3E,$FF,$38,$33,$34,$30,$FF,$48,$3E,$44,$FF,$FF,$FF,$FF,$46,$34,$41,$34,$FF,$3C,$34,$3D,$43,$30,$3B,$3B,$48,$FF,$33,$38,$42,$30,$31,$3B,$34,$33,$54,$FE
+  ; please forgive me for my utter ignorance, i had no idea you were m impaired.
+  .db $86,$3F,$3B,$34,$30,$42,$34,$FF,$35,$3E,$41,$36,$38,$45,$34,$FF,$3C,$34,$FF,$35,$3E,$41,$FF,$3C,$48,$FF,$44,$43,$43,$34,$41,$FF,$FF,$38,$36,$3D,$3E,$41,$30,$3D,$32,$34,$55,$FF,$38,$FF,$37,$30,$33,$FF,$3D,$3E,$FF,$38,$33,$34,$30,$FF,$48,$3E,$44,$FF,$FF,$FF,$FF,$46,$34,$41,$34,$FF,$3C,$FF,$38,$3C,$3F,$30,$38,$41,$34,$33,$54,$FE
   ; give me a safe word first.
   .db $85,$36,$38,$45,$34,$FF,$3C,$34,$FF,$30,$FF,$42,$30,$35,$34,$FF,$46,$3E,$41,$33,$FF,$35,$38,$41,$42,$43,$54,$FE
   ; please accept this gift as my sincere apology.
@@ -158,6 +158,26 @@ ghost2:
 forgot:
   ; i have a nagging feeling that i forgot something important. what in the universe could that be?
   .db $85,$38,$FF,$37,$30,$45,$34,$FF,$30,$FF,$3D,$30,$36,$36,$38,$3D,$36,$FF,$35,$34,$34,$3B,$38,$3D,$36,$FF,$43,$37,$30,$43,$FF,$FF,$FF,$38,$FF,$35,$3E,$41,$36,$3E,$43,$FF,$42,$3E,$3C,$34,$43,$37,$38,$3D,$36,$FF,$38,$3C,$3F,$3E,$41,$43,$30,$3D,$43,$54,$FF,$FF,$FF,$46,$37,$30,$43,$FF,$38,$3D,$FF,$43,$37,$34,$FF,$44,$3D,$38,$45,$34,$41,$42,$34,$FF,$32,$3E,$44,$3B,$33,$FF,$FF,$FF,$FF,$FF,$FF,$43,$37,$30,$43,$FF,$31,$34,$59,$FE
+
+dinosaur:
+  ; i don't feel like going there. there's a dinosaur staring at me in a hostile manner.
+  .db $85,$38,$FF,$33,$3E,$3D,$53,$43,$FF,$35,$34,$34,$3B,$FF,$3B,$38,$3A,$34,$FF,$36,$3E,$38,$3D,$36,$FF,$43,$37,$34,$41,$34,$54,$FF,$FF,$43,$37,$34,$41,$34,$53,$42,$FF,$30,$FF,$33,$38,$3D,$3E,$42,$30,$44,$41,$FF,$42,$43,$30,$41,$38,$3D,$36,$FF,$30,$43,$FF,$FF,$FF,$3C,$34,$FF,$38,$3D,$FF,$30,$FF,$37,$3E,$42,$43,$38,$3B,$34,$FF,$3C,$30,$3D,$3D,$34,$41,$54,$FE
+
+evil_ex:
+  ; hey... got candy?
+  .db $85,$37,$34,$48,$54,$54,$54,$FF,$36,$3E,$43,$FF,$32,$30,$3D,$33,$48,$59,$FE
+  ; how dare you appear before my eyes? you broke up with me only because I died.
+  .db $66,$37,$3E,$46,$FF,$33,$30,$41,$34,$FF,$48,$3E,$44,$FF,$30,$3F,$3F,$34,$30,$41,$FF,$31,$34,$35,$3E,$41,$34,$FF,$3C,$48,$FF,$FF,$FF,$34,$48,$34,$42,$59,$FF,$48,$3E,$44,$FF,$31,$41,$3E,$3A,$34,$FF,$44,$3F,$FF,$46,$38,$43,$37,$FF,$3C,$34,$FF,$FF,$FF,$FF,$FF,$FF,$3E,$3D,$3B,$48,$FF,$31,$34,$32,$30,$44,$42,$34,$FF,$38,$FF,$33,$38,$34,$33,$54,$FE
+  ; yea, speaking of that...
+  .db $85,$48,$34,$30,$55,$FF,$42,$3F,$34,$30,$3A,$38,$3D,$36,$FF,$3E,$35,$FF,$43,$37,$30,$43,$54,$54,$54,$FE
+  ; you better speak with my new boyfriend.
+  .db $66,$48,$3E,$44,$FF,$31,$34,$43,$43,$34,$41,$FF,$42,$3F,$34,$30,$3A,$FF,$46,$38,$43,$37,$FF,$3C,$48,$FF,$3D,$34,$46,$FF,$FF,$FF,$FF,$31,$3E,$48,$35,$41,$38,$34,$3D,$33,$54,$FE
+  ; i'll smash you like an unprivatized minecraft house!
+  .db $76,$38,$53,$3B,$3B,$FF,$42,$3C,$30,$42,$37,$FF,$48,$3E,$44,$FF,$3B,$38,$3A,$34,$FF,$30,$3D,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$44,$3D,$3F,$41,$38,$45,$30,$43,$38,$49,$34,$33,$FF,$3C,$38,$3D,$34,$32,$41,$30,$35,$43,$FF,$37,$3E,$44,$42,$34,$5A,$FE
+
+enraged:
+  ; * enraged, to put it mildly *
+  .db $76,$58,$FF,$34,$3D,$41,$30,$36,$34,$33,$55,$FF,$43,$3E,$FF,$3F,$44,$43,$FF,$38,$43,$FF,$3C,$38,$3B,$33,$3B,$48,$FF,$58,$FE
 
 your_fault:
   ; it's all your fault.

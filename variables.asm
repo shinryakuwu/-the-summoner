@@ -94,6 +94,7 @@ loadcache        .rs 1  ; skip DrawCatFromCache when 0
 randomnumber     .rs 1  ; used for death screen
 lives            .rs 1
 sound_ptr        .rs 2  ; song pointer for sound engine
+sound_ptr2       .rs 2  ; jump pointer for sound engine
 catcache         .rs 24
 
 ;; DECLARE SOME CONSTANTS HERE

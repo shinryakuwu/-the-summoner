@@ -215,7 +215,7 @@ Clrmem:
 
   JSR Vblankwait      ; Second wait for vblank, PPU is ready after this
 
-  JSR SoundInit
+  JSR sound_init
 
 SetPalettes:
   LDA #LOW(palette)
@@ -301,7 +301,7 @@ ForeverLoop:
   JSR CheckActionMainLoop
   JSR MovementSubroutine
   JSR Warp
-  JSR SoundPlayFrame
+  JSR sound_play_frame
 
 SkipMainLogicSubroutines:
   JSR BgRenderSubroutine

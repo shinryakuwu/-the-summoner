@@ -455,10 +455,12 @@ ExHouseEventsSubroutine:
 	RTS
 
 ExParams:
-	LDA #LOW(your_fault)
+	LDA #LOW(evil_ex)
 	STA currenttextlow
-	LDA #HIGH(your_fault)
+	LDA #HIGH(evil_ex)
 	STA currenttexthigh
+	LDA #$03
+	STA textpartscounter
 	JSR SettingEventParamsDone
 	RTS
 
