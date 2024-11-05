@@ -1,19 +1,32 @@
 ;; DECLARE SOME VARIABLES HERE
-  .rsset $0000  ;;start variables at ram location 0
 currentXtile     .rs 1  ; variable for determining the bg tile next to the cat
 currentYtile     .rs 1  ; variable for determining the bg tile next to the cat
 buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button state in this variable
                         ; A B select start up down left right
 candycounter     .rs 1  ; stores the number of candy left to collect
 candyswitches    .rs 1  ; stores switches for collecting candy
+                        ; 00000000
+                        ;   ||||||__ old lady candy
+                        ;   |||||__ candy man hand
+                        ;   ||||__ licorice
+                        ;   |||__ ghost candy
+                        ;   ||__ boss candy 1
+                        ;   |__ boss candy 2
 switches         .rs 1  ; stores other switches
-                        ; 0 - ghost candy drop
+                        ; 00000000
+                        ;   ||||||__ ghost candy drop
+                        ;   |||||__ talked to fren
+                        ;   ||||__ took meds
+                        ;   |||__ visited ghost house
+                        ;   ||__ got ghost pass hint
+                        ;   |__ got ghost pass
 currentbglow     .rs 1  ; 16-bit variable to point to current background
 currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
 curntspriteshigh .rs 1
 location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
-                        ; 4 - server room, 5 - bsod, 6 - ghost room 1, 7 - ghost room 2, 8 - park, 9 - ex house)
+                        ; 4 - server room, 5 - bsod, 6 - ghost room 1, 7 - ghost room 2, 8 - park, 9 - ex house
+                        ; 10 - end, 11 - death)
 spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
 loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
@@ -69,28 +82,39 @@ emptytilescount  .rs 1  ; number of empty tile rows before the current tile (req
 emptytilerowaddr .rs 2  ; 16-bit variable to temporarily store the address of empty tile row 
                         ; (used in StoreEmptyTilesRowAddress and AddEmptyTilesToCurrentTile)
 currentbgparams  .rs 2  ; used for setting params for current location during warp
+curntpalette     .rs 2  ; used for setting relevant palette address
 actionnmi        .rs 1  ; 0 - action check happens in main logic, 1 - action check happens in nmi
 dotsstate        .rs 1  ; 0 - inactive, 1 - active
 dotscounter      .rs 1  ; stores counter for action dots to process animation
 dotsframe        .rs 1  ; stores the number of dots frame (0-3) for animation
 olddotsframe     .rs 1  ; stores previous number of dots frame
 cachedisable     .rs 1  ; 0 - yes, 1 - no (use cache for updating cat graphics and no cache for all the rest)
+bgscrollposition .rs 1  ; self-explanatory
+loadcache        .rs 1  ; skip DrawCatFromCache when 0
+randomnumber     .rs 1  ; used for death screen
+lives            .rs 1
+sound_ptr        .rs 2  ; song pointer for sound engine
+sound_ptr2       .rs 2  ; jump pointer for sound engine
 catcache         .rs 24
 
 ;; DECLARE SOME CONSTANTS HERE
 
+CATLIVES = $09
 MVRIGHT = %00000001
 MVLEFT = %00000010
 MVDOWN = %00000100
 MVUP = %00001000
 ACTIONBUTTONS = %11000000
+STARTBUTTON = %00010000
 CANDYGATHERED = %00111111
 CATANIMATIONSPEED = $0A
 OBJECTSANIMATIONSPEED = $18
+XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
 EMPTYBGTILEATTRIBUTE = $0F
 EMPTYTILEROWADDRESSES = $80
 BGPARAMSADDRESS = $06
 BGPARAMSCOMPARE = $0A
-DELAYAFTERGHOSTROOM1 = $A0
+DELAYGHOSTROOM1 = $A0
+DELAYENDSCREEN = $80

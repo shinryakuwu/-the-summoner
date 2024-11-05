@@ -100,6 +100,8 @@ Village1Village2Warp:
   RTS
 
 Village1SkeletonHouseWarp:
+  LDA #$02
+  JSR sound_load
   LDA #LOW(skeletonhouseparams)
   STA currentbgparams
   LDA #HIGH(skeletonhouseparams)
@@ -213,6 +215,9 @@ Village2ExHouseWarp:
   RTS
 
 Village2GhostRoom2Warp:
+  LDA switches
+  AND #%00100000
+  BEQ GhostGuardEvent ; if no ghost pass, cannot enter the house
   LDA #LOW(ghostroom2params)
   STA currentbgparams
   LDA #HIGH(ghostroom2params)
@@ -221,25 +226,34 @@ Village2GhostRoom2Warp:
   STA warpXYlow
   LDA #HIGH(ghostroomwarp)
   STA warpXYhigh
-  ; TODO: add switch check here
-  ; LDA switches
-  ; AND #somenumber
-  ; CMP #somenumber
-  ; BNE skip this
-  LDA #$04
-  STA eventnumber
+  LDA candyswitches
+  AND #%00001000
+  BNE Village2GhostRoom2WarpNoEvent ; if got the ghost candy, skip the math cutscene
   LDA #$20
   STA eventwaitcounter
   LDA #$04
   STA action
+  STA eventnumber
   LDA #LOW(math_ghost)
   STA currenttextlow
   LDA #HIGH(math_ghost)
   STA currenttexthigh
   LDA #$02
   STA textpartscounter
-  ; jump here when no action
+Village2GhostRoom2WarpNoEvent:
   JSR PrepareForBGRender
+  RTS
+
+GhostGuardEvent:
+  LDA action
+  BNE GhostGuardEventDone
+  LDA #$46
+  STA eventnumber
+  LDA #$0A
+  STA movecounter
+  LDA #$08
+  STA action
+GhostGuardEventDone:
   RTS
 
 SkeletonHouseVillage1WarpCheck:
@@ -255,6 +269,8 @@ SkeletonHouseVillage1WarpCheckDone:
   RTS
 
 SkeletonHouseVillage1Warp:
+  LDA #$00
+  JSR sound_load
   JSR SetVillage1Params
   LDA #LOW(skeletonhousevillage1warp)
   STA warpXYlow
@@ -297,12 +313,27 @@ GhostRoom2Village2WarpCheckDone:
   RTS
 
 GhostRoom2Village2Warp:
+  LDA switches
+  AND #%00000001      ; when candy dropped
+  BNE ForgotSomething
   JSR SetVillage2Params
   LDA #LOW(ghostroom2village2warp)
   STA warpXYlow
   LDA #HIGH(ghostroom2village2warp)
   STA warpXYhigh
   JSR PrepareForBGRender
+  RTS
+
+ForgotSomething:
+  LDA action
+  BNE ForgotSomethingDone
+  LDA #$41
+  STA eventnumber
+  LDA #$0A
+  STA movecounter
+  LDA #$08
+  STA action
+ForgotSomethingDone:
   RTS
 
 ParkVillage1WarpCheck:
@@ -363,6 +394,30 @@ ExHouseVillage2Warp:
   STA warpXYlow
   LDA #HIGH(exhousevillage2warp)
   STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
+DeadCatHouseWarp:
+  LDA #LOW(cathouseparams)
+  STA currentbgparams
+  LDA #HIGH(cathouseparams)
+  STA currentbgparams+1
+  LDA #LOW(deadcathousewarp)
+  STA warpXYlow
+  LDA #HIGH(deadcathousewarp)
+  STA warpXYhigh
+  JSR PrepareForBGRender
+  RTS
+
+CatHouseEndWarp:
+  LDA #LOW(endparams)
+  STA currentbgparams
+  LDA #HIGH(endparams)
+  STA currentbgparams+1
+  LDA #LOW(endattributes)
+  STA currentattrlow
+  LDA #HIGH(endattributes)
+  STA currentattrhigh
   JSR PrepareForBGRender
   RTS
 

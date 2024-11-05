@@ -52,6 +52,8 @@ CheckActionStatus:
 	BEQ ClearTextSectionDone
 	CMP #$08
 	BEQ CheckActionButtonReleased
+	CMP #$09
+	BEQ StartButtonLogic
 	RTS
 
 PerformTextEvent:
@@ -78,6 +80,10 @@ CheckActionButtons:
 CheckTileForAction:
 	JSR BlockMovement
 	JSR CheckActionTile
+	RTS
+
+StartButtonLogic:
+	JSR StartButtonLogicSubroutine
 	RTS
 
 ActionTimeout:
@@ -197,19 +203,21 @@ Village1EventsSubroutine:
 	RTS
 
 StartGhostParams:
-	LDA #LOW(startghost)
-	STA currenttextlow
-	LDA #HIGH(startghost)
-	STA currenttexthigh
+	LDA #$47
+	STA eventnumber
 	JSR SettingEventParamsDone
 	RTS
 
 OldLadyParams:
+	LDA candyswitches
+	AND #%00000001
+  BNE OldLadyParamsDone ; if candy already gathered, skip event
 	LDA #$40
 	STA eventnumber
 	LDA #$15
 	STA movecounter
 	JSR SettingEventParamsDone
+OldLadyParamsDone:
 	RTS
 
 CatHouseEventsSubroutine:
@@ -251,6 +259,8 @@ MedicineParams:
 	STA currenttextlow
 	LDA #HIGH(medicine)
 	STA currenttexthigh
+	LDA #$44
+	STA eventnumber
 	JSR SettingEventParamsDone
 	RTS
 ColaParams:
@@ -301,6 +311,9 @@ SkeletonParams:
 	JSR SettingEventParamsDone
 	RTS
 CandymanParams:
+	LDA candyswitches
+	AND #%00000010
+  BNE CandymanParamsDone ; if candy already gathered, skip event
 	LDA #LOW(candyman)
 	STA currenttextlow
 	LDA #HIGH(candyman)
@@ -309,6 +322,7 @@ CandymanParams:
 	STA textpartscounter
 	STA eventnumber
 	JSR SettingEventParamsDone
+CandymanParamsDone:
 	RTS
 
 ServerRoomEventsSubroutine:
@@ -331,26 +345,52 @@ TVParams:
 	RTS
 
 BucketHatGuyParams:
-	LDA #LOW(corporations)
-	STA currenttextlow
-	LDA #HIGH(corporations)
-	STA currenttexthigh
-	LDA #$02
-	STA textpartscounter
+	LDA #$45
+	STA eventnumber
 	JSR SettingEventParamsDone
 	RTS
 
 ParkEventsSubroutine:
+	LDX #$15
+	LDY #$0A
+	JSR CheckTilesForEvent
+	BNE OfficeWarpParams
+	LDA direction
+	CMP #$02
+	BEQ ParkEventsCheckLeft
+	CMP #$03
+	BEQ ParkEventsCheckRight
+	RTS
+
+ParkEventsCheckRight:
 	LDX #$16
-	LDY #$09
+	LDY #$0A
+	JSR CheckTilesForEvent
+	BNE OfficeWarpParams
+	RTS
+
+ParkEventsCheckLeft:
+	LDX #$14
+	LDY #$0A
 	JSR CheckTilesForEvent
 	BNE OfficeWarpParams
 	RTS
 
 OfficeWarpParams:
-	LDA #$41
+	LDA switches
+  AND #%00100000
+  BNE OfficeWarpParamsDone ; event appears when no ghost pass
+	LDA switches
+  AND #%00010000
+  BEQ OfficeWarpParamsDone ; event appears after getting a hint
+	LDA #$03
 	STA eventnumber
+	LDA #LOW(nothing)
+  STA currenttextlow
+  LDA #HIGH(nothing)
+  STA currenttexthigh
 	JSR SettingEventParamsDone
+OfficeWarpParamsDone:
 	RTS
 
 GhostRoom2EventsSubroutine:
@@ -394,9 +434,13 @@ BigGhostParams:
 	JSR SettingEventParamsDone
 	RTS
 MathCandyParams:
+	LDA candyswitches
+	AND #%00001000
+  BNE MathCandyParamsDone ; if candy already gathered, skip event
 	LDA #$42
 	STA eventnumber
 	JSR SettingEventParamsDone
+MathCandyParamsDone:
 	RTS
 
 ExHouseEventsSubroutine:
@@ -404,13 +448,25 @@ ExHouseEventsSubroutine:
 	LDY #$0B
 	JSR CheckTilesForEvent
 	BNE ExParams
+	LDX #$14
+	LDY #$0B
+	JSR CheckTilesForEvent
+	BNE DeathParams
 	RTS
 
 ExParams:
-	LDA #LOW(your_fault)
+	LDA #LOW(evil_ex)
 	STA currenttextlow
-	LDA #HIGH(your_fault)
+	LDA #HIGH(evil_ex)
 	STA currenttexthigh
+	LDA #$03
+	STA textpartscounter
+	JSR SettingEventParamsDone
+	RTS
+
+DeathParams:
+	LDA #$49
+	STA eventnumber
 	JSR SettingEventParamsDone
 	RTS
 
@@ -465,4 +521,26 @@ EventTrue:
 	RTS
 EventFalse:
 	LDA #$00
+	RTS
+
+StartButtonLogicSubroutine:
+	LDA buttons
+	AND #STARTBUTTON
+	STA buttons
+	BEQ StartButtonNotPressed
+	LDA location
+  CMP #$0B
+  BEQ SetRestartEvent
+  ; TODO: add start screen logic here
+StartButtonNotPressed:
+	RTS
+
+SetRestartEvent:
+	LDA lives
+	BEQ SkipSetRestartEvent ; no restart when no lives
+	LDA #$08
+	STA action
+	LDA #$48
+	STA eventnumber
+SkipSetRestartEvent:
 	RTS

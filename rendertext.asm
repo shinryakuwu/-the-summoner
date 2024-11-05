@@ -25,7 +25,16 @@ RenderTextDone:
   JSR CalculateCurrentTextAddress ; define from which address to load the text tiles within the next frame (within tiles.asm)
   LDA #$00
   STA textpointer
+
+  LDA location
+  CMP #$0B
+  BEQ SetDeathScreenStatus
   LDA #$02
+  STA action
+  RTS
+
+SetDeathScreenStatus:
+  LDA #$09
   STA action
   RTS
 

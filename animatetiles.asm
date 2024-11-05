@@ -37,6 +37,10 @@ AnimateTiles:
  	BEQ AnimateGhostRoom2
  	CMP #$08
  	BEQ AnimatePark
+ 	CMP #$0A
+ 	BEQ AnimateEnd
+ 	CMP #$0B
+ 	BEQ AnimateDead
  	RTS
 
 AnimateVillage1:
@@ -62,6 +66,12 @@ AnimateGhostRoom2:
 	RTS
 AnimatePark:
 	JSR AnimateParkSubroutine
+	RTS
+AnimateEnd:
+	JSR AnimateEndSubroutine
+	RTS
+AnimateDead:
+	JSR AnimateDeadSubroutine
 	RTS
 
 AnimateVillage1Subroutine:
@@ -125,6 +135,7 @@ AnimateVillage2Subroutine:
 	LDA #$01
 	STA switchtile
 	JSR ObjectTransformNoCache
+	INC $02F4        ; animate ghost guard
  	RTS
 AnimateRiver:
 	LDA #$01
@@ -139,6 +150,7 @@ AnimateFestoon:
 	LDA #$00
 	STA switchtile
 	JSR ObjectTransformNoCache
+	DEC $02F4        ; animate ghost guard
 	RTS
 
 AnimateSkeletonHouseSubroutine:
@@ -395,6 +407,31 @@ TransformBigGhost:
 BigGhostTilesWithoutCandy:
 	LDX #$1C
 	JMP TransformBigGhost
+
+AnimateEndSubroutine:
+	; TODO: might wanna make this animation faster
+	LDA objectframenum
+	BEQ AnimateCatSkating
+	DEC objectframenum
+	LDA #$F5
+	STA $0209
+	RTS
+AnimateCatSkating:
+	INC objectframenum
+	LDA #$E4
+	STA $0209
+	RTS
+
+AnimateDeadSubroutine:
+	LDA objectframenum
+	BEQ AnimateCatGhost
+	DEC objectframenum
+	DEC $021C
+	RTS
+AnimateCatGhost:
+	INC objectframenum
+	INC $021C
+	RTS
 
 AnimateParkSubroutine:
 	LDA #$00

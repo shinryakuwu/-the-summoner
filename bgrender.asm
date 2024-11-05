@@ -8,6 +8,8 @@ BgRenderSubroutine:
   BEQ LoadSpritesForLocation
   CMP #$04
   BEQ ReloadLocation ; after the glitch event
+  CMP #$05
+  BEQ DrawEndScreen
   RTS
 
 EndBgRenderSubroutine:
@@ -43,8 +45,14 @@ LoadSpritesForLocation:
 ReloadLocation:
   JSR DisableNMIRendering
   JSR ClearBG
-  JSR LoadAttribute
+  JSR LoadSatanBGAttributes
   JSR LoadPalettes
+  JMP EndBgRenderSubroutine
+
+DrawEndScreen:
+  JSR DisableNMIRendering
+  JSR ClearBG
+  JSR LoadDeadCat
   JMP EndBgRenderSubroutine
 
 ClearBG:
@@ -77,10 +85,33 @@ ChangeCatCoordinates:
   JSR ObjectTransformLoop
   RTS
 
+LoadSatanBGAttributes: ; TODO: might need to remove or reconsider this mess
+  LDA #$00
+  STA singleattribute ; no need to set attributes address because it's already set to village1attributes
+  JSR LoadAttribute
+  RTS
+
+LoadDeadCat:
+  LDA #$00
+  STA ramspriteslow
+  STA loadcache
+  JSR LoadSprites
+  LDA #$18
+  STA ramspriteslow
+  RTS
+
 AdditionalRender:
   LDA location
+  CMP #$03
+  BEQ SkeletonHouseAdditionalRender
   CMP #$06
   BEQ GhostRoom1AdditionalRender
+  CMP #$07
+  BEQ GhostRoom2AdditionalRender
+  CMP #$08
+  BEQ ParkAdditionalRender
+  CMP #$0A
+  BEQ EndAdditionalRender
   RTS
 
 GhostRoom1AdditionalRender:
@@ -95,6 +126,50 @@ GhostRoom1AdditionalRender:
   LDA #$97              ; remove exit
   STA $2007
   STA $2007
+  RTS
+
+GhostRoom2AdditionalRender:
+  LDA candyswitches
+  AND #%00001000
+  BNE GhostRoom2EraseCandyTile
+  RTS
+
+GhostRoom2EraseCandyTile:
+  LDA #$00
+  STA $0219
+  RTS
+
+SkeletonHouseAdditionalRender:
+  LDA candyswitches
+  AND #%00000010
+  BNE RenderTornOffHand
+  RTS
+
+RenderTornOffHand:
+  LDA #$34
+  STA $0221
+  RTS
+
+ParkAdditionalRender:
+  LDA switches
+  AND #%00100000
+  BNE ParkAdditionalRenderDone ; when no ghost pass
+  LDA switches
+  AND #%00010000
+  BEQ ParkAdditionalRenderDone ; after getting a hint
+  LDA #$03
+  STA $0272
+  STA $0276
+  STA $027A
+ParkAdditionalRenderDone:
+  RTS
+
+EndAdditionalRender:
+  LDA #LOW(paletteend)
+  STA curntpalette
+  LDA #HIGH(paletteend)
+  STA curntpalette+1
+  JSR LoadPalettes
   RTS
 
 SetPPUAddrSubroutine:

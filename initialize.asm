@@ -1,9 +1,6 @@
-  .bank 0
-  .org $C000
-
-vblankwait:
+Vblankwait:
   BIT $2002
-  BPL vblankwait
+  BPL Vblankwait
   RTS
 
 LoadBackground:
@@ -155,11 +152,16 @@ LoadSpritesLoop:
   CPY spritescompare       ; Compare Y to the needed value
   BNE LoadSpritesLoop      ; Branch to LoadSpritesLoop if compare was Not Equal to zero
 
+ClearSprites:
+  LDA #$00                 ; add the needed offset not to clear further than $02FF
+  SEC
+  SBC ramspriteslow
+  STA spritescompare
 ClearSpritesLoop:
   LDA #$00                 ; fill the rest of sprite addresses with zeros
   STA [ramspriteslow], y
   INY
-  CPY #$00
+  CPY spritescompare
   BNE ClearSpritesLoop
   RTS
 
@@ -169,16 +171,16 @@ LoadPalettes:
   STA $2006             ; write the high byte of $3F00 address
   LDA #$00
   STA $2006             ; write the low byte of $3F00 address
-  LDX #$00              ; start out at 0
+  LDY #$00              ; start out at 0
 LoadPalettesLoop:
-  LDA palette, x        ; load data from address (palette + the value in x)
+  LDA [curntpalette], y   ; load data from address (palette + the value in y)
                           ; 1st time through loop it will load palette+0
                           ; 2nd time through loop it will load palette+1
                           ; 3rd time through loop it will load palette+2
                           ; etc
   STA $2007             ; write to PPU
-  INX                   ; X = X + 1
-  CPX #$20              ; Compare X to hex $10, decimal 16 - copying 16 bytes = 4 sprites
+  INY                   ; Y = Y + 1
+  CPY #$20              ; Compare Y to hex $10, decimal 16 - copying 16 bytes = 4 sprites
   BNE LoadPalettesLoop  ; Branch to LoadPalettesLoop if compare was Not Equal to zero
                         ; if compare was equal to 32, keep going down
   RTS
@@ -195,9 +197,9 @@ RESET:
   STX $2001    ; disable rendering
   STX $4010    ; disable DMC IRQs
 
-  JSR vblankwait       ; First wait for vblank to make sure PPU is ready
+  JSR Vblankwait       ; First wait for vblank to make sure PPU is ready
 
-clrmem:
+Clrmem:
   LDA #$00
   STA $0000, x
   STA $0100, x
@@ -209,10 +211,17 @@ clrmem:
   LDA #$FE
   STA $0300, x
   INX
-  BNE clrmem
-   
-  JSR vblankwait      ; Second wait for vblank, PPU is ready after this
+  BNE Clrmem
 
+  JSR Vblankwait      ; Second wait for vblank, PPU is ready after this
+
+  JSR sound_init
+
+SetPalettes:
+  LDA #LOW(palette)
+  STA curntpalette
+  LDA #HIGH(palette)
+  STA curntpalette+1
   JSR LoadPalettes
 
 SetCatCache:
@@ -264,6 +273,12 @@ SetDefaultAttributes:
   ; LDA #$FF
   ; STA candyswitches
 
+  LDA #$01
+  STA loadcache
+
+  LDA #CATLIVES
+  STA lives
+
 ReturnToNMI:
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
   STA $2000
@@ -284,8 +299,9 @@ ForeverLoop:
 
   JSR CheckActionDots
   JSR CheckActionMainLoop
-  JSR CheckMovement
+  JSR MovementSubroutine
   JSR Warp
+  JSR sound_play_frame
 
 SkipMainLogicSubroutines:
   JSR BgRenderSubroutine
