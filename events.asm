@@ -1,99 +1,50 @@
+post_events_jump_table:
+	.word CandymanHandSubroutine-1
+	.word SatanGlitchSubroutine-1
+	.word OfficeSubroutine-1
+	.word MathSubroutine-1
+	.word SkatingSubroutine-1
+	.word MathSubroutine-1
+
+initial_events_jump_table:
+	.word OldLadySubroutine-1
+	.word ForgotSubroutine-1
+	.word MathCandySubroutine-1
+	.word SatanWalkSubroutine-1
+	.word MedsSubroutine-1
+	.word BucketHatGuySubroutine-1
+	.word GhostGuardSubroutine-1
+	.word StartGhostSubroutine-1
+	.word RestartSubroutine-1
+	.word DeathSubroutine-1
+
 NonTextEvents:
+	; implementing the RTS trick here https://www.nesdev.org/wiki/RTS_Trick
 	LDA eventnumber
 	BEQ NonTextEventsDone ; if zero, then there is no event
-	CMP #$01
-	BEQ CandymanHand
-	CMP #$02
-	BEQ SatanGlitch
-	CMP #$03
-	BEQ Office
-	CMP #$04
-	BEQ Math
-	CMP #$05
-	BEQ Skating
 	CMP #$40
-	BEQ OldLady
-	CMP #$41
-	BEQ Forgot
-	CMP #$42
-	BEQ MathCandy
-	CMP #$43
-	BEQ SatanWalk
-	CMP #$44
-	BEQ Meds
-	CMP #$45
-	BEQ BucketHatGuy
-	CMP #$46
-	BEQ GhostGuard
-	CMP #$47
-	BEQ StartGhost
-	CMP #$48
-	BEQ Restart
-	CMP #$49
-	BEQ Death
+	BCC PerformPostEvent  ; if < 40
+	EOR #%01000000  			; subtract 40, so to say
+	ASL A            		  ; we have a table of addresses, which are two bytes each. double that index.
+  TAX
+  LDA initial_events_jump_table+1, x    ; RTS will expect the low byte to be popped first,       
+  PHA                                   ; so we need to push the high byte first
+  LDA initial_events_jump_table, x      ; push the low byte
+  PHA
+  RTS                   ; this rts will launch our subroutine
+PerformPostEvent:
+	SEC
+	SBC #$01              ; subtract 1 from A because table index would start from 0 but event numbers start from 1
+	ASL A          			  ; we have a table of addresses, which are two bytes each. double that index.
+  TAX
+  LDA post_events_jump_table+1, x    ; RTS will expect the low byte to be popped first,       
+  PHA                                ; so we need to push the high byte first
+  LDA post_events_jump_table, x      ; push the low byte
+  PHA
+  RTS                   ; this rts will launch our subroutine
 NonTextEventsDone:
 	LDA #$00
   STA action
-	RTS
-
-CandymanHand:
-	JSR CandymanHandSubroutine
-	RTS
-
-OldLady:
-	JSR OldLadySubroutine
-	RTS
-
-Office:
-	JSR OfficeSubroutine
-	RTS
-
-Forgot:
-	JSR ForgotSubroutine
-	RTS
-
-Math:
-	JSR MathSubroutine
-	RTS
-
-Skating:
-	JSR SkatingSubroutine
-	RTS
-
-Meds:
-	JSR MedsSubroutine
-	RTS
-
-BucketHatGuy:
-	JSR BucketHatGuySubroutine
-	RTS
-
-MathCandy:
-	JSR MathCandySubroutine
-	RTS
-
-GhostGuard:
-	JSR GhostGuardSubroutine
-	RTS
-
-SatanWalk:
-	JSR SatanWalkSubroutine
-	RTS
-
-SatanGlitch:
-	JSR SatanGlitchSubroutine
-	RTS
-
-StartGhost:
-	JSR StartGhostSubroutine
-	RTS
-
-Restart:
-	JSR RestartSubroutine
-	RTS
-
-Death:
-	JSR DeathSubroutine
 	RTS
 
 CandymanHandSubroutine:

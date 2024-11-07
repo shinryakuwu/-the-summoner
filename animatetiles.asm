@@ -1,3 +1,17 @@
+animate_tiles_jump_table:
+	.word AnimateVillage1Subroutine-1
+	.word AnimateCatHouseSubroutine-1
+	.word AnimateVillage2Subroutine-1
+	.word AnimateSkeletonHouseSubroutine-1
+	.word AnimateServerRoomSubroutine-1
+	.word SkipAnimateSubroutine-1
+	.word AnimateGhostRoom1Subroutine-1
+	.word AnimateGhostRoom2Subroutine-1
+	.word AnimateParkSubroutine-1
+	.word SkipAnimateSubroutine-1
+	.word AnimateEndSubroutine-1
+	.word AnimateDeadSubroutine-1
+
 CheckAnimateTiles:
 	LDA animatecounter
 	BEQ AnimateTiles   ; animate only when counter = 0
@@ -19,59 +33,19 @@ SkeletonDance:
 	RTS
 
 AnimateTiles:
+	; implementing the RTS trick here https://www.nesdev.org/wiki/RTS_Trick
 	LDA #OBJECTSANIMATIONSPEED ; renew the counter
 	STA animatecounter
 	LDA location
- 	BEQ AnimateVillage1 ; when equals zero
- 	CMP #$01
- 	BEQ AnimateCatHouse
- 	CMP #$02
- 	BEQ AnimateVillage2
- 	CMP #$03
- 	BEQ AnimateSkeletonHouse
- 	CMP #$04
- 	BEQ AnimateServerRoom
- 	CMP #$06
- 	BEQ AnimateGhostRoom1
- 	CMP #$07
- 	BEQ AnimateGhostRoom2
- 	CMP #$08
- 	BEQ AnimatePark
- 	CMP #$0A
- 	BEQ AnimateEnd
- 	CMP #$0B
- 	BEQ AnimateDead
- 	RTS
+	ASL A            		  ; we have a table of addresses, which are two bytes each. double that index.
+  TAX
+  LDA animate_tiles_jump_table+1, x    ; RTS will expect the low byte to be popped first,       
+  PHA                                  ; so we need to push the high byte first
+  LDA animate_tiles_jump_table, x      ; push the low byte
+  PHA
+  RTS 									; this rts will launch our subroutine
 
-AnimateVillage1:
-	JSR AnimateVillage1Subroutine
-	RTS
-AnimateCatHouse:
-	JSR AnimateCatHouseSubroutine
-	RTS
-AnimateVillage2:
-	JSR AnimateVillage2Subroutine
-	RTS
-AnimateSkeletonHouse:
-	JSR AnimateSkeletonHouseSubroutine
-	RTS
-AnimateServerRoom:
-	JSR AnimateServerRoomSubroutine
-	RTS
-AnimateGhostRoom1:
-	JSR AnimateGhostRoom1Subroutine
-	RTS
-AnimateGhostRoom2:
-	JSR AnimateGhostRoom2Subroutine
-	RTS
-AnimatePark:
-	JSR AnimateParkSubroutine
-	RTS
-AnimateEnd:
-	JSR AnimateEndSubroutine
-	RTS
-AnimateDead:
-	JSR AnimateDeadSubroutine
+SkipAnimateSubroutine:
 	RTS
 
 AnimateVillage1Subroutine:
