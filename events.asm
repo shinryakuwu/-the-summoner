@@ -4,7 +4,6 @@ post_events_jump_table:
 	.word OfficeSubroutine-1
 	.word MathSubroutine-1
 	.word SkatingSubroutine-1
-	.word MathSubroutine-1
 
 initial_events_jump_table:
 	.word OldLadySubroutine-1
@@ -675,6 +674,9 @@ GhostGuardHides:
 	ORA #%00001000
 	STA switches
 	JSR PerformNonTextEventDone
+	JSR CalculateTileInFrontOfCatSubroutine ; update the coordinates so that this event won't be looped
+	; yea, i know, weird stuff, but when action button is pressed, warp subroutine fails to receive recent cat coordinates
+	; and constantly repeats guard ghost event
 	RTS
 
 GhostGuardInitiateRender:
@@ -733,8 +735,6 @@ EventWalkSubroutine:
 EventWalkDone:
 	LDA #$00
   STA walkbackwards
-	LDA #$05
-  STA action
 	INC eventstate
 	RTS
 
@@ -805,6 +805,7 @@ ForgotTalk:
   STA action
 	INC eventstate
 	JSR PerformNonTextEventDone
+	JSR CalculateTileInFrontOfCatSubroutine ; same thing as with ghost guard
 	RTS
 
 SkatingSubroutine:

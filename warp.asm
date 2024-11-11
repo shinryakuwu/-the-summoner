@@ -231,8 +231,9 @@ Village2GhostRoom2Warp:
   BNE Village2GhostRoom2WarpNoEvent ; if got the ghost candy, skip the math cutscene
   LDA #$20
   STA eventwaitcounter
-  LDA #$04
+  LDA #$01
   STA action
+  LDA #$04
   STA eventnumber
   LDA #LOW(math_ghost)
   STA currenttextlow
@@ -251,7 +252,7 @@ GhostGuardEvent:
   STA eventnumber
   LDA #$0A
   STA movecounter
-  LDA #$08
+  LDA #$06
   STA action
 GhostGuardEventDone:
   RTS
@@ -331,7 +332,7 @@ ForgotSomething:
   STA eventnumber
   LDA #$0A
   STA movecounter
-  LDA #$08
+  LDA #$06
   STA action
 ForgotSomethingDone:
   RTS
@@ -465,7 +466,7 @@ SatanEventParams:
   STA movecounter
   LDA #$20
   STA eventwaitcounter
-  LDA #$08
+  LDA #$06
   STA action
 SatanEventParamsDone:
   RTS
