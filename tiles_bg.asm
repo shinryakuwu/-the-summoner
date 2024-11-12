@@ -91,10 +91,10 @@ village2:
   .db $00,$00,$00,$A8,$FE,$FE,$FE,$FE,$FE,$E5,$99,$00,$FF,$FF,$00,$C0  ;;row 11
   .db $C1,$C2,$01,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
-  .db $F2,$00,$00,$8D,$CA,$A5,$A6,$A7,$C9,$CA,$F2,$F2,$FF,$FF,$00,$D0  ;;row 12
+  .db $00,$00,$F2,$8D,$CA,$A5,$A6,$A7,$C9,$CA,$F2,$F2,$FF,$FF,$00,$D0  ;;row 12
   .db $D1,$D2,$01,$01,$01,$01,$01,$01,$01,$01,$01,$00,$03,$00,$00,$00
 
-  .db $00,$00,$00,$8E,$DA,$B5,$B6,$B7,$D9,$DA,$99,$00,$FF,$FF,$00,$E0  ;;row 13
+  .db $00,$00,$FF,$8E,$DA,$B5,$B6,$B7,$D9,$DA,$99,$00,$FF,$FF,$00,$E0  ;;row 13
   .db $E1,$E2,$00,$00,$00,$00,$00,$00,$00,$01,$01,$00,$00,$00,$00,$00
 
   .db $00,$02,$00,$F4,$FF,$C5,$FF,$C7,$FF,$FF,$99,$00,$FF,$FF,$00,$FF  ;;row 14
@@ -498,4 +498,4 @@ endparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(end), HIGH(end), LOW(endsprites), HIGH(endsprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $0A, $F4, $85, $01, $00
+  .db $0A, $F8, $85, $01, $00

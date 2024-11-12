@@ -255,14 +255,23 @@ FanfictionParams:
 	RTS
 
 SkeletonHouseEventsSubroutine:
-	LDX #$09
-	LDY #$10
-	JSR CheckTilesForEvent
 	BNE SkeletonParams
 	LDX #$15
 	LDY #$07
 	JSR CheckTilesForEvent
 	BNE CandymanParams
+	LDA direction  ; only when looking above
+	CMP #$01
+	BNE SkeletonHouseEventsSubroutineDone
+	LDX #$08
+	LDY #$10
+	JSR CheckTilesForEvent
+	BNE SkeletonParams
+	LDX #$09
+	LDY #$10
+	JSR CheckTilesForEvent
+	BNE SkeletonParams
+SkeletonHouseEventsSubroutineDone:
 	RTS
 
 SkeletonParams:
