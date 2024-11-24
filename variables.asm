@@ -96,6 +96,8 @@ bgscrollposition .rs 1  ; self-explanatory
 loadcache        .rs 1  ; skip DrawCatFromCache when 0
 randomnumber     .rs 1  ; used for death screen
 lives            .rs 1
+shakescreen      .rs 1  ; used for boss fight (1/2 - shake screen, 0 - do not)
+dinomvstate      .rs 1  ; defines state of gojira movement (0 - stands, 1 - moves down, 2 - moves up)
 sound_ptr        .rs 2  ; song pointer for sound engine
 sound_ptr2       .rs 2  ; jump pointer for sound engine
 catcache         .rs 24

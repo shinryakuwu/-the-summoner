@@ -4,6 +4,7 @@ post_events_jump_table:
 	.word OfficeSubroutine-1
 	.word MathSubroutine-1
 	.word SkatingSubroutine-1
+	.word BossSubroutine-1
 
 initial_events_jump_table:
 	.word OldLadySubroutine-1
@@ -897,6 +898,232 @@ RestartText:
   STA currenttextlow
   LDA #HIGH(dead)
   STA currenttexthigh
+	RTS
+
+boss_events_jump_table:
+	.word BossSteps-1
+	.word BossLook-1
+	.word BossCatWalk-1
+	.word BossCrash-1
+	.word FlyingObjects-1
+	.word ObjectsBlink-1
+	.word StopShake-1
+	.word BossAppear-1
+	.word BossWalk-1
+	.word BossTalk-1
+
+BossSubroutine:
+	; implementing the RTS trick here https://www.nesdev.org/wiki/RTS_Trick
+	LDA eventstate
+	ASL A            		  ; we have a table of addresses, which are two bytes each. double that index.
+  TAX
+  LDA boss_events_jump_table+1, x    ; RTS will expect the low byte to be popped first,       
+  PHA                                  ; so we need to push the high byte first
+  LDA boss_events_jump_table, x      ; push the low byte
+  PHA
+  RTS 									; this rts will launch our subroutine
+
+BossSteps:
+	LDA #$04
+  JSR sound_load
+  INC eventstate
+  LDA #$FF
+  STA eventwaitcounter
+	RTS
+
+BossLook:
+	LDA #%00000101
+	STA buttons
+	INC eventstate
+	LDA #$DD
+  STA eventwaitcounter
+  LDA #$1A
+  STA movecounter
+	RTS
+
+BossCatWalk:
+	LDX #MVDOWN
+	LDY #$00
+	JSR EventWalkSubroutine
+	RTS
+
+BossCrash:
+	LDA #$05
+  JSR sound_load
+	LDA #$10
+  STA movecounter
+  LDA #$01
+  STA shakescreen
+  INC eventstate
+  JSR BreakWall
+  LDA #MVRIGHT
+  STA buttons
+	RTS
+
+FlyingObjects:
+	LDA movecounter
+	BEQ FlyingObjectsDone
+	LDY #$03
+FlyingObjectsLoop:
+	LDA #$01
+	STA trnsfrm       ; increment via transform loop
+	LDA #$60          ; compare pointer to this number via transform loop
+	STA trnsfrmcompare
+	LDX #$38          ; tiles are stored at address 0200 + this number
+	JSR ObjectTransformNoCache
+	DEY
+	CPY #$00
+	BNE FlyingObjectsLoop
+	LDA #$00
+	STA trnsfrm       ; decrement via transform loop
+	LDA #$3F          ; compare pointer to this number via transform loop
+	STA trnsfrmcompare
+	LDX #$3B          ; tiles are stored at address 0200 + this number
+	JSR ObjectTransformNoCache
+	DEC movecounter
+	RTS
+FlyingObjectsDone:
+	LDA #$10
+  STA movecounter
+	INC eventstate
+	RTS
+
+ObjectsBlink:
+	LDA movecounter
+  AND #%00000001            ; branch depends on whether movecounter is even/odd
+  BNE FlyingObjectsAppear   ; odd
+	; even - objects disappear here
+  LDA #$06          ; switch tiles via transform loop
+	STA trnsfrm
+	LDX #$39          ; tiles are stored at address 0200 + this number
+	LDA #$61
+	STA trnsfrmcompare
+	LDA #$00
+	STA switchtile    ; switch to nothing
+	JSR ObjectTransformNoCache
+ObjectsBlinkDone:
+	LDA movecounter
+	BEQ ObjectsBlinkChangeEventState ; if 0
+	DEC movecounter
+  RTS
+ObjectsBlinkChangeEventState:
+	INC eventstate
+	RTS
+
+FlyingObjectsAppear:
+  LDA #$38
+  STA ramspriteslow  ; load into ram starting from this address
+  LDX #$0A
+  LDY #$01
+FlyingObjectsAppearLoop:
+  LDA flyingobjects, y   ; load data from address (sprites +  y)
+  STA [ramspriteslow], y   ; store into RAM address
+  INY                      ; Y = Y + 1
+  INY
+  INY
+  INY
+  DEX
+  CPX #$00
+  BNE FlyingObjectsAppearLoop
+	JMP ObjectsBlinkDone
+
+StopShake:
+	LDA #$00
+  STA shakescreen
+  INC eventstate
+  LDA #$80
+  STA eventwaitcounter
+	RTS
+
+BossAppear:
+	LDA #$03
+  JSR sound_load
+	LDA #LOW(gojira)
+  STA curntspriteslow
+  LDA #HIGH(gojira)
+  STA curntspriteshigh
+  LDA #$64
+  STA spritescompare
+  LDA #$38
+  STA ramspriteslow  ; load into ram starting from this address
+  JSR LoadSprites
+  LDA #$18
+  STA ramspriteslow  ; restore default ppu pointer position
+  INC eventstate
+  LDA #$80
+  STA eventwaitcounter
+  LDA #$24
+  STA movecounter
+  LDA #$01
+  STA dinomvstate
+	RTS
+
+BossWalk:
+	LDA movecounter
+	BEQ BossWalkDone
+	DEC movecounter
+	JSR BossWalks
+	RTS
+BossWalkDone:
+	LDA #$00
+  STA dinomvstate
+	INC eventstate
+	RTS
+
+BossTalk:
+	LDA #LOW(smash)
+	STA currenttextlow
+	LDA #HIGH(smash)
+	STA currenttexthigh
+	LDA #$01
+  STA action
+	LDA #$00
+	STA eventstate
+	LDA #$80
+  STA eventwaitcounter
+	JSR PerformNonTextEventDone
+	RTS
+
+BreakWall:
+	LDX #$20
+  LDY #$D2
+	JSR SetPPUAddrSubroutine
+	LDX #$03
+	JSR BreakWallClearBg
+	LDX #$20
+  LDY #$F1
+	JSR SetPPUAddrSubroutine
+	LDX #$06
+	JSR BreakWallClearBg
+	LDX #$21
+  LDY #$11
+	JSR SetPPUAddrSubroutine
+	LDX #$06
+	JSR BreakWallClearBg
+	LDX #$21
+  LDY #$32
+	JSR SetPPUAddrSubroutine
+	LDX #$05
+	JSR BreakWallClearBg
+	LDX #$21
+  LDY #$52
+	JSR SetPPUAddrSubroutine
+	LDX #$02
+	JSR BreakWallClearBg
+	LDX #$21
+  LDY #$72
+	JSR SetPPUAddrSubroutine
+	LDX #$04
+	JSR BreakWallClearBg
+	RTS
+
+BreakWallClearBg:
+	LDA #$FF
+BreakWallClearBgLoop:
+	STA $2007
+	DEX
+	CPX #$00
+	BNE BreakWallClearBgLoop
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional

@@ -29,6 +29,7 @@
   .include "events.asm"         ; logic for performing any events aside from rendering text
   .include "dots.asm"           ; logic for drawing dots identifying that the action is possible
   .include "scroll.asm"
+  .include "boss_fight.asm"     ; boss fight logic
 
 ;;;;;;;;;;;;;;
 

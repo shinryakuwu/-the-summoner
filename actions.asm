@@ -432,6 +432,8 @@ ExParams:
 	STA currenttexthigh
 	LDA #$03
 	STA textpartscounter
+	LDA #$06
+	STA eventnumber
 	JSR SettingEventParamsDone
 	RTS
 
