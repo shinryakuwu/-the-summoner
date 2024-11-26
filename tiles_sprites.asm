@@ -493,18 +493,27 @@ gojira:
   .db $40, $CA, $00, $A0
   .db $40, $CB, $00, $A8
   .db $40, $CC, $00, $B0
+gojiraleftleg:
   .db $48, $D8, $00, $90
   .db $48, $D9, $00, $98
-  .db $48, $DA, $00, $A0
-  .db $48, $DB, $00, $A8
-  .db $48, $DC, $00, $B0
-  .db $48, $DC, $00, $B0
   .db $50, $E8, $00, $90
   .db $50, $E9, $00, $98
+gojirarightleg:
+  .db $48, $DA, $00, $A0
+  .db $48, $DB, $00, $A8
   .db $50, $EA, $00, $A0
   .db $50, $EB, $00, $A8
-  .db $50, $EC, $00, $B0
   .db $58, $AB, $00, $A2
+
+  .db $48, $DC, $00, $B0
+  .db $48, $DC, $00, $B0
+  .db $50, $EC, $00, $B0
+
+gojiraleftlegup:
+  .db $B6, $B7, $C6, $C7
+  
+gojirarightlegup:
+  .db $D6, $D7, $E6, $E7, $00
 
 endsprites:
   ; cat

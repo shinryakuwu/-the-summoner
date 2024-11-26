@@ -65,7 +65,6 @@ StorePreviousDotsFrame:
 
 DrawDots:
 	LDA dotsframe
-	STA $70
 	CMP olddotsframe
 	BEQ SkipDrawDots
 	CMP #$00

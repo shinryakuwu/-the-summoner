@@ -1065,8 +1065,7 @@ BossWalk:
 	JSR BossWalks
 	RTS
 BossWalkDone:
-	LDA #$00
-  STA dinomvstate
+	JSR BossStops
 	INC eventstate
 	RTS
 
