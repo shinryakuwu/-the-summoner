@@ -1,5 +1,5 @@
 avril14_bgm_header:
-  .byte $04           ;4 streams
+  .byte $03           ;3 streams
   
   .byte MUSIC_SQ1     ;which stream
   .byte $01           ;status byte (stream enabled)
@@ -24,9 +24,6 @@ avril14_bgm_header:
   .byte $00           ;volume envelope
   .word avr14_tri     ;pointer to stream
   .byte $16           ;tempo
-  
-  .byte MUSIC_NOI
-  .byte $00
 
               
 avr14_square1:

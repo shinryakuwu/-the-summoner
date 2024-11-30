@@ -417,6 +417,9 @@ song_headers:
 	.word song0_header     ;this is a silence song.  See song0.i for more details
   .word boss_bgm_header  ; boss fight theme
   .word avril14_bgm_header
+  .word boss_step_header ; sounds of gojira approaching
+  .word boss_steps_header
+  .word boss_crash_header ; the sound of gojira crashing the wall
   ; TODO: add more headers here
 
   .include "sound_opcodes.asm"    ;our opcode subroutines, jump table and aliases
@@ -424,4 +427,5 @@ song_headers:
   .include "vol_envelopes.i"
 	.include "song0.i"      ;holds the data for song 0 (header and data streams)
 	.include "song_boss_bgm.asm"
+	.include "sounds_boss.asm"
 	.include "song_avril14_bgm.asm"

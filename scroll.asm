@@ -1,7 +1,16 @@
 BgScroll:
 	LDA location
 	CMP #$0A        ; perform horizontal scroll for the end screen
-	BNE SkipScroll
+	BEQ EndScreenScroll
+	LDA shakescreen
+	BEQ SkipScroll
+	CMP #$01
+	BEQ MoveScreenLeft
+MoveScreenRight:
+	LDA #$01
+	STA shakescreen
+	JMP BgScrollSetValues
+EndScreenScroll:
 	INC bgscrollposition
   INC bgscrollposition
   LDA bgscrollposition
@@ -14,4 +23,9 @@ BgScrollSetValues:
 
 SkipScroll:
 	LDA #$00
+	JMP BgScrollSetValues
+
+MoveScreenLeft:
+	LDA #$FF
+	STA shakescreen
 	JMP BgScrollSetValues

@@ -1,9 +1,23 @@
 ;; DECLARE SOME VARIABLES HERE
+;.rs 1 means reserve one byte of space
 currentXtile     .rs 1  ; variable for determining the bg tile next to the cat
 currentYtile     .rs 1  ; variable for determining the bg tile next to the cat
-buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button state in this variable
+buttons          .rs 1  ; store button state in this variable
                         ; A B select start up down left right
+buttons_old      .rs 1  ; last frame's button states
+buttons_pressed  .rs 1  ; current frame's off_to_on transitions
 candycounter     .rs 1  ; stores the number of candy left to collect
+currentbglow     .rs 1  ; 16-bit variable to point to current background
+currentbghigh    .rs 1
+curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
+curntspriteshigh .rs 1
+location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
+                        ; 4 - server room, 5 - bsod, 6 - ghost room 1, 7 - ghost room 2, 8 - park, 9 - ex house
+                        ; 10 - end, 11 - death)
+spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
+loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
+singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
+attributenumber  .rs 1  ; define single attribute to load
 candyswitches    .rs 1  ; stores switches for collecting candy
                         ; 00000000
                         ;   ||||||__ old lady candy
@@ -20,20 +34,9 @@ switches         .rs 1  ; stores other switches
                         ;   |||__ visited ghost house
                         ;   ||__ got ghost pass hint
                         ;   |__ got ghost pass
-currentbglow     .rs 1  ; 16-bit variable to point to current background
-currentbghigh    .rs 1
-curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
-curntspriteshigh .rs 1
-location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
-                        ; 4 - server room, 5 - bsod, 6 - ghost room 1, 7 - ghost room 2, 8 - park, 9 - ex house
-                        ; 10 - end, 11 - death)
-spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
-loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
-singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
-attributenumber  .rs 1  ; define single attribute to load
 sleeping         .rs 1  ; main program sets this and waits for the NMI to clear it.
                         ; Ensures the main program is run only once per frame.
-action           .rs 1  ; action state ( 1 - action active, 0 - not, 2 - text render done, 3 - timeout state)
+action           .rs 1  ; action state ( 1 - action active, 0 - not, +some other states)
 bgrender         .rs 1  ; 0 - don't perform bg render, 1 - perform, 2 - bg render with loading palette
 nmiwaitcounter   .rs 1  ; defines how many frames nmi should wait
 eventwaitcounter .rs 1  ; defines delays in events
@@ -93,9 +96,14 @@ bgscrollposition .rs 1  ; self-explanatory
 loadcache        .rs 1  ; skip DrawCatFromCache when 0
 randomnumber     .rs 1  ; used for death screen
 lives            .rs 1
+shakescreen      .rs 1  ; used for boss fight (1/2 - shake screen, 0 - do not)
 sound_ptr        .rs 2  ; song pointer for sound engine
 sound_ptr2       .rs 2  ; jump pointer for sound engine
 catcache         .rs 24
+dinomvstate      .rs 1  ; defines state of gojira movement (0 - stands, 1 - moves down, 2 - moves up)
+dinomvframe      .rs 1  ; the number of animation frame for gijira
+                        ; (0 - default, 1 - left leg up, 2 - default, 3 - right lef up)
+dinomvcounter    .rs 1  ; animation counter for gojira
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -108,6 +116,7 @@ ACTIONBUTTONS = %11000000
 STARTBUTTON = %00010000
 CANDYGATHERED = %00111111
 CATANIMATIONSPEED = $0A
+BOSSANIMATIONSPEED = $08
 OBJECTSANIMATIONSPEED = $18
 XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0
