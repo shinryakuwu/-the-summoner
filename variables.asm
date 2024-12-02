@@ -104,6 +104,9 @@ dinomvstate      .rs 1  ; defines state of gojira movement (0 - stands, 1 - move
 dinomvframe      .rs 1  ; the number of animation frame for gijira
                         ; (0 - default, 1 - left leg up, 2 - default, 3 - right lef up)
 dinomvcounter    .rs 1  ; animation counter for gojira
+dinojumpstate    .rs 1  ; used for gojira jumping
+dinojumppointer  .rs 1  ; used to point into gojirajumpacceleration
+dinoacceleration .rs 1  ; used to store current acceleration
 
 ;; DECLARE SOME CONSTANTS HERE
 

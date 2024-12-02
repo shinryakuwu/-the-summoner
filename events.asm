@@ -1016,7 +1016,7 @@ FlyingObjectsAppear:
   LDX #$0A
   LDY #$01
 FlyingObjectsAppearLoop:
-  LDA flyingobjects, y   ; load data from address (sprites +  y)
+  LDA flyingobjects, y     ; load data from address (sprites +  y)
   STA [ramspriteslow], y   ; store into RAM address
   INY                      ; Y = Y + 1
   INY

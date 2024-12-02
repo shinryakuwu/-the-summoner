@@ -515,6 +515,9 @@ gojiraleftlegup:
 gojirarightlegup:
   .db $D6, $D7, $E6, $E7, $00
 
+gojirajumpacceleration:
+  .db $05, $04, $04, $03, $03, $02, $02, $01, $01, $00, $FF
+
 endsprites:
   ; cat
   .db $9F, $02, $00, $20
