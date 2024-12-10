@@ -378,6 +378,8 @@ GhostRoom1ParkWarp:
   RTS
 
 ExHouseVillage2WarpCheck:
+  LDA action
+  BNE ExHouseVillage2WarpCheckDone
   LDA currentXtile
   CMP #$0B
   BNE ExHouseVillage2WarpCheckDone

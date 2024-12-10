@@ -28,6 +28,9 @@ EventWait:
 
 CheckActionStatusNMI:
 	; check for statuses that will be processed within nmi
+	LDA action
+	CMP #$07
+	BEQ PerformBossFightEvent ; movement should remain here
 	JSR BlockMovement
 	LDA action
 	CMP #$01
@@ -48,6 +51,10 @@ CheckActionStatus:
 	BEQ ClearTextSectionDone
 	CMP #$04
 	BEQ StartButtonLogic
+	RTS
+
+PerformBossFightEvent:
+	JSR BossFightEvent
 	RTS
 
 PerformTextEvent:

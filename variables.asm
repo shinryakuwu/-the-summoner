@@ -100,6 +100,7 @@ shakescreen      .rs 1  ; used for boss fight (1/2 - shake screen, 0 - do not)
 sound_ptr        .rs 2  ; song pointer for sound engine
 sound_ptr2       .rs 2  ; jump pointer for sound engine
 catcache         .rs 24
+fightstate       .rs 1  ; determines the state of boss fight
 dinomvstate      .rs 1  ; defines state of gojira movement (0 - stands, 1 - moves down, 2 - moves up)
 dinomvframe      .rs 1  ; the number of animation frame for gijira
                         ; (0 - default, 1 - left leg up, 2 - default, 3 - right lef up)
@@ -107,6 +108,7 @@ dinomvcounter    .rs 1  ; animation counter for gojira
 dinojumpstate    .rs 1  ; used for gojira jumping
 dinojumppointer  .rs 1  ; used to point into gojirajumpacceleration
 dinoacceleration .rs 1  ; used to store current acceleration
+dinochasestate   .rs 1  ; used for gojira chasing
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -120,6 +122,9 @@ STARTBUTTON = %00010000
 CANDYGATHERED = %00111111
 CATANIMATIONSPEED = $0A
 BOSSANIMATIONSPEED = $08
+; BOSSMAXYPOSITION = $8D
+; CATBOSSPOSITIONOFFSET = $06
+CATBOSSPOSITIONOFFSET = $03
 OBJECTSANIMATIONSPEED = $18
 XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0

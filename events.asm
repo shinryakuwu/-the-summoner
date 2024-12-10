@@ -911,6 +911,7 @@ boss_events_jump_table:
 	.word BossAppear-1
 	.word BossWalk-1
 	.word BossTalk-1
+	.word InitiateBossFight-1
 
 BossSubroutine:
 	; implementing the RTS trick here https://www.nesdev.org/wiki/RTS_Trick
@@ -1076,10 +1077,19 @@ BossTalk:
 	STA currenttexthigh
 	LDA #$01
   STA action
-	LDA #$00
-	STA eventstate
 	LDA #$80
   STA eventwaitcounter
+	INC eventstate
+	RTS
+
+InitiateBossFight:
+	; TODO: start playing a song here
+	; LDA #$01
+  ; JSR sound_load
+	LDA #$07
+  STA action
+  LDA #$00
+  STA eventstate
 	JSR PerformNonTextEventDone
 	RTS
 

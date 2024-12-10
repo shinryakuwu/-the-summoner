@@ -30,7 +30,7 @@ boss_step_noi:
   .byte endsound
 
 boss_crash_header:
-  .byte $01              ;1 stream
+  .byte $01            ;1 stream
 
   .byte SFX_1          ;which stream
   .byte $01            ;status byte (stream enabled)
@@ -42,4 +42,34 @@ boss_crash_header:
 
 boss_crash_noi:
   .byte $81, $0C
+  .byte endsound
+
+boss_jump_header:
+  .byte $01            ;1 stream
+
+  .byte SFX_1          ;which stream
+  .byte $01            ;status byte (stream enabled)
+  .byte NOISE          ;which channel
+  .byte $70            ;duty (01)
+  .byte $00            ;volume envelope
+  .word boss_jump_noi  ;pointer to stream
+  .byte $12            ;tempo
+
+boss_jump_noi:
+  .byte $81, $0A
+  .byte endsound
+
+boss_fire_header:
+  .byte $01              ;1 stream
+
+  .byte SFX_1          ;which stream
+  .byte $01            ;status byte (stream enabled)
+  .byte NOISE          ;which channel
+  .byte $70            ;duty (01)
+  .byte $00            ;volume envelope
+  .word boss_fire_noi  ;pointer to stream
+  .byte $20            ;tempo
+
+boss_fire_noi:
+  .byte $81, $0F
   .byte endsound

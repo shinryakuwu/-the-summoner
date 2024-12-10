@@ -5,6 +5,10 @@ CheckPassability:
   LDX $0213          ; load horizontal coordinate of the cat's left bottom tile into X
   LDY $0210          ; load vertical coordinate of the cat's left bottom tile into Y
 
+  LDA action         ; some checks specific for boss fight event
+  CMP #$07
+  BEQ BossFightPassability
+
   LDA direction
   CMP #$02
   BEQ CheckMapBordersLeft
@@ -28,6 +32,20 @@ PassableForWalkBackwards:
   LDA #$01
   STA passable       ; set passable to true
   RTS
+
+BossFightPassability:
+  LDA direction
+  CMP #$03
+  BEQ BossFightBordersRight
+  CMP #$01
+  BNE CalculateTileInFrontOfCat
+BossFightBordersUp:
+  CPY #$6C
+  BCC BordersReached
+  JMP CalculateTileInFrontOfCat
+BossFightBordersRight:
+  CPX #$80
+  BCS BordersReached
 
 CalculateTileInFrontOfCat:
   JSR CalculateTileInFrontOfCatSubroutine
