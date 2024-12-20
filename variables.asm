@@ -109,6 +109,9 @@ dinojumpstate    .rs 1  ; used for gojira jumping
 dinojumppointer  .rs 1  ; used to point into gojirajumpacceleration
 dinoacceleration .rs 1  ; used to store current acceleration
 dinochasestate   .rs 1  ; used for gojira chasing
+projectilenumber .rs 1  ; defines current number of projectiles
+projectilestate  .rs 1  ; defines state of projectiles
+fireballsstate   .rs 1  ; used for gojura throwing fireballs
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -122,15 +125,13 @@ STARTBUTTON = %00010000
 CANDYGATHERED = %00111111
 CATANIMATIONSPEED = $0A
 BOSSANIMATIONSPEED = $08
-; BOSSMAXYPOSITION = $8D
-; CATBOSSPOSITIONOFFSET = $06
 CATBOSSPOSITIONOFFSET = $03
 OBJECTSANIMATIONSPEED = $18
 XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
 EMPTYBGTILEATTRIBUTE = $0F
-EMPTYTILEROWADDRESSES = $80
+EMPTYTILEROWADDRESSES = $A0
 BGPARAMSADDRESS = $06
 BGPARAMSCOMPARE = $0A
 DELAYGHOSTROOM1 = $A0

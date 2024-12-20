@@ -59,7 +59,7 @@ graves:
   .db $7E, $1F, $00, $E5
 
 hydrant:
-  .db $39, $2D, $00, $02
+  .db $39, $2D, $00, $03
 
 festoon: ; makes it more than 8 tiles in a row so I had to limit it at this point :(
   .db $22, $4A, $00, $BA
@@ -479,6 +479,9 @@ flyingobjects:
   .db $4F, $5D, $40, $A8
   .db $4E, $67, $01, $A8
 
+fireball:
+  .db $7B, $00, $96 ; y is dynamic
+
 gojira:
   .db $30, $A8, $00, $90
   .db $30, $A9, $00, $98
@@ -506,7 +509,6 @@ gojirarightleg:
   .db $58, $AB, $00, $A2
 
   .db $48, $DC, $00, $B0
-  .db $48, $DC, $00, $B0
   .db $50, $EC, $00, $B0
 
 gojiraleftlegup:
@@ -517,6 +519,9 @@ gojirarightlegup:
 
 gojirajumpacceleration:
   .db $05, $04, $04, $03, $03, $02, $02, $01, $01, $00, $FF
+
+projectileacceleration:
+  .db $01, $01, $01, $01, $02, $02, $02, $02, $03, $03, $03
 
 endsprites:
   ; cat

@@ -44,6 +44,7 @@
   .org $C000
 
   .include "tiles_sprites.asm"    ; stores tiles for sprites
+  .include "projectiles.asm"      ; logic for projectiles
 
 ;;;;;;;;;;;;;;
 

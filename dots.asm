@@ -26,7 +26,7 @@ RenewDotsCounter:
 DefineCurrentDotsFrame:
 	LDA dotscounter
 	BEQ SetDotsFrameToZero
-	CMP #$30               ; if dotsstate => this value
+	CMP #$30               ; if dotscounter => this value
 	BCS SetDotsFrameToZero
 	CMP #$01
 	BEQ SetDotsFrameToOne
@@ -75,8 +75,7 @@ SkipDrawDots:
 
 DrawOneDot:
   LDX #HIGH(INITIALTEXTPPUADDR)
-  LDY #LOW(INITIALTEXTPPUADDR)
-  TYA
+  LDA #LOW(INITIALTEXTPPUADDR)
   CLC
   ADC dotsframe  ; use dotsframe value as a pointer to add to text ppu address
   TAY

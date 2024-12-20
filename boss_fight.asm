@@ -3,6 +3,8 @@ boss_fight_jump_table:
 	.word BossChases-1
 
 BossFightEvent:
+	; TODO: move out of NMI later
+	JSR ProjectilesLifecycle
 	LDA dinojumpstate
 	BNE BossJumpInProcess
 
@@ -20,16 +22,56 @@ BossJumpInProcess:
 	RTS
 
 BossThrowsFireballs:
-	; add logic for fireball cycles (throw ceveral in a row with delay during which a jump can be performed)
-	; set number of fireballs
-	; throw, decrement number, set wait, if wait != 0, check jump. if number != 0, keep throwing fireballs
+	LDA fireballsstate
+	BEQ BossSpawnsFireball
+	CMP #$01
+	BEQ BossThrowsFireballsTimeout
+	RTS
+
+BossSpawnsFireball:
+	; and subroutine defining the projectilenumber limit based on cycle number
+	; jump to BossThrowsFireballsDone when limit reached
+	LDA projectilenumber
+	CMP #$01
+	BEQ BossThrowsFireballsDone
+	; when limit not reached, proceed throwing fireballs
+	JSR BossOpensMouth
 	LDA #$07
   JSR sound_load
-	JSR BossOpensMouth
-	; generate fireball
-	LDA #$10
-	STA eventwaitcounter
+	INC projectilenumber
+	; add dynamic stuff here, also cache
+	LDA $0238
+	CLC
+	ADC #$03 ; offset
+	STA $0298
+	LDY #$00
+DrawProjectileLoop:
+	LDA fireball, y
+	STA $0299, y
+	INY
+	CPY #$03
+	BNE DrawProjectileLoop
+	LDA #$20
+	STA movecounter
+	INC fireballsstate
+	RTS
+
+BossThrowsFireballsTimeout:
+	JSR CheckBossJump
+	LDA movecounter
+	BEQ BossThrowsFireballsTimeoutDone
+	DEC movecounter
+	RTS
+BossThrowsFireballsTimeoutDone:
+	DEC fireballsstate
+	RTS
+
+BossThrowsFireballsDone:
+	; TODO: increment cycle here
+	JSR BossClosesMouth
 	INC fightstate
+	LDA #$00
+	STA fireballsstate
 	RTS
 
 BossOpensMouth:
@@ -63,7 +105,6 @@ BossChases:
 	RTS
 
 BossChasesInit:
-	JSR BossClosesMouth
 	LDA #$20
   STA movecounter
 	INC dinochasestate
@@ -75,7 +116,7 @@ BossChasesDelay:
 	DEC movecounter
 	RTS
 BossChasesDelayDone:
-	LDA #$40
+	LDA #$2C
   STA movecounter
   INC dinochasestate
 	RTS
@@ -83,7 +124,7 @@ BossChasesDelayDone:
 BossChasesCheck:
 	; wait for cat movement here
 	; if cat stands on same line, wait for counter to pass, then throw fireballs
-	; else proceed to chasing
+	; else proceed to chase
 	LDA $0210
 	SEC
 	SBC #CATBOSSPOSITIONOFFSET
@@ -151,7 +192,6 @@ CheckBossJump:
 	CMP #$78  ; change this number to adjust distance
 	BCC SkipJumping
 	JSR BossJumps
-	; TODO: add some logic here to throw fireballs right after the jump
 SkipJumping:
 	RTS
 
@@ -169,7 +209,7 @@ BossWalksDown:
 	; A = 1 at this point if jumped to BossWalksDown
 	STA trnsfrm       ; increment or decrement via transform loop based on the condition
 ChangeBossCoordinates:
-	LDA #$9C          ; compare pointer to this number via transform loop
+	LDA #$98          ; compare pointer to this number via transform loop
 	STA trnsfrmcompare
 	LDX #$38          ; tiles are stored at address 0200 + this number
 	JSR ObjectTransformNoCache
@@ -290,6 +330,7 @@ BossJumpsInit:
 	STA dinojumppointer
 	JSR RenderBossLeftUp
 	JSR RenderBossRightUp
+	JSR BossClosesMouth
 	INC dinojumpstate
 	RTS
 
@@ -346,12 +387,15 @@ BossJumpEnds:
 	LDA #$00
   STA shakescreen
   STA dinojumpstate
+  STA fightstate     ; throw fireballs right after the jump
+  LDA #$01
+	STA fireballsstate
 	RTS
 
 MoveBossOnJumping:
   LDA #$38
   STA ramspriteslow  ; load into ram starting from this address
-  LDX #$19
+  LDX #$18
   LDY #$00
 MoveBossOnJumpingLoop:
 	LDA dinojumpstate        ; if boss is in ascending state, subtract dinoacceleration from boss y coordinates

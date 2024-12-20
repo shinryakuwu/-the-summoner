@@ -8,7 +8,7 @@ animate_tiles_jump_table:
 	.word AnimateGhostRoom1Subroutine-1
 	.word AnimateGhostRoom2Subroutine-1
 	.word AnimateParkSubroutine-1
-	.word SkipAnimateSubroutine-1
+	.word AnimateExHouseSubroutine-1
 	.word AnimateEndSubroutine-1
 	.word AnimateDeadSubroutine-1
 
@@ -414,4 +414,28 @@ AnimateParkSubroutine:
 	STA trnsfrmcompare
 	LDX #$43          ; cloud tiles are stored at address 0200 + this number
 	JSR ObjectTransformNoCache
+	RTS
+
+AnimateExHouseSubroutine:
+	LDA projectilenumber
+	BEQ AnimateExHouseSubroutineDone
+	LDA #$06          ; switch tile attributes via transform loop
+	STA trnsfrm
+	LDX #$9A
+	LDA #$9E
+	STA trnsfrmcompare
+	LDA objectframenum
+	BEQ AnimateFireballs
+	LDA #$00
+	STA objectframenum
+	STA switchtile
+	JSR ObjectTransformNoCache
+ 	RTS
+AnimateFireballs:
+	LDA #$01
+	STA objectframenum
+	LDA #$80
+	STA switchtile
+	JSR ObjectTransformNoCache
+AnimateExHouseSubroutineDone:
 	RTS

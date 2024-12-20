@@ -1043,7 +1043,7 @@ BossAppear:
   STA curntspriteslow
   LDA #HIGH(gojira)
   STA curntspriteshigh
-  LDA #$64
+  LDA #$60
   STA spritescompare
   LDA #$38
   STA ramspriteslow  ; load into ram starting from this address
