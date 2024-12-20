@@ -1,10 +1,11 @@
 boss_fight_jump_table:
 	.word BossThrowsFireballs-1
 	.word BossChases-1
+	.word BossRageWalk-1
 
 BossFightEvent:
 	; TODO: move out of NMI later
-	JSR ProjectilesLifecycle
+	JSR ProcessProjectiles
 	LDA dinojumpstate
 	BNE BossJumpInProcess
 
@@ -21,6 +22,21 @@ BossJumpInProcess:
 	JSR BossJumps
 	RTS
 
+BossRageWalk:
+	LDA $0274
+	CMP #BOSSENRAGEDPOSITION
+	BEQ BossRageWalkDone
+	BCC BossRageWalkDown
+BossRageWalkDownUp:
+	; add code
+	RTS
+BossRageWalkDown:
+	; add code
+	RTS
+BossRageWalkDone:
+	INC fightstate
+	RTS
+
 BossThrowsFireballs:
 	LDA fireballsstate
 	BEQ BossSpawnsFireball
@@ -29,31 +45,34 @@ BossThrowsFireballs:
 	RTS
 
 BossSpawnsFireball:
-	; and subroutine defining the projectilenumber limit based on cycle number
-	; jump to BossThrowsFireballsDone when limit reached
-	LDA projectilenumber
-	CMP #$01
+	JSR DefineProjectileNumberLimit ; current limit will be in A
+	CMP projectilenumber
 	BEQ BossThrowsFireballsDone
 	; when limit not reached, proceed throwing fireballs
 	JSR BossOpensMouth
 	LDA #$07
   JSR sound_load
-	INC projectilenumber
-	; add dynamic stuff here, also cache
+  ; load a fireball tile into projectile cache
+	LDA projectilenumber
+	ASL A
+	ASL A    ; multiply by 4 to make it a pointer
+	TAX
 	LDA $0238
 	CLC
 	ADC #$03 ; offset
-	STA $0298
+	STA projectilecache, x
 	LDY #$00
-DrawProjectileLoop:
+LoadProjectileLoop:
+	INX
 	LDA fireball, y
-	STA $0299, y
+	STA projectilecache, x
 	INY
 	CPY #$03
-	BNE DrawProjectileLoop
-	LDA #$20
+	BNE LoadProjectileLoop
+	LDA #$08
 	STA movecounter
 	INC fireballsstate
+	INC projectilenumber
 	RTS
 
 BossThrowsFireballsTimeout:
@@ -67,9 +86,9 @@ BossThrowsFireballsTimeoutDone:
 	RTS
 
 BossThrowsFireballsDone:
-	; TODO: increment cycle here
 	JSR BossClosesMouth
 	INC fightstate
+	INC fightcycle
 	LDA #$00
 	STA fireballsstate
 	RTS
@@ -90,6 +109,16 @@ BossClosesMouth:
 	STA $0245
 	LDA #$B9
 	STA $0249
+	RTS
+
+DefineProjectileNumberLimit:
+	LDA fightcycle
+	CMP #BOSSFIRSTPHASELENGTH
+	BCC ProjectileNumberLimitFirstPhase
+	LDA #$02
+	RTS
+ProjectileNumberLimitFirstPhase:
+	LDA #$01
 	RTS
 
 BossChases:

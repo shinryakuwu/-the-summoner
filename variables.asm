@@ -109,9 +109,13 @@ dinojumpstate    .rs 1  ; used for gojira jumping
 dinojumppointer  .rs 1  ; used to point into gojirajumpacceleration
 dinoacceleration .rs 1  ; used to store current acceleration
 dinochasestate   .rs 1  ; used for gojira chasing
+fireballsstate   .rs 1  ; used for gojira throwing fireballs
 projectilenumber .rs 1  ; defines current number of projectiles
-projectilestate  .rs 1  ; defines state of projectiles
-fireballsstate   .rs 1  ; used for gojura throwing fireballs
+projectilestate  .rs 2  ; defines state of projectiles
+projectilecache  .rs 8  ; used to store projectile tiles data before it's loaded to PPU
+projectileframe  .rs 1  ; used for loading projectiles into PPU in turns (due to 1 projectile per line limit)
+projdestroyed    .rs 1  ; number of destroyed projectiles per cycle
+fightcycle       .rs 1  ; counts how many times fireballs were spawned to progress the boss fight
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -126,6 +130,9 @@ CANDYGATHERED = %00111111
 CATANIMATIONSPEED = $0A
 BOSSANIMATIONSPEED = $08
 CATBOSSPOSITIONOFFSET = $03
+PROJECTILESPPUADDRESS = $0298
+BOSSFIRSTPHASELENGTH = $10
+BOSSENRAGEDPOSITION = $78
 OBJECTSANIMATIONSPEED = $18
 XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0

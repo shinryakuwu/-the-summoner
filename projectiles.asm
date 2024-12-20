@@ -1,55 +1,129 @@
 DrawProjectiles:
+	LDA projectilenumber
+	BEQ DrawProjectilesDone
+	LDA projectileframe
+	BEQ DrawProjectilesFrame0
+DrawProjectilesFrame1:
+	DEC projectileframe
+	LDX #$04
+	JMP DrawProjectilesFromCache
+	RTS
+DrawProjectilesFrame0:
+	INC projectileframe
+	LDX #$00
+	JMP DrawProjectilesFromCache
+DrawProjectilesDone:
 	RTS
 
-ProjectilesLifecycle:
+DrawProjectilesFromCache:
+	LDY #$00
+DrawProjectilesFromCacheLoop:
+	LDA projectilecache, x
+	STA PROJECTILESPPUADDRESS, y
+	INX
+	INY
+	CPY #$04
+	BNE DrawProjectilesFromCacheLoop
+	RTS
+
+ProcessProjectiles:
+	JSR DrawProjectiles
+	LDX projdestroyed
+	CPX projectilenumber
+	BEQ ProjectileCycleEnded
+ProcessProjectilesLoop:
+	CPX projectilenumber
+	BCS ProcessProjectilesLoopDone
 	; JSR CheckCollision
-	LDA projectilenumber
-	BEQ ProjectilesLifecycleDone
-	LDA projectilestate
+	JSR ProjectileLifecycle
+	INX
+	JMP ProcessProjectilesLoop
+ProcessProjectilesLoopDone:
+	RTS
+ProjectileCycleEnded:
+	LDA #$00
+	STA projectilenumber
+	STA projdestroyed
+	RTS
+
+ProjectileLifecycle:
+	LDA projectilestate, x
 	CMP #$0B
 	BCC ProjectileFallsDown
 	BEQ ProjectileFallsWithCondition
 	CMP #$0C
 	BEQ ProjectileMovesLeft
-ProjectilesLifecycleDone:
 	RTS
 
 ProjectileFallsDown:
-	DEC $029B
-	LDY projectilestate ; serves as acceleration pointer here
-	LDA $0298
+	TXA
+	PHA
+	ASL A
+	ASL A                ; multiply by 4
+	TAX
+	LDY projectilestate, x  ; serves as acceleration pointer here
+	LDA projectilecache, x
 	CLC
-	ADC projectileacceleration, y
-	STA $0298
-	INC projectilestate
+	ADC projectileacceleration, y ; alter projectile's Y coordinate
+	STA projectilecache, x
+	INX
+	INX
+	INX
+	DEC projectilecache, x ; alter projectile's X coordinate
+	PLA
+	TAX
+	INC projectilestate, x
 	RTS
 
 ProjectileFallsWithCondition:
-	LDA $0298
+	TXA
+	PHA
+	ASL A
+	ASL A                ; multiply by 4
+	TAX
+	LDA projectilecache, x
 	CMP $0200
 	BCS ProjectileAlignsWithCat
 	CLC
 	ADC #$04
-	STA $0298
+	STA projectilecache, x
+	PLA
+	TAX
 	RTS
 ProjectileAlignsWithCat:
-	INC projectilestate
+	PLA
+	TAX
+	INC projectilestate, x
 	RTS
 
 ProjectileMovesLeft:
-	LDA $029B
+	TXA
+	PHA
+	ASL A
+	ASL A  ; multiply by 4
+	TAX
+	INX
+	INX
+	INX
+	LDA projectilecache, x
 	CMP #$40
 	BCC ProjectileReachesWall
-	DEC $029B
-	DEC $029B
+	DEC projectilecache, x
+	DEC projectilecache, x
+	PLA
+	TAX
 	RTS
 ProjectileReachesWall:
 	; TODO: add delay after reaching wall
+	DEX
+	DEX
 	LDA #$7C
-	STA $0299
+	STA projectilecache, x
+	PLA
+	TAX
 	LDA #$00
-	STA projectilenumber
-	STA projectilestate
+	STA projectilestate, x
+	INC projdestroyed
 	RTS
 
 CheckCollision:
