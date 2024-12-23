@@ -1,7 +1,10 @@
 boss_fight_jump_table:
 	.word BossThrowsFireballs-1
 	.word BossChases-1
-	.word BossRageWalk-1
+	.word BossRageTalk-1
+	.word BossRageJump-1
+	.word OpenUmbrella-1
+	.word FallingHydrants-1
 
 BossFightEvent:
 	; TODO: move out of NMI later
@@ -22,19 +25,134 @@ BossJumpInProcess:
 	JSR BossJumps
 	RTS
 
-BossRageWalk:
-	LDA $0274
-	CMP #BOSSENRAGEDPOSITION
-	BEQ BossRageWalkDone
-	BCC BossRageWalkDown
-BossRageWalkDownUp:
-	; add code
+FallingHydrants:
 	RTS
-BossRageWalkDown:
-	; add code
+
+OpenUmbrella:
+	LDA movecounter
+	BNE OpenUmbrellaWait
+	LDA umbrellastate
+	BEQ OpenUmbrellaInit
+	CMP #$01
+	BEQ OpenUmbrellaChangeSprites
+	CMP #$02
+	BEQ OpenUmbrellaFrame1
+	CMP #$03
+	BEQ OpenUmbrellaFrame2
+	CMP #$04
+	BEQ UmbrellaOpened
 	RTS
-BossRageWalkDone:
+OpenUmbrellaWait:
+	DEC movecounter
+	RTS
+
+UmbrellaOpened:
+	LDA #$00
+	STA umbrellastate
 	INC fightstate
+	RTS
+
+OpenUmbrellaInit:
+	LDA #$00
+	STA shakescreen
+	INC umbrellastate
+	LDA #$10
+	STA movecounter
+	RTS
+
+OpenUmbrellaChangeSprites:
+	LDA #$59
+	STA $0225
+	LDA #$69
+	STA $022D
+	INC $0227
+	INC umbrellastate
+	RTS
+
+OpenUmbrellaFrame1:
+	LDX #$24
+  LDY #$EE
+  JSR SetPPUAddrSubroutine
+  LDA #$29
+  STA $2007
+	LDX #$25
+  LDY #$0E
+  JSR SetPPUAddrSubroutine
+  LDA #$1D
+  STA $2007
+  LDX #$25
+  LDY #$2E
+  JSR SetPPUAddrSubroutine
+  LDA #$2D
+  STA $2007
+  LDX #$25
+  LDY #$4E
+  JSR SetPPUAddrSubroutine
+  LDA #$18
+  STA $2007
+	INC umbrellastate
+	LDA #$20
+	STA movecounter
+	RTS
+
+OpenUmbrellaFrame2:
+	LDX #$24
+  LDY #$ED
+  JSR SetPPUAddrSubroutine
+  LDX #$00
+  LDY #$1A
+  JSR OpenUmbrellaFrame2LoadTilesLoop
+  LDX #$25
+  LDY #$0D
+  JSR SetPPUAddrSubroutine
+  LDX #$00
+  LDY #$2A
+  JSR OpenUmbrellaFrame2LoadTilesLoop
+  LDX #$25
+  LDY #$2E
+  JSR SetPPUAddrSubroutine
+  LDA #$19
+  STA $2007
+  INC umbrellastate
+	LDA #$20
+	STA movecounter
+	RTS
+
+OpenUmbrellaFrame2LoadTilesLoop:
+  STY $2007
+  INY
+  INX
+  CPX #$03
+  BNE OpenUmbrellaFrame2LoadTilesLoop
+	RTS
+
+BossRageJump:
+	LDA dinojumpcount ; compare to 1 instead of 0 to avoid throwing fireballs after jumping
+	CMP #$01
+	BEQ BossRageJumpDone
+	JSR BossJumps
+	RTS
+BossRageJumpDone:
+	INC fightstate
+	LDA #$30
+	STA movecounter
+	RTS
+
+BossRageTalk:
+	LDA projectilenumber
+	BNE BossRageTalkWait
+	LDA #LOW(enraged)
+  STA currenttextlow
+  LDA #HIGH(enraged)
+  STA currenttexthigh
+  LDA #$01
+  STA action
+  LDA #$07
+	STA eventnumber
+	LDA #$04
+	STA dinojumpcount
+	INC fightstate
+BossRageTalkWait:
 	RTS
 
 BossThrowsFireballs:
@@ -86,11 +204,18 @@ BossThrowsFireballsTimeoutDone:
 	RTS
 
 BossThrowsFireballsDone:
+	LDA #$00
+	STA fireballsstate
+	LDA fightcycle
+	CMP #BOSSSECONDPHASELENGTH
+	BEQ BossThrowsFireballsPhaseDone
 	JSR BossClosesMouth
 	INC fightstate
 	INC fightcycle
-	LDA #$00
-	STA fireballsstate
+	RTS
+BossThrowsFireballsPhaseDone:
+	LDA #$02
+	STA fightstate
 	RTS
 
 BossOpensMouth:
@@ -359,8 +484,12 @@ BossJumpsInit:
 	STA dinojumppointer
 	JSR RenderBossLeftUp
 	JSR RenderBossRightUp
-	JSR BossClosesMouth
 	INC dinojumpstate
+	LDA fightstate
+	CMP #$03
+	BEQ BossJumpsInitDone
+	JSR BossClosesMouth
+BossJumpsInitDone:
 	RTS
 
 BossAscends:
@@ -409,16 +538,25 @@ BossLands:
 	JSR RenderBossDefault
 	INC dinojumpstate
 	LDA #$08
-	STA eventwaitcounter
+	STA movecounter
 	RTS
 
 BossJumpEnds:
+	LDA movecounter
+	BNE BossJumpWait
 	LDA #$00
-  STA shakescreen
   STA dinojumpstate
+  LDA dinojumpcount
+  BNE BossKeepsJumping
+  STA shakescreen    ; A would be 0 here
   STA fightstate     ; throw fireballs right after the jump
-  LDA #$01
 	STA fireballsstate
+	RTS
+BossKeepsJumping:
+	DEC dinojumpcount
+	RTS
+BossJumpWait:
+	DEC movecounter
 	RTS
 
 MoveBossOnJumping:

@@ -5,6 +5,7 @@ post_events_jump_table:
 	.word MathSubroutine-1
 	.word SkatingSubroutine-1
 	.word BossSubroutine-1
+	.word ProceedFightSubroutine-1
 
 initial_events_jump_table:
 	.word OldLadySubroutine-1
@@ -1086,10 +1087,11 @@ InitiateBossFight:
 	; TODO: start playing a song here
 	; LDA #$01
   ; JSR sound_load
-	LDA #$07
-  STA action
   LDA #$00
   STA eventstate
+ProceedFightSubroutine:
+	LDA #$07
+  STA action
 	JSR PerformNonTextEventDone
 	RTS
 

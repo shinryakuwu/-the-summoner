@@ -464,7 +464,7 @@ SatanEventParams:
   BNE SatanEventParamsDone
   LDA #$43
   STA eventnumber
-  LDA #$0F
+  LDA #$0E
   STA movecounter
   LDA #$20
   STA eventwaitcounter

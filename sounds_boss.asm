@@ -68,7 +68,7 @@ boss_fire_header:
   .byte $70            ;duty (01)
   .byte $00            ;volume envelope
   .word boss_fire_noi  ;pointer to stream
-  .byte $20            ;tempo
+  .byte $28            ;tempo
 
 boss_fire_noi:
   .byte $81, $0F

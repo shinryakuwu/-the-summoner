@@ -327,11 +327,11 @@ exhouse:
 
   .db $0F,$0E,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$FF,$FF,$9D,$9D,$9A ;;row 7-8
 
-  .db $0F,$0E,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$FF,$FF,$9D,$9D,$9A ;;row 8-9
+  .db $0F,$0E,$9C,$9D,$9D,$28,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$FF,$FF,$9D,$9D,$9A ;;row 8-9
 
-  .db $0F,$0E,$9C,$9D,$9D,$FF,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$FF,$FF,$9D,$9D,$9A ;;row 9-10
+  .db $0F,$0E,$9C,$9D,$9D,$17,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$FF,$FF,$9D,$9D,$9A ;;row 9-10
 
-  .db $0F,$0E,$9C,$97,$97,$FF,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$9A ;;row 10-11
+  .db $0F,$0E,$9C,$97,$97,$27,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$9A ;;row 10-11
 
   .db $0F,$0E,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A ;;row 11-12
 
@@ -480,7 +480,7 @@ ghostroom1params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(ghostroom), HIGH(ghostroom), LOW(ghostroom1sprites), HIGH(ghostroom1sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $06, $68, $B4, $00, $01, $00
+  .db $06, $60, $B4, $00, $01, $00
 
 ghostroom2params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh

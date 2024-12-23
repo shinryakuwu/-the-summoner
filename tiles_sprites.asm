@@ -352,10 +352,6 @@ ghostroom1sprites:
   .db $55, $86, $00, $78
   .db $55, $86, $40, $80
 
-  ; plant
-  .db $3B, $59, $00, $A0
-  .db $43, $69, $00, $A0
-
   ; picture
   .db $30, $89, $00, $60
 
@@ -452,10 +448,6 @@ parksprites:
   .db $67, $6C, $00, $B0
 
 exhousesprites:
-  ; plant
-  .db $4C, $59, $00, $50
-  .db $54, $69, $00, $50
-
   ; ex
   .db $43, $6A, $00, $64
   .db $43, $6A, $40, $6B
@@ -463,6 +455,10 @@ exhousesprites:
   .db $4B, $7A, $40, $6B
   .db $53, $8A, $00, $64
   .db $53, $8A, $40, $6B
+
+  ; reserved for projectiles
+  .db $00, $00, $00, $00
+  .db $00, $00, $00, $00
 
 flyingobjects:
   ; picture

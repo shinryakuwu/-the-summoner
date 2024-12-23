@@ -110,22 +110,10 @@ AdditionalRender:
   BEQ GhostRoom2AdditionalRender
   CMP #$08
   BEQ ParkAdditionalRender
+  CMP #$09
+  BEQ ExHouseAdditionalRender
   CMP #$0A
   BEQ EndAdditionalRender
-  RTS
-
-GhostRoom1AdditionalRender:
-  LDX #$21
-  LDY #$34
-  JSR SetPPUAddrSubroutine
-  LDA #$FF              ; add empty tile behind the plant
-  STA $2007
-  LDX #$22
-  LDY #$4F
-  JSR SetPPUAddrSubroutine
-  LDA #$97              ; remove exit
-  STA $2007
-  STA $2007
   RTS
 
 GhostRoom2AdditionalRender:
@@ -164,12 +152,41 @@ ParkAdditionalRender:
 ParkAdditionalRenderDone:
   RTS
 
+ExHouseAdditionalRender:
+  ; add code
+  RTS
+
 EndAdditionalRender:
   LDA #LOW(paletteend)
   STA curntpalette
   LDA #HIGH(paletteend)
   STA curntpalette+1
   JSR LoadPalettes
+  RTS
+
+GhostRoom1AdditionalRender:
+  ; add a plant
+  LDX #$20
+  LDY #$F4
+  JSR SetPPUAddrSubroutine
+  LDA #$16
+  STA $2007
+  LDX #$21
+  LDY #$14
+  JSR SetPPUAddrSubroutine
+  LDA #$17
+  STA $2007
+  LDX #$21
+  LDY #$34
+  JSR SetPPUAddrSubroutine
+  LDA #$27
+  STA $2007
+  LDX #$22
+  LDY #$4F
+  JSR SetPPUAddrSubroutine
+  LDA #$97              ; remove exit
+  STA $2007
+  STA $2007
   RTS
 
 SetPPUAddrSubroutine:

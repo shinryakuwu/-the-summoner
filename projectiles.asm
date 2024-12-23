@@ -53,6 +53,8 @@ ProjectileLifecycle:
 	BEQ ProjectileFallsWithCondition
 	CMP #$0C
 	BEQ ProjectileMovesLeft
+	CMP #$0D
+	BEQ ProjectileTimeOut
 	RTS
 
 ProjectileFallsDown:
@@ -121,9 +123,13 @@ ProjectileReachesWall:
 	STA projectilecache, x
 	PLA
 	TAX
+	INC projectilestate, x
+	RTS
+
+ProjectileTimeOut:
+	INC projdestroyed
 	LDA #$00
 	STA projectilestate, x
-	INC projdestroyed
 	RTS
 
 CheckCollision:

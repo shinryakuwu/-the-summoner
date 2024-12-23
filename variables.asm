@@ -107,6 +107,7 @@ dinomvframe      .rs 1  ; the number of animation frame for gijira
 dinomvcounter    .rs 1  ; animation counter for gojira
 dinojumpstate    .rs 1  ; used for gojira jumping
 dinojumppointer  .rs 1  ; used to point into gojirajumpacceleration
+dinojumpcount    .rs 1  ; needed for performing multiple jumps in a row
 dinoacceleration .rs 1  ; used to store current acceleration
 dinochasestate   .rs 1  ; used for gojira chasing
 fireballsstate   .rs 1  ; used for gojira throwing fireballs
@@ -116,6 +117,7 @@ projectilecache  .rs 8  ; used to store projectile tiles data before it's loaded
 projectileframe  .rs 1  ; used for loading projectiles into PPU in turns (due to 1 projectile per line limit)
 projdestroyed    .rs 1  ; number of destroyed projectiles per cycle
 fightcycle       .rs 1  ; counts how many times fireballs were spawned to progress the boss fight
+umbrellastate    .rs 1  ; used for umbrella animation
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -132,7 +134,8 @@ BOSSANIMATIONSPEED = $08
 CATBOSSPOSITIONOFFSET = $03
 PROJECTILESPPUADDRESS = $0298
 BOSSFIRSTPHASELENGTH = $10
-BOSSENRAGEDPOSITION = $78
+BOSSSECONDPHASELENGTH = $20
+BOSSENRAGEDPOSITION = $88
 OBJECTSANIMATIONSPEED = $18
 XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0
