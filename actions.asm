@@ -55,6 +55,7 @@ CheckActionStatus:
 
 PerformBossFightEvent:
 	JSR BossFightEvent
+	JSR DrawProjectiles
 	RTS
 
 PerformTextEvent:

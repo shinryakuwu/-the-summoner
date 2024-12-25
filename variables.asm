@@ -116,6 +116,7 @@ projectilestate  .rs 2  ; defines state of projectiles
 projectilecache  .rs 8  ; used to store projectile tiles data before it's loaded to PPU
 projectileframe  .rs 1  ; used for loading projectiles into PPU in turns (due to 1 projectile per line limit)
 projdestroyed    .rs 1  ; number of destroyed projectiles per cycle
+projectiledelay  .rs 2  ; defines for how long a projectile will remain after reaching the wall
 fightcycle       .rs 1  ; counts how many times fireballs were spawned to progress the boss fight
 umbrellastate    .rs 1  ; used for umbrella animation
 
@@ -133,6 +134,7 @@ CATANIMATIONSPEED = $0A
 BOSSANIMATIONSPEED = $08
 CATBOSSPOSITIONOFFSET = $03
 PROJECTILESPPUADDRESS = $0298
+PROJECTILEDELAY = $10
 BOSSFIRSTPHASELENGTH = $10
 BOSSSECONDPHASELENGTH = $20
 BOSSENRAGEDPOSITION = $88

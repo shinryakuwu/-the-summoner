@@ -27,7 +27,6 @@ DrawProjectilesFromCacheLoop:
 	RTS
 
 ProcessProjectiles:
-	JSR DrawProjectiles
 	LDX projdestroyed
 	CPX projectilenumber
 	BEQ ProjectileCycleEnded
@@ -116,7 +115,6 @@ ProjectileMovesLeft:
 	TAX
 	RTS
 ProjectileReachesWall:
-	; TODO: add delay after reaching wall
 	DEX
 	DEX
 	LDA #$7C
@@ -124,10 +122,27 @@ ProjectileReachesWall:
 	PLA
 	TAX
 	INC projectilestate, x
+	LDA #PROJECTILEDELAY
+	STA projectiledelay, x
 	RTS
 
 ProjectileTimeOut:
+	LDA projectiledelay, x
+	BEQ DestroyProjectile
+	DEC projectiledelay, x
+	RTS
+DestroyProjectile:
+	TXA
+	PHA
+	ASL A
+	ASL A  ; multiply by 4
+	TAX
+	INX
+	LDA #$00
+	STA projectilecache, x
 	INC projdestroyed
+	PLA
+	TAX
 	LDA #$00
 	STA projectilestate, x
 	RTS
