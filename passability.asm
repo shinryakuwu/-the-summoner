@@ -42,10 +42,33 @@ BossFightPassability:
 BossFightBordersUp:
   CPY #$6C
   BCC BordersReached
+  JSR DefineDinoCompareCoordinate
+  CPY dinocoordcompare
+  BCS CalculateTileInFrontOfCat
+  CPX #$81
+  BCS BordersReached
   JMP CalculateTileInFrontOfCat
 BossFightBordersRight:
+  JSR DefineDinoCompareCoordinate
+  DEC dinocoordcompare
+  CPY dinocoordcompare
+  BCS CalculateTileInFrontOfCat
   CPX #$80
   BCS BordersReached
+  JMP CalculateTileInFrontOfCat
+
+DefineDinoCompareCoordinate:
+  LDA dinojumpcount ; this number indicates when boss becomes enraged
+  BNE DinoCompareCoordinateEnraged
+  LDA $028C         ; boss y coordinate
+  STA dinocoordcompare
+  RTS
+DinoCompareCoordinateEnraged:
+  LDA #BOSSENRAGEDPOSITION
+  CLC
+  ADC #$05
+  STA dinocoordcompare
+  RTS
 
 CalculateTileInFrontOfCat:
   JSR CalculateTileInFrontOfCatSubroutine

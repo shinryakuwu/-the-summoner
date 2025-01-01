@@ -119,6 +119,7 @@ projdestroyed    .rs 1  ; number of destroyed projectiles per cycle
 projectiledelay  .rs 2  ; defines for how long a projectile will remain after reaching the wall
 fightcycle       .rs 1  ; counts how many times fireballs were spawned to progress the boss fight
 umbrellastate    .rs 1  ; used for umbrella animation
+dinocoordcompare .rs 1  ; used in passability logic and in boss fight logic to compare coordinates
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -134,10 +135,12 @@ CATANIMATIONSPEED = $0A
 BOSSANIMATIONSPEED = $08
 CATBOSSPOSITIONOFFSET = $03
 PROJECTILESPPUADDRESS = $0298
-PROJECTILEDELAY = $10
+PROJECTILEDELAY = $06
 BOSSFIRSTPHASELENGTH = $10
 BOSSSECONDPHASELENGTH = $20
-BOSSENRAGEDPOSITION = $88
+; BOSSFIRSTPHASELENGTH = $02
+; BOSSSECONDPHASELENGTH = $02
+BOSSENRAGEDPOSITION = $80
 OBJECTSANIMATIONSPEED = $18
 XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0

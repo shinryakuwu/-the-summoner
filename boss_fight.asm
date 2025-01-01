@@ -62,10 +62,10 @@ OpenUmbrellaInit:
 
 OpenUmbrellaChangeSprites:
 	LDA #$59
-	STA $0225
-	LDA #$69
 	STA $022D
-	INC $0227
+	LDA #$69
+	STA $0235
+	INC $022F
 	INC umbrellastate
 	RTS
 
@@ -141,6 +141,7 @@ BossRageJumpDone:
 BossRageTalk:
 	LDA projectilenumber
 	BNE BossRageTalkWait
+	JSR BossOpensMouth
 	LDA #LOW(enraged)
   STA currenttextlow
   LDA #HIGH(enraged)
@@ -461,35 +462,24 @@ BossStops:
   JSR RenderBossDefault
 	RTS
 
-BossJumps:
-	LDA dinojumpstate
-	BEQ BossJumpsInit
-	CMP #$01
-	BEQ BossAscends
-	CMP #$02
-	BEQ BossInAir
-	CMP #$03
-	BEQ BossDescends
-	CMP #$04
-	BEQ BossLands
-	CMP #$05
-	BEQ BossJumpEnds
-	RTS
-
-
 BossJumpsInit:
-	; change everything to jumpstate and db. of acceleration ending with $FF or so.
-	; falling might be backwards for jumping
 	LDA #$00
 	STA dinojumppointer
 	JSR RenderBossLeftUp
 	JSR RenderBossRightUp
 	INC dinojumpstate
-	LDA fightstate
-	CMP #$03
-	BEQ BossJumpsInitDone
-	JSR BossClosesMouth
-BossJumpsInitDone:
+	RTS
+
+BossAscendsWithCondition:
+	JSR DefineJumpCompareCoordinate
+	CMP $028C
+	BCS BossAscendsWithConditionDone
+	LDA #$05
+	STA dinoacceleration
+	JSR MoveBossOnJumping
+	RTS
+BossAscendsWithConditionDone:
+	INC dinojumpstate
 	RTS
 
 BossAscends:
@@ -503,20 +493,31 @@ BossAscends:
 	RTS
 BossAscendsDone:
 	INC dinojumpstate
+	LDA fightstate
+	CMP #$03
+	BEQ BossAscendsEnraged
+	JSR BossClosesMouth
+BossAscendsEnraged:
 	RTS
 
-BossInAir:
-	; fall a bit regardless of cat position
-	; maybe use movecounter here
-	LDA #$01
-	STA dinoacceleration
-	JSR MoveBossOnJumping
-	INC dinojumpstate
+BossJumps:
+	LDA dinojumpstate
+	BEQ BossJumpsInit
+	CMP #$01
+	BEQ BossAscendsWithCondition
+	CMP #$02
+	BEQ BossAscends
+	CMP #$03
+	BEQ BossDescends
+	CMP #$04
+	BEQ BossDescendsWithCondition
+	CMP #$05
+	BEQ BossLands
+	CMP #$06
+	BEQ BossJumpEnds
 	RTS
 
 BossDescends:
-	; stop falling depending on cat position
-	; add condition here
 	LDA dinojumppointer
 	CMP #$FF
 	BEQ BossDescendsDone
@@ -530,15 +531,33 @@ BossDescendsDone:
 	INC dinojumpstate
 	RTS
 
+BossDescendsWithCondition:
+	JSR DefineJumpCompareCoordinate
+	CMP $028C
+	BCC BossDescendsWithConditionDone
+	LDA #$05
+	STA dinoacceleration
+	JSR MoveBossOnJumping
+	RTS
+BossDescendsWithConditionDone:
+	INC dinojumpstate
+	RTS
+
 BossLands:
-	LDA #$01
-  STA shakescreen
 	LDA #$06
   JSR sound_load
+  LDA #$01
+  STA shakescreen
+  ; LDA $0213
+  ; CMP #$78
+  ; BCS DeathFromJump
 	JSR RenderBossDefault
 	INC dinojumpstate
 	LDA #$08
 	STA movecounter
+	RTS
+DeathFromJump:
+	JSR ProcessDeath
 	RTS
 
 BossJumpEnds:
@@ -559,6 +578,15 @@ BossJumpWait:
 	DEC movecounter
 	RTS
 
+DefineJumpCompareCoordinate:
+	LDA dinojumpcount
+	BEQ JumpCompareToCat
+	LDA #BOSSENRAGEDPOSITION
+	RTS
+JumpCompareToCat:
+	LDA $0208 ; y of the middle of the cat
+	RTS
+
 MoveBossOnJumping:
   LDA #$38
   STA ramspriteslow  ; load into ram starting from this address
@@ -566,8 +594,8 @@ MoveBossOnJumping:
   LDY #$00
 MoveBossOnJumpingLoop:
 	LDA dinojumpstate        ; if boss is in ascending state, subtract dinoacceleration from boss y coordinates
-	CMP #$01								 ; else add dinoacceleration to boss y coordinates
-	BNE MoveBossOnJumpingIncrement
+	CMP #$03								 ; else add dinoacceleration to boss y coordinates
+	BCS MoveBossOnJumpingIncrement
 MoveBossOnJumpingDecrement:
   LDA [ramspriteslow], y
   SEC

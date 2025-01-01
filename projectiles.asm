@@ -174,13 +174,17 @@ CheckCollision:
 	BCC NoCollision
 	LDA #$01
 	STA dotsframe
-	; add processing death here
-	JSR DrawOneDot
-	; LDA #$49
-	; STA eventnumber
-	; LDA #$06
-	; STA action
+	JSR ProcessDeath
 	RTS
 NoCollision:
-	JSR ClearDots
+	; JSR ClearDots
+	RTS
+
+ProcessDeath:
+	; TODO: clear boss variables here
+	; JSR DrawOneDot
+	LDA #$49
+	STA eventnumber
+	LDA #$06
+	STA action
 	RTS

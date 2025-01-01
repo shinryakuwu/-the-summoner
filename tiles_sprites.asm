@@ -448,6 +448,10 @@ parksprites:
   .db $67, $6C, $00, $B0
 
 exhousesprites:
+  ; reserved for projectiles
+  .db $00, $00, $00, $00
+  .db $00, $00, $00, $00
+
   ; ex
   .db $43, $6A, $00, $64
   .db $43, $6A, $40, $6B
@@ -455,10 +459,6 @@ exhousesprites:
   .db $4B, $7A, $40, $6B
   .db $53, $8A, $00, $64
   .db $53, $8A, $40, $6B
-
-  ; reserved for projectiles
-  .db $00, $00, $00, $00
-  .db $00, $00, $00, $00
 
 flyingobjects:
   ; picture

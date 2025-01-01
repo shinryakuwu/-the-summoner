@@ -833,6 +833,8 @@ RestartSubroutine:
 	RTS
 
 RestartWarp:
+	LDA #$00
+  STA shakescreen
 	LDA #MVRIGHT
   STA buttons
 	JSR DeadCatHouseWarp
