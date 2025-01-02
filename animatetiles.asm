@@ -417,6 +417,9 @@ AnimateParkSubroutine:
 	RTS
 
 AnimateExHouseSubroutine:
+	LDA fightstate ; this logic is only for animating fireballs
+	CMP #$05
+	BCS AnimateExHouseSubroutineDone
 	LDA projectilenumber
 	BEQ AnimateExHouseSubroutineDone
 	LDA #$06          ; switch tile attributes via transform loop

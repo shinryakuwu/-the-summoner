@@ -1,4 +1,7 @@
 DrawProjectiles:
+	LDA fightstate ; this logic is only for drawing fireballs, hydrants hit PPU directly
+	CMP #$05
+	BCS DrawProjectilesDone
 	LDA projectilenumber
 	BEQ DrawProjectilesDone
 	LDA projectileframe
@@ -37,15 +40,17 @@ ProcessProjectilesLoop:
 	JSR ProjectileLifecycle
 	INX
 	JMP ProcessProjectilesLoop
-ProcessProjectilesLoopDone:
-	RTS
 ProjectileCycleEnded:
 	LDA #$00
 	STA projectilenumber
 	STA projdestroyed
+ProcessProjectilesLoopDone:
 	RTS
 
 ProjectileLifecycle:
+	LDA fightstate ; different logic for hydrants
+	CMP #$05
+	BCS HydrantLifecycle
 	LDA projectilestate, x
 	CMP #$0B
 	BCC ProjectileFallsDown
@@ -54,6 +59,10 @@ ProjectileLifecycle:
 	BEQ ProjectileMovesLeft
 	CMP #$0D
 	BEQ ProjectileTimeOut
+	RTS
+
+HydrantLifecycle:
+	JSR HydrantLifecycleSubroutine
 	RTS
 
 ProjectileFallsDown:
@@ -147,6 +156,207 @@ DestroyProjectile:
 	STA projectilestate, x
 	RTS
 
+BossThrowsFireballs:
+	LDA fireballsstate
+	BEQ BossSpawnsFireball
+	CMP #$01
+	BEQ BossThrowsFireballsTimeout
+	RTS
+
+BossSpawnsFireball:
+	JSR DefineProjectileNumberLimit ; current limit will be in A
+	CMP projectilenumber
+	BEQ BossThrowsFireballsDone
+	; when limit not reached, proceed throwing fireballs
+	JSR BossOpensMouth
+	LDA #$07
+  JSR sound_load
+  ; load a fireball tile into projectile cache
+	LDA projectilenumber
+	ASL A
+	ASL A    ; multiply by 4 to make it a pointer
+	TAX
+	LDA $0238
+	CLC
+	ADC #$03 ; offset
+	STA projectilecache, x
+	LDY #$00
+LoadProjectileLoop:
+	INX
+	LDA fireball, y
+	STA projectilecache, x
+	INY
+	CPY #$03
+	BNE LoadProjectileLoop
+	LDA #$08
+	STA movecounter
+	INC fireballsstate
+	INC projectilenumber
+	RTS
+
+BossThrowsFireballsTimeout:
+	JSR CheckBossJump
+	LDA movecounter
+	BEQ BossThrowsFireballsTimeoutDone
+	DEC movecounter
+	RTS
+BossThrowsFireballsTimeoutDone:
+	DEC fireballsstate
+	RTS
+
+BossThrowsFireballsDone:
+	LDA #$00
+	STA fireballsstate
+	LDA fightcycle
+	CMP #BOSSSECONDPHASELENGTH
+	BEQ BossThrowsFireballsPhaseDone
+	JSR BossClosesMouth
+	INC fightstate
+	INC fightcycle
+	RTS
+BossThrowsFireballsPhaseDone:
+	LDA #$02
+	STA fightstate
+	RTS
+
+
+FallingHydrants:
+	LDA hydrantsstate
+	BEQ FallingHydrantsDrop
+	CMP #$01
+	BEQ FallingHydrantsDelay
+	RTS
+
+FallingHydrantsDrop:
+	LDY projectilenumber
+	LDA projectilenumber
+	CMP #HYDRANTSMAX
+	BEQ FallingHydrantsDropDone
+	ASL A ; transform to pointer, multiply by 8
+	ASL A
+	ASL A
+	TAX
+	; render hydrant
+	LDA #$00
+	STA HYDRANTSPPUADDRESS, x
+	INX
+	LDA #$2D
+	STA HYDRANTSPPUADDRESS, x
+	INX
+	INX
+	LDA hydrantsX, y
+	STA HYDRANTSPPUADDRESS, x
+	; render shadow
+	INX
+	LDA hydrantshadowsY, y
+	STA HYDRANTSPPUADDRESS, x
+	INX
+	LDA #$68
+	STA HYDRANTSPPUADDRESS, x
+	INX
+	LDA #$02
+	STA HYDRANTSPPUADDRESS, x
+	INX
+	LDA hydrantsX, y
+	STA HYDRANTSPPUADDRESS, x
+	DEC HYDRANTSPPUADDRESS, x ; move shadow 1 px to the left
+	INC projectilenumber
+	INC hydrantsstate
+	LDA #HYDRANTSDELAY
+	STA movecounter
+FallingHydrantsDropDone:
+	RTS
+
+FallingHydrantsDelay:
+	LDA movecounter
+	BEQ FallingHydrantsDelayDone
+	DEC movecounter
+FallingHydrantsDelayDone:
+	DEC hydrantsstate
+	RTS
+
+HydrantLifecycleSubroutine:
+	LDA projectilestate, x
+	BEQ HydrantFallsDown
+	CMP #$11
+	BCC HydrantBlinks
+	BEQ HydrantDestroyed
+	RTS
+
+HydrantFallsDown:
+	TXA
+	PHA
+	ASL A
+	ASL A
+	ASL A                     ; multiply by 8
+	TAX
+	CLC
+	ADC #$04
+	TAY
+	LDA HYDRANTSPPUADDRESS, y ; get shadow y coordinate
+	SEC
+	SBC #$03                  ; add offset
+	CMP HYDRANTSPPUADDRESS, x ; compare hydrant y to shadow y
+	BCC HydrantFallsDownDone
+	INC HYDRANTSPPUADDRESS, x ; move hydrant's y coordinate by 2 pixels each frame
+	INC HYDRANTSPPUADDRESS, x
+	PLA
+	TAX
+	RTS
+HydrantFallsDownDone:
+	; erase shadow
+	LDA #$FF
+	STA HYDRANTSPPUADDRESS, y
+	INY
+	STA HYDRANTSPPUADDRESS, y
+	LDA #$03
+  JSR sound_load
+  ; JSR CheckCollision
+  PLA
+	TAX
+	INC projectilestate, x
+	RTS
+
+HydrantBlinks:
+	TXA
+	PHA
+	TAY
+	ASL A
+	ASL A
+	ASL A               ; multiply by 8
+	TAX
+	INX
+	LDA projectilestate, y
+	AND #%00000001      ; branch depends on whether projectilestate is even/odd
+  BNE HydrantAppears  ; odd
+HydrantDisappears:
+	LDA #$00
+	STA HYDRANTSPPUADDRESS, x
+	JMP HydrantBlinksDone
+HydrantAppears:
+	LDA #$2D
+	STA HYDRANTSPPUADDRESS, x
+HydrantBlinksDone:
+	PLA
+	TAX
+	INC projectilestate, x
+	RTS
+
+HydrantDestroyed:
+	TXA
+	PHA
+	TAY
+	ASL A
+	ASL A
+	ASL A               ; multiply by 8
+	TAX
+	LDA #$FF
+	STA HYDRANTSPPUADDRESS, x
+	PLA
+	TAX
+	INC projectilestate, x
+	RTS
+
 CheckCollision:
 	; take upper cat sprite coordinates, add offset
 	; take projectile coordinates
@@ -183,6 +393,7 @@ NoCollision:
 ProcessDeath:
 	; TODO: clear boss variables here
 	; JSR DrawOneDot
+	; set ramspriteslow?
 	LDA #$49
 	STA eventnumber
 	LDA #$06

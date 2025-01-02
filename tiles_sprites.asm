@@ -478,6 +478,12 @@ flyingobjects:
 fireball:
   .db $7B, $00, $96 ; y is dynamic
 
+hydrantsX:
+  .db $58, $78, $90, $48, $80, $88, $78, $60
+
+hydrantshadowsY:
+  .db $68, $78, $88, $80, $58, $70, $60, $88
+
 gojira:
   .db $30, $A8, $00, $90
   .db $30, $A9, $00, $98

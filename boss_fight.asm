@@ -25,9 +25,6 @@ BossJumpInProcess:
 	JSR BossJumps
 	RTS
 
-FallingHydrants:
-	RTS
-
 OpenUmbrella:
 	LDA movecounter
 	BNE OpenUmbrellaWait
@@ -156,69 +153,6 @@ BossRageTalk:
 BossRageTalkWait:
 	RTS
 
-BossThrowsFireballs:
-	LDA fireballsstate
-	BEQ BossSpawnsFireball
-	CMP #$01
-	BEQ BossThrowsFireballsTimeout
-	RTS
-
-BossSpawnsFireball:
-	JSR DefineProjectileNumberLimit ; current limit will be in A
-	CMP projectilenumber
-	BEQ BossThrowsFireballsDone
-	; when limit not reached, proceed throwing fireballs
-	JSR BossOpensMouth
-	LDA #$07
-  JSR sound_load
-  ; load a fireball tile into projectile cache
-	LDA projectilenumber
-	ASL A
-	ASL A    ; multiply by 4 to make it a pointer
-	TAX
-	LDA $0238
-	CLC
-	ADC #$03 ; offset
-	STA projectilecache, x
-	LDY #$00
-LoadProjectileLoop:
-	INX
-	LDA fireball, y
-	STA projectilecache, x
-	INY
-	CPY #$03
-	BNE LoadProjectileLoop
-	LDA #$08
-	STA movecounter
-	INC fireballsstate
-	INC projectilenumber
-	RTS
-
-BossThrowsFireballsTimeout:
-	JSR CheckBossJump
-	LDA movecounter
-	BEQ BossThrowsFireballsTimeoutDone
-	DEC movecounter
-	RTS
-BossThrowsFireballsTimeoutDone:
-	DEC fireballsstate
-	RTS
-
-BossThrowsFireballsDone:
-	LDA #$00
-	STA fireballsstate
-	LDA fightcycle
-	CMP #BOSSSECONDPHASELENGTH
-	BEQ BossThrowsFireballsPhaseDone
-	JSR BossClosesMouth
-	INC fightstate
-	INC fightcycle
-	RTS
-BossThrowsFireballsPhaseDone:
-	LDA #$02
-	STA fightstate
-	RTS
-
 BossOpensMouth:
 	LDA #$8B
 	STA $023D
@@ -293,9 +227,12 @@ BossChasesCheckWait:
 	DEC movecounter
 	RTS
 BossChasesCheckDone:
+	LDA projectilenumber
+	BNE BossChasesCheckLimitWait
 	LDA #$00
 	STA dinochasestate
 	STA fightstate
+BossChasesCheckLimitWait:
 	RTS
 
 BossChasesUp:
@@ -337,9 +274,17 @@ BossChasesProceedMoving:
 	RTS
 BossChasesMoveDone:
 	JSR BossStops
+	LDA projectilenumber
+	BNE ProjectileLimitReachedKeepChasing
 	LDA #$00
 	STA dinochasestate
 	STA fightstate
+	RTS
+ProjectileLimitReachedKeepChasing:
+	LDA #$08
+  STA movecounter
+  LDA #$01
+  STA dinochasestate
 	RTS
 
 CheckBossJump:

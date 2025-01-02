@@ -112,7 +112,7 @@ dinoacceleration .rs 1  ; used to store current acceleration
 dinochasestate   .rs 1  ; used for gojira chasing
 fireballsstate   .rs 1  ; used for gojira throwing fireballs
 projectilenumber .rs 1  ; defines current number of projectiles
-projectilestate  .rs 2  ; defines state of projectiles
+projectilestate  .rs 8  ; defines state of projectiles
 projectilecache  .rs 8  ; used to store projectile tiles data before it's loaded to PPU
 projectileframe  .rs 1  ; used for loading projectiles into PPU in turns (due to 1 projectile per line limit)
 projdestroyed    .rs 1  ; number of destroyed projectiles per cycle
@@ -120,6 +120,7 @@ projectiledelay  .rs 2  ; defines for how long a projectile will remain after re
 fightcycle       .rs 1  ; counts how many times fireballs were spawned to progress the boss fight
 umbrellastate    .rs 1  ; used for umbrella animation
 dinocoordcompare .rs 1  ; used in passability logic and in boss fight logic to compare coordinates
+hydrantsstate    .rs 1  ; used for state of falling hydrants
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -136,11 +137,14 @@ BOSSANIMATIONSPEED = $08
 CATBOSSPOSITIONOFFSET = $03
 PROJECTILESPPUADDRESS = $0298
 PROJECTILEDELAY = $06
-BOSSFIRSTPHASELENGTH = $10
-BOSSSECONDPHASELENGTH = $20
-; BOSSFIRSTPHASELENGTH = $02
-; BOSSSECONDPHASELENGTH = $02
+; BOSSFIRSTPHASELENGTH = $10
+; BOSSSECONDPHASELENGTH = $20
+BOSSFIRSTPHASELENGTH = $02
+BOSSSECONDPHASELENGTH = $02
 BOSSENRAGEDPOSITION = $80
+HYDRANTSPPUADDRESS = $0298
+HYDRANTSDELAY = $18
+HYDRANTSMAX = $08
 OBJECTSANIMATIONSPEED = $18
 XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0
