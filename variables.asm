@@ -117,10 +117,11 @@ projectilecache  .rs 8  ; used to store projectile tiles data before it's loaded
 projectileframe  .rs 1  ; used for loading projectiles into PPU in turns (due to 1 projectile per line limit)
 projdestroyed    .rs 1  ; number of destroyed projectiles per cycle
 projectiledelay  .rs 2  ; defines for how long a projectile will remain after reaching the wall
-fightcycle       .rs 1  ; counts how many times fireballs were spawned to progress the boss fight
+fightcycle       .rs 1  ; counts how many times projectiles were spawned to progress the boss fight
 umbrellastate    .rs 1  ; used for umbrella animation
 dinocoordcompare .rs 1  ; used in passability logic and in boss fight logic to compare coordinates
 hydrantsstate    .rs 1  ; used for state of falling hydrants
+hydrantpointer   .rs 1  ; used for pointing to the needed hydrant in db
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -141,10 +142,12 @@ PROJECTILEDELAY = $06
 ; BOSSSECONDPHASELENGTH = $20
 BOSSFIRSTPHASELENGTH = $02
 BOSSSECONDPHASELENGTH = $02
+BOSSTHIRDPHASELENGTH = $02
 BOSSENRAGEDPOSITION = $80
 HYDRANTSPPUADDRESS = $0298
-HYDRANTSDELAY = $18
+HYDRANTSDELAY = $03
 HYDRANTSMAX = $08
+HYDRANTSTIMEOUT = $48
 OBJECTSANIMATIONSPEED = $18
 XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0

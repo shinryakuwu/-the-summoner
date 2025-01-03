@@ -5,6 +5,7 @@ boss_fight_jump_table:
 	.word BossRageJump-1
 	.word OpenUmbrella-1
 	.word FallingHydrants-1
+	.word BossRageJump-1
 
 BossFightEvent:
 	; TODO: move out of NMI later
@@ -130,9 +131,17 @@ BossRageJump:
 	JSR BossJumps
 	RTS
 BossRageJumpDone:
-	INC fightstate
 	LDA #$30
 	STA movecounter
+	LDA fightstate
+	CMP #$06
+	BEQ BossRageJumpDropHydrants
+	INC fightstate
+	RTS
+BossRageJumpDropHydrants:
+	DEC fightstate
+	LDA #$03
+	STA hydrantsstate
 	RTS
 
 BossRageTalk:
@@ -440,7 +449,7 @@ BossAscendsDone:
 	INC dinojumpstate
 	LDA fightstate
 	CMP #$03
-	BEQ BossAscendsEnraged
+	BCS BossAscendsEnraged
 	JSR BossClosesMouth
 BossAscendsEnraged:
 	RTS

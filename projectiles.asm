@@ -217,25 +217,94 @@ BossThrowsFireballsDone:
 BossThrowsFireballsPhaseDone:
 	LDA #$02
 	STA fightstate
+	LDA #$00
+	STA fightcycle
 	RTS
 
+FallingHydrantsTimeout:
+	LDA movecounter
+	BEQ FallingHydrantsTimeoutDone
+	DEC movecounter
+	RTS
+FallingHydrantsTimeoutDone:
+	LDA #$04
+	STA dinojumpcount
+	LDA #$00
+	STA projectilenumber
+	STA hydrantsstate
+	INC fightstate
+	RTS
+
+FallingHydrantsStopShakescreen:
+	LDA movecounter
+	BEQ FallingHydrantsStopShakescreenDone
+	DEC movecounter
+	RTS
+FallingHydrantsStopShakescreenDone:
+	LDA #$00
+  STA shakescreen
+  STA hydrantsstate
+	RTS
+
+FinalHydrantLoad:
+	LDX #$00
+FinalHydrantLoadLoop:
+	LDA finalhydrant, x
+	STA $0218, x
+	INX
+	CPX #$04
+	BNE FinalHydrantLoadLoop
+	INC hydrantsstate
+	RTS
+
+FinalHydrantFall:
+	LDA $0218
+	CMP #$52 ; TODO: fix inconsistencies here
+	BCS FinalHydrantFallDone
+	INC $0218
+	INC $0218
+	RTS
+FinalHydrantFallDone:
+	LDA #$07
+  JSR sound_load
+	LDA #$8C
+	STA $023D
+	INC hydrantsstate
+	RTS
 
 FallingHydrants:
 	LDA hydrantsstate
 	BEQ FallingHydrantsDrop
 	CMP #$01
 	BEQ FallingHydrantsDelay
+	CMP #$02
+	BEQ FallingHydrantsTimeout
+	CMP #$03
+	BEQ FallingHydrantsStopShakescreen
+	CMP #$04
+	BEQ FinalHydrantLoad
+	CMP #$05
+	BEQ FinalHydrantFall
+	RTS
+
+FallingHydrantsDelay:
+	LDA movecounter
+	BEQ FallingHydrantsDelayDone
+	DEC movecounter
+	RTS
+FallingHydrantsDelayDone:
+	DEC hydrantsstate
 	RTS
 
 FallingHydrantsDrop:
-	LDY projectilenumber
 	LDA projectilenumber
 	CMP #HYDRANTSMAX
-	BEQ FallingHydrantsDropDone
+	BEQ FallingHydrantsDropCycleDone
 	ASL A ; transform to pointer, multiply by 8
 	ASL A
 	ASL A
 	TAX
+	LDY hydrantpointer
 	; render hydrant
 	LDA #$00
 	STA HYDRANTSPPUADDRESS, x
@@ -260,19 +329,28 @@ FallingHydrantsDrop:
 	LDA hydrantsX, y
 	STA HYDRANTSPPUADDRESS, x
 	DEC HYDRANTSPPUADDRESS, x ; move shadow 1 px to the left
+	LDX projectilenumber
+	LDA #$00
+	STA projectilestate, x ; renew projectile status
 	INC projectilenumber
+	INC hydrantpointer
 	INC hydrantsstate
 	LDA #HYDRANTSDELAY
 	STA movecounter
-FallingHydrantsDropDone:
 	RTS
-
-FallingHydrantsDelay:
-	LDA movecounter
-	BEQ FallingHydrantsDelayDone
-	DEC movecounter
-FallingHydrantsDelayDone:
-	DEC hydrantsstate
+FallingHydrantsDropCycleDone:
+	LDA fightcycle
+	CMP #BOSSTHIRDPHASELENGTH
+	BEQ FallingHydrantsDropDone
+	INC fightcycle
+	LDA #$02
+	STA hydrantsstate ; timeout
+	LDA #HYDRANTSTIMEOUT
+	STA movecounter
+	RTS
+FallingHydrantsDropDone:
+	LDA #$04
+	STA hydrantsstate
 	RTS
 
 HydrantLifecycleSubroutine:
