@@ -59,7 +59,7 @@ graves:
   .db $7E, $1F, $00, $E5
 
 hydrant:
-  .db $39, $2D, $00, $02
+  .db $39, $2D, $00, $03
 
 festoon: ; makes it more than 8 tiles in a row so I had to limit it at this point :(
   .db $22, $4A, $00, $BA
@@ -352,10 +352,6 @@ ghostroom1sprites:
   .db $55, $86, $00, $78
   .db $55, $86, $40, $80
 
-  ; plant
-  .db $3B, $59, $00, $A0
-  .db $43, $69, $00, $A0
-
   ; picture
   .db $30, $89, $00, $60
 
@@ -452,12 +448,9 @@ parksprites:
   .db $67, $6C, $00, $B0
 
 exhousesprites:
-  ; plant
-  .db $4C, $59, $00, $50
-  .db $54, $69, $00, $50
-
-  ; picture
-  .db $38, $99, $00, $90
+  ; reserved for projectiles
+  .db $00, $00, $00, $00
+  .db $00, $00, $00, $00
 
   ; ex
   .db $43, $6A, $00, $64
@@ -466,6 +459,10 @@ exhousesprites:
   .db $4B, $7A, $40, $6B
   .db $53, $8A, $00, $64
   .db $53, $8A, $40, $6B
+
+flyingobjects:
+  ; picture
+  .db $38, $99, $00, $90
 
   ; door
   .db $40, $4E, $00, $A0
@@ -477,6 +474,67 @@ exhousesprites:
   .db $4F, $5D, $00, $A0
   .db $4F, $5D, $40, $A8
   .db $4E, $67, $01, $A8
+
+fireball:
+  .db $7B, $00, $96 ; y is dynamic
+
+hydrantsX:
+  .db $58, $78, $90, $48, $80, $88, $78, $60
+  .db $80, $40, $48, $88, $58, $48, $90, $80
+  .db $78, $50, $78, $60, $58, $90, $40, $88
+
+hydrantshadowsY:
+  .db $68, $78, $88, $80, $58, $70, $60, $88
+  .db $58, $60, $68, $88, $60, $80, $78, $70
+  .db $88, $90, $58, $70, $80, $78, $60, $68
+
+finalhydrant:
+  .db $00, $2D, $00, $98
+
+candy:
+  .db $60, $4C, $01, $98
+  .db $68, $4C, $02, $A8
+
+gojira:
+  .db $30, $A8, $00, $90
+  .db $30, $A9, $00, $98
+  .db $30, $AA, $00, $A0
+  .db $38, $B8, $00, $90
+  .db $38, $B9, $00, $98
+  .db $38, $BA, $00, $A0
+  .db $38, $BB, $00, $A8
+  .db $38, $BC, $00, $B0
+  .db $40, $C8, $00, $90
+  .db $40, $C9, $00, $98
+  .db $40, $CA, $00, $A0
+  .db $40, $CB, $00, $A8
+  .db $40, $CC, $00, $B0
+gojiraleftleg:
+  .db $48, $D8, $00, $90
+  .db $48, $D9, $00, $98
+  .db $50, $E8, $00, $90
+  .db $50, $E9, $00, $98
+gojirarightleg:
+  .db $48, $DA, $00, $A0
+  .db $48, $DB, $00, $A8
+  .db $50, $EA, $00, $A0
+  .db $50, $EB, $00, $A8
+  .db $58, $AB, $00, $A2
+
+  .db $48, $DC, $00, $B0
+  .db $50, $EC, $00, $B0
+
+gojiraleftlegup:
+  .db $B6, $B7, $C6, $C7
+  
+gojirarightlegup:
+  .db $D6, $D7, $E6, $E7, $00
+
+gojirajumpacceleration:
+  .db $05, $04, $04, $03, $03, $02, $02, $01, $01, $00, $FF
+
+projectileacceleration:
+  .db $01, $01, $01, $01, $02, $02, $02, $02, $03, $03, $03
 
 endsprites:
   ; cat
@@ -518,6 +576,7 @@ endsprites:
   .db $80, $CD, $42, $5B
   .db $71, $F0, $02, $4D
   .db $7B, $C5, $02, $40
+  .db $7C, $1D, $01, $44
   .db $7C, $D5, $02, $4D
   .db $7E, $E3, $02, $40
   .db $7D, $E3, $02, $4F

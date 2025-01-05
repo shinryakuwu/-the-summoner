@@ -231,8 +231,9 @@ Village2GhostRoom2Warp:
   BNE Village2GhostRoom2WarpNoEvent ; if got the ghost candy, skip the math cutscene
   LDA #$20
   STA eventwaitcounter
-  LDA #$04
+  LDA #$01
   STA action
+  LDA #$04
   STA eventnumber
   LDA #LOW(math_ghost)
   STA currenttextlow
@@ -251,7 +252,7 @@ GhostGuardEvent:
   STA eventnumber
   LDA #$0A
   STA movecounter
-  LDA #$08
+  LDA #$06
   STA action
 GhostGuardEventDone:
   RTS
@@ -331,7 +332,7 @@ ForgotSomething:
   STA eventnumber
   LDA #$0A
   STA movecounter
-  LDA #$08
+  LDA #$06
   STA action
 ForgotSomethingDone:
   RTS
@@ -377,6 +378,8 @@ GhostRoom1ParkWarp:
   RTS
 
 ExHouseVillage2WarpCheck:
+  LDA action
+  BNE ExHouseVillage2WarpCheckDone
   LDA currentXtile
   CMP #$0B
   BNE ExHouseVillage2WarpCheckDone
@@ -388,7 +391,19 @@ ExHouseVillage2WarpCheck:
 ExHouseVillage2WarpCheckDone:
   RTS
 
+ForgotSomethingCheck:
+  LDA candyswitches
+  AND #%00110000
+  CMP #%00110000
+  BNE ForgotSomething
+  JMP ExHouseVillage2WarpAfterCheck
+  RTS
+
 ExHouseVillage2Warp:
+  LDA switches
+  AND #%01000000      ; when boss defeated
+  BNE ForgotSomethingCheck
+ExHouseVillage2WarpAfterCheck:
   JSR SetVillage2Params
   LDA #LOW(exhousevillage2warp)
   STA warpXYlow
@@ -461,11 +476,11 @@ SatanEventParams:
   BNE SatanEventParamsDone
   LDA #$43
   STA eventnumber
-  LDA #$0F
+  LDA #$0E
   STA movecounter
   LDA #$20
   STA eventwaitcounter
-  LDA #$08
+  LDA #$06
   STA action
 SatanEventParamsDone:
   RTS

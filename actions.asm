@@ -9,11 +9,13 @@ CheckActionMainLoop:
 
 CheckAction:
 	LDA eventwaitcounter
-	BNE EventWait          ; do nothing in this frame unless eventwaitcounter is zero
+	BNE EventWait            ; do nothing in this frame unless eventwaitcounter is zero
+	LDA actionnmi
+	BEQ CheckActionStatus
+	LDA action               ; fix for blinking screen when action logic is happening during the animation frame
+	BEQ CheckActionStatusNMIDone ; when action is 0
 	LDA animatecounter
-	BNE CanCheckForAction  ; fix for blinking screen when action logic is happening during the animation frame
-	LDA action
-	BEQ CanCheckForAction  ; allow movement only when no action is happening
+	BNE CheckActionStatusNMI
 EventWaitDone:
 	JSR BlockMovement
 	RTS
@@ -24,12 +26,12 @@ EventWait:
 	BNE EventWaitDone      ; because calling it in main loop messes up automovement
 	RTS                    ; (buttons are set to some direction and this code clears it before CheckMovement is called)
 
-CanCheckForAction:
-	LDA actionnmi
-	BEQ CheckActionStatus
-
 CheckActionStatusNMI:
 	; check for statuses that will be processed within nmi
+	LDA action
+	CMP #$07
+	BEQ PerformBossFightEvent ; movement should remain here
+	JSR BlockMovement
 	LDA action
 	CMP #$01
 	BEQ PerformTextEvent
@@ -37,6 +39,7 @@ CheckActionStatusNMI:
 	BEQ PerformNonTextEvent
 	CMP #$06
 	BEQ ClearTextSection
+CheckActionStatusNMIDone:
 	RTS
 
 CheckActionStatus:
@@ -45,40 +48,35 @@ CheckActionStatus:
 	CMP #$02
 	BEQ ActionTimeout
 	CMP #$03
-	BEQ CheckActionButtonReleased
-	CMP #$04
-	BEQ CheckActionButtonReleased
-	CMP #$07
 	BEQ ClearTextSectionDone
-	CMP #$08
-	BEQ CheckActionButtonReleased
-	CMP #$09
+	CMP #$04
 	BEQ StartButtonLogic
 	RTS
 
+PerformBossFightEvent:
+	JSR BossFightEvent
+	JSR DrawProjectiles
+	RTS
+
 PerformTextEvent:
-	JSR BlockButtons
 	JSR RenderText
 	RTS
 
 PerformNonTextEvent:
-	JSR BlockButtons
 	JSR NonTextEvents
 	RTS
 
 ClearTextSection:
-	JSR BlockButtons
 	JSR ClearTextSectionSubroutine
 	RTS
 
 CheckActionButtons:
-	LDA buttons
+	LDA buttons_pressed
 	AND #ACTIONBUTTONS
 	BNE CheckTileForAction
 	RTS
 
 CheckTileForAction:
-	JSR BlockMovement
 	JSR CheckActionTile
 	RTS
 
@@ -87,35 +85,17 @@ StartButtonLogic:
 	RTS
 
 ActionTimeout:
-	LDA buttons             ; the part of the action is over, keep waiting for action button to be pressed at this step
-	AND #ACTIONBUTTONS      ; when action button is pressed, state 2 leads to state 3 which returns to 0 (or next dialogue part)
-	BEQ SkipActionTimeout   ; only when action button is released
-	LDA #$03
-	STA action
-SkipActionTimeout:
-	JSR BlockButtons
-	RTS
-
-CheckActionButtonReleased:
-	; if text finished rendering and action button is released, clear text and disable action or initiate rendering next text part
-	LDA buttons
-	AND #ACTIONBUTTONS
-	STA buttons              ; disable movement for this frame
-	BNE ActionButtonOnHold
-	LDA action
-	CMP #$04                 ; if state is 4, it means that the initial text event will start in the next frame
-	BEQ InitialTextEvent
-	CMP #$08                 ; if state is 8, it means that the initial non-text event will start in the next frame
-	BEQ InitialNonTextEvent
+	LDA buttons_pressed     ; the part of the text action is over, keep waiting for action button to be pressed at this step
+	AND #ACTIONBUTTONS      ; when action button is pressed, clear text and disable action or initiate rendering next text part
+	BEQ WaitForActionButton
 	LDA #$00
 	STA cleartextstate
 	LDA #$06                 ; trigger processing ClearTextSectionSubroutine from the next frame
 	STA action
-ActionButtonOnHold:
+WaitForActionButton:
 	RTS
 
 ClearTextSectionDone:
-	JSR BlockButtons
 	LDA textpartscounter
 	BNE NextTextPart      ; if textpartscounter is not zero, set action to 1, decrement textpartscounter
 	LDA eventnumber
@@ -125,16 +105,6 @@ ClearTextSectionDone:
 	RTS
 EndOfAction:
 	LDA #$00
-	STA action
-	RTS
-
-InitialTextEvent:
-	LDA #$01
-	STA action
-	RTS
-
-InitialNonTextEvent:
-	LDA #$06
 	STA action
 	RTS
 
@@ -293,14 +263,23 @@ FanfictionParams:
 	RTS
 
 SkeletonHouseEventsSubroutine:
-	LDX #$09
-	LDY #$10
-	JSR CheckTilesForEvent
 	BNE SkeletonParams
 	LDX #$15
 	LDY #$07
 	JSR CheckTilesForEvent
 	BNE CandymanParams
+	LDA direction  ; only when looking above
+	CMP #$01
+	BNE SkeletonHouseEventsSubroutineDone
+	LDX #$08
+	LDY #$10
+	JSR CheckTilesForEvent
+	BNE SkeletonParams
+	LDX #$09
+	LDY #$10
+	JSR CheckTilesForEvent
+	BNE SkeletonParams
+SkeletonHouseEventsSubroutineDone:
 	RTS
 
 SkeletonParams:
@@ -452,16 +431,57 @@ ExHouseEventsSubroutine:
 	LDY #$0B
 	JSR CheckTilesForEvent
 	BNE DeathParams
+	LDA switches
+	AND #%01000000
+	BEQ ExHouseEventsSubroutineDone
+	LDX #$12
+	LDY #$0F
+	JSR CheckTilesForEvent
+	BNE BossCandy1Params
+	LDX #$14
+	LDY #$10
+	JSR CheckTilesForEvent
+	BNE BossCandy2Params
+ExHouseEventsSubroutineDone:
 	RTS
 
 ExParams:
+	LDA switches
+	AND #%01000000
+	BNE ExParamsBossDefeated
 	LDA #LOW(evil_ex)
 	STA currenttextlow
 	LDA #HIGH(evil_ex)
 	STA currenttexthigh
 	LDA #$03
 	STA textpartscounter
+	LDA #$06
+	STA eventnumber
 	JSR SettingEventParamsDone
+	RTS
+ExParamsBossDefeated:
+	LDA #LOW(your_fault)
+	STA currenttextlow
+	LDA #HIGH(your_fault)
+	STA currenttexthigh
+	JSR SettingEventParamsDone
+	RTS
+BossCandy1Params:
+	LDA candyswitches
+	AND #%00010000
+  BNE BossCandyParamsDone ; if candy already gathered, skip event
+	LDA #$4A
+	STA eventnumber
+	JSR SettingEventParamsDone
+	RTS
+BossCandy2Params:
+	LDA candyswitches
+	AND #%00100000
+  BNE BossCandyParamsDone ; if candy already gathered, skip event
+	LDA #$4B
+	STA eventnumber
+	JSR SettingEventParamsDone
+BossCandyParamsDone:
 	RTS
 
 DeathParams:
@@ -476,11 +496,11 @@ SettingEventParamsDone:
 	LDA eventnumber
 	CMP #$40             ; 1-39 - postevent (happens after text), 40 and more - initial event (happens before text)
 	BCC PostEvent        ; post event (or noevent if 0)
-	LDA #$08
+	LDA #$06
 	STA action
 	RTS
 PostEvent:
-	LDA #$04
+	LDA #$01
 	STA action
 	RTS
 
@@ -492,14 +512,9 @@ ClearEventParams:
 	STA textpartscounter
 	RTS
 
-BlockButtons:
-	LDA #$00    ; blocks buttons if action is in process
-	STA buttons
-	RTS
-
 BlockMovement:
-	LDA buttons        ; blocks movement if action button is pressed
-	AND #ACTIONBUTTONS
+	LDA buttons        ; blocks movement during action
+	AND #%11110000
 	STA buttons
 	RTS
 
@@ -524,9 +539,8 @@ EventFalse:
 	RTS
 
 StartButtonLogicSubroutine:
-	LDA buttons
+	LDA buttons_pressed
 	AND #STARTBUTTON
-	STA buttons
 	BEQ StartButtonNotPressed
 	LDA location
   CMP #$0B
@@ -538,7 +552,7 @@ StartButtonNotPressed:
 SetRestartEvent:
 	LDA lives
 	BEQ SkipSetRestartEvent ; no restart when no lives
-	LDA #$08
+	LDA #$06
 	STA action
 	LDA #$48
 	STA eventnumber

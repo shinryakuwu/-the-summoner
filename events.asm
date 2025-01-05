@@ -1,99 +1,53 @@
+post_events_jump_table:
+	.word CandymanHandSubroutine-1
+	.word SatanGlitchSubroutine-1
+	.word OfficeSubroutine-1
+	.word MathSubroutine-1
+	.word SkatingSubroutine-1
+	.word BossSubroutine-1
+	.word ProceedFightSubroutine-1
+
+initial_events_jump_table:
+	.word OldLadySubroutine-1
+	.word ForgotSubroutine-1
+	.word MathCandySubroutine-1
+	.word SatanWalkSubroutine-1
+	.word MedsSubroutine-1
+	.word BucketHatGuySubroutine-1
+	.word GhostGuardSubroutine-1
+	.word StartGhostSubroutine-1
+	.word RestartSubroutine-1
+	.word DeathSubroutine-1
+	.word BossCandy1Subroutine-1
+	.word BossCandy2Subroutine-1
+
 NonTextEvents:
+	; implementing the RTS trick here https://www.nesdev.org/wiki/RTS_Trick
 	LDA eventnumber
 	BEQ NonTextEventsDone ; if zero, then there is no event
-	CMP #$01
-	BEQ CandymanHand
-	CMP #$02
-	BEQ SatanGlitch
-	CMP #$03
-	BEQ Office
-	CMP #$04
-	BEQ Math
-	CMP #$05
-	BEQ Skating
 	CMP #$40
-	BEQ OldLady
-	CMP #$41
-	BEQ Forgot
-	CMP #$42
-	BEQ MathCandy
-	CMP #$43
-	BEQ SatanWalk
-	CMP #$44
-	BEQ Meds
-	CMP #$45
-	BEQ BucketHatGuy
-	CMP #$46
-	BEQ GhostGuard
-	CMP #$47
-	BEQ StartGhost
-	CMP #$48
-	BEQ Restart
-	CMP #$49
-	BEQ Death
+	BCC PerformPostEvent  ; if < 40
+	EOR #%01000000  			; subtract 40, so to say
+	ASL A            		  ; we have a table of addresses, which are two bytes each. double that index.
+  TAX
+  LDA initial_events_jump_table+1, x    ; RTS will expect the low byte to be popped first,       
+  PHA                                   ; so we need to push the high byte first
+  LDA initial_events_jump_table, x      ; push the low byte
+  PHA
+  RTS                   ; this rts will launch our subroutine
+PerformPostEvent:
+	SEC
+	SBC #$01              ; subtract 1 from A because table index would start from 0 but event numbers start from 1
+	ASL A          			  ; we have a table of addresses, which are two bytes each. double that index.
+  TAX
+  LDA post_events_jump_table+1, x    ; RTS will expect the low byte to be popped first,       
+  PHA                                ; so we need to push the high byte first
+  LDA post_events_jump_table, x      ; push the low byte
+  PHA
+  RTS                   ; this rts will launch our subroutine
 NonTextEventsDone:
 	LDA #$00
   STA action
-	RTS
-
-CandymanHand:
-	JSR CandymanHandSubroutine
-	RTS
-
-OldLady:
-	JSR OldLadySubroutine
-	RTS
-
-Office:
-	JSR OfficeSubroutine
-	RTS
-
-Forgot:
-	JSR ForgotSubroutine
-	RTS
-
-Math:
-	JSR MathSubroutine
-	RTS
-
-Skating:
-	JSR SkatingSubroutine
-	RTS
-
-Meds:
-	JSR MedsSubroutine
-	RTS
-
-BucketHatGuy:
-	JSR BucketHatGuySubroutine
-	RTS
-
-MathCandy:
-	JSR MathCandySubroutine
-	RTS
-
-GhostGuard:
-	JSR GhostGuardSubroutine
-	RTS
-
-SatanWalk:
-	JSR SatanWalkSubroutine
-	RTS
-
-SatanGlitch:
-	JSR SatanGlitchSubroutine
-	RTS
-
-StartGhost:
-	JSR StartGhostSubroutine
-	RTS
-
-Restart:
-	JSR RestartSubroutine
-	RTS
-
-Death:
-	JSR DeathSubroutine
 	RTS
 
 CandymanHandSubroutine:
@@ -129,7 +83,6 @@ OldLadyWalk:
 	RTS
 
 OldLadyAppear:
-	INC candycounter
 	LDA #$FF
 	STA $0245
 	LDA #LOW(oldlady)
@@ -164,10 +117,7 @@ OldLadyDisappear:
 	LDA #$FF
 	STA switchtile
 	JSR ObjectTransformNoCache
-	LDA #LOW(candy_left)
-  STA currenttextlow
-  LDA #HIGH(candy_left)
-  STA currenttexthigh
+	JSR GotCandySubroutine
   LDA candyswitches
   ORA #%00000001
   STA candyswitches
@@ -590,16 +540,12 @@ AddSpritesComparetoSprites:
 	RTS
 
 MathCandySubroutine:
-	INC candycounter
 	LDA #$00
 	STA $0219             ; candy disappears
 	LDA switches
   AND #%11111110
   STA switches          ; remove candy dropped trigger
-	LDA #LOW(candy_left)
-	STA currenttextlow
-	LDA #HIGH(candy_left)
-	STA currenttexthigh
+  JSR GotCandySubroutine
 	LDA candyswitches
 	ORA #%00001000
 	STA candyswitches
@@ -673,11 +619,7 @@ BucketHatGuyState3:
 
 BucketHatGuyCandyAcquired:
 	DEC eventstate
-	INC candycounter
-	LDA #LOW(candy_left)
-  STA currenttextlow
-  LDA #HIGH(candy_left)
-  STA currenttexthigh
+	JSR GotCandySubroutine
 
 BucketHatGuySubroutineDone:
 	LDA #$01
@@ -724,6 +666,9 @@ GhostGuardHides:
 	ORA #%00001000
 	STA switches
 	JSR PerformNonTextEventDone
+	JSR CalculateTileInFrontOfCatSubroutine ; update the coordinates so that this event won't be looped
+	; yea, i know, weird stuff, but when action button is pressed, warp subroutine fails to receive recent cat coordinates
+	; and constantly repeats guard ghost event
 	RTS
 
 GhostGuardInitiateRender:
@@ -782,8 +727,6 @@ EventWalkSubroutine:
 EventWalkDone:
 	LDA #$00
   STA walkbackwards
-	LDA #$05
-  STA action
 	INC eventstate
 	RTS
 
@@ -854,6 +797,7 @@ ForgotTalk:
   STA action
 	INC eventstate
 	JSR PerformNonTextEventDone
+	JSR CalculateTileInFrontOfCatSubroutine ; same thing as with ghost guard
 	RTS
 
 SkatingSubroutine:
@@ -879,6 +823,8 @@ RestartSubroutine:
 	RTS
 
 RestartWarp:
+	LDA #$00
+  STA shakescreen
 	LDA #MVRIGHT
   STA buttons
 	JSR DeadCatHouseWarp
@@ -945,6 +891,275 @@ RestartText:
   STA currenttextlow
   LDA #HIGH(dead)
   STA currenttexthigh
+	RTS
+
+boss_events_jump_table:
+	.word BossSteps-1
+	.word BossLook-1
+	.word BossCatWalk-1
+	.word BossCrash-1
+	.word FlyingObjects-1
+	.word ObjectsBlink-1
+	.word StopShake-1
+	.word BossAppearWithSound-1
+	.word BossWalk-1
+	.word BossTalk-1
+	.word InitiateBossFight-1
+
+BossSubroutine:
+	; implementing the RTS trick here https://www.nesdev.org/wiki/RTS_Trick
+	LDA eventstate
+	ASL A            		  ; we have a table of addresses, which are two bytes each. double that index.
+  TAX
+  LDA boss_events_jump_table+1, x    ; RTS will expect the low byte to be popped first,       
+  PHA                                  ; so we need to push the high byte first
+  LDA boss_events_jump_table, x      ; push the low byte
+  PHA
+  RTS 									; this rts will launch our subroutine
+
+BossSteps:
+	LDA #$04
+  JSR sound_load
+  INC eventstate
+  LDA #$FF
+  STA eventwaitcounter
+	RTS
+
+BossLook:
+	LDA #%00000101
+	STA buttons
+	INC eventstate
+	LDA #$DD
+  STA eventwaitcounter
+  LDA #$1A
+  STA movecounter
+	RTS
+
+BossCatWalk:
+	LDX #MVDOWN
+	LDY #$00
+	JSR EventWalkSubroutine
+	RTS
+
+BossCrash:
+	LDA #$05
+  JSR sound_load
+	LDA #$10
+  STA movecounter
+  LDA #$01
+  STA shakescreen
+  INC eventstate
+  JSR BreakWall
+  LDA #MVRIGHT
+  STA buttons
+	RTS
+
+FlyingObjects:
+	LDA movecounter
+	BEQ FlyingObjectsDone
+	LDY #$03
+FlyingObjectsLoop:
+	LDA #$01
+	STA trnsfrm       ; increment via transform loop
+	LDA #$60          ; compare pointer to this number via transform loop
+	STA trnsfrmcompare
+	LDX #$38          ; tiles are stored at address 0200 + this number
+	JSR ObjectTransformNoCache
+	DEY
+	CPY #$00
+	BNE FlyingObjectsLoop
+	LDA #$00
+	STA trnsfrm       ; decrement via transform loop
+	LDA #$3F          ; compare pointer to this number via transform loop
+	STA trnsfrmcompare
+	LDX #$3B          ; tiles are stored at address 0200 + this number
+	JSR ObjectTransformNoCache
+	DEC movecounter
+	RTS
+FlyingObjectsDone:
+	LDA #$10
+  STA movecounter
+	INC eventstate
+	RTS
+
+ObjectsBlink:
+	LDA movecounter
+  AND #%00000001            ; branch depends on whether movecounter is even/odd
+  BNE FlyingObjectsAppear   ; odd
+	; even - objects disappear here
+  LDA #$06          ; switch tiles via transform loop
+	STA trnsfrm
+	LDX #$39          ; tiles are stored at address 0200 + this number
+	LDA #$61
+	STA trnsfrmcompare
+	LDA #$00
+	STA switchtile    ; switch to nothing
+	JSR ObjectTransformNoCache
+ObjectsBlinkDone:
+	LDA movecounter
+	BEQ ObjectsBlinkChangeEventState ; if 0
+	DEC movecounter
+  RTS
+ObjectsBlinkChangeEventState:
+	INC eventstate
+	RTS
+
+FlyingObjectsAppear:
+  LDA #$38
+  STA ramspriteslow  ; load into ram starting from this address
+  LDX #$0A
+  LDY #$01
+FlyingObjectsAppearLoop:
+  LDA flyingobjects, y     ; load data from address (sprites +  y)
+  STA [ramspriteslow], y   ; store into RAM address
+  INY                      ; Y = Y + 1
+  INY
+  INY
+  INY
+  DEX
+  CPX #$00
+  BNE FlyingObjectsAppearLoop
+	JMP ObjectsBlinkDone
+
+StopShake:
+	LDA #$00
+  STA shakescreen
+  INC eventstate
+  LDA #$80
+  STA eventwaitcounter
+	RTS
+
+BossAppearWithSound:
+	LDA #$03
+  JSR sound_load
+BossAppear:
+	LDA #LOW(gojira)
+  STA curntspriteslow
+  LDA #HIGH(gojira)
+  STA curntspriteshigh
+  LDA #$60
+  STA spritescompare
+  LDA #$38
+  STA ramspriteslow  ; load into ram starting from this address
+  JSR LoadSprites
+  LDA #$18
+  STA ramspriteslow  ; restore default ppu pointer position
+  INC eventstate
+  LDA #$80
+  STA eventwaitcounter
+  LDA #$24
+  STA movecounter
+  LDA #$01
+  STA dinomvstate
+	RTS
+
+BossWalk:
+	LDA movecounter
+	BEQ BossWalkDone
+	DEC movecounter
+	JSR BossWalks
+	RTS
+BossWalkDone:
+	JSR BossStops
+	INC eventstate
+	RTS
+
+BossTalk:
+	LDA #LOW(smash)
+	STA currenttextlow
+	LDA #HIGH(smash)
+	STA currenttexthigh
+	LDA #$01
+  STA action
+	LDA #$80
+  STA eventwaitcounter
+	INC eventstate
+	RTS
+
+InitiateBossFight:
+	; TODO: start playing a song here
+	; LDA #$01
+  ; JSR sound_load
+  LDA #$00
+  STA eventstate
+ProceedFightSubroutine:
+	LDA #$07
+  STA action
+	JSR PerformNonTextEventDone
+	RTS
+
+BreakWall:
+	LDX #$20
+  LDY #$D2
+	JSR SetPPUAddrSubroutine
+	LDX #$03
+	JSR BreakWallClearBg
+	LDX #$20
+  LDY #$F1
+	JSR SetPPUAddrSubroutine
+	LDX #$06
+	JSR BreakWallClearBg
+	LDX #$21
+  LDY #$11
+	JSR SetPPUAddrSubroutine
+	LDX #$06
+	JSR BreakWallClearBg
+	LDX #$21
+  LDY #$32
+	JSR SetPPUAddrSubroutine
+	LDX #$05
+	JSR BreakWallClearBg
+	LDX #$21
+  LDY #$52
+	JSR SetPPUAddrSubroutine
+	LDX #$02
+	JSR BreakWallClearBg
+	LDX #$21
+  LDY #$72
+	JSR SetPPUAddrSubroutine
+	LDX #$04
+	JSR BreakWallClearBg
+	RTS
+
+BreakWallClearBg:
+	LDA #$FF
+BreakWallClearBgLoop:
+	STA $2007
+	DEX
+	CPX #$00
+	BNE BreakWallClearBgLoop
+	RTS
+
+BossCandy1Subroutine:
+	LDA #$00
+	STA $0239             ; candy disappears
+	LDA candyswitches
+	ORA #%00010000
+	STA candyswitches
+	LDA #$01
+  STA action
+  JSR GotCandySubroutine
+  JSR PerformNonTextEventDone
+	RTS
+
+BossCandy2Subroutine:
+	LDA #$00
+	STA $023D             ; candy disappears
+	LDA candyswitches
+	ORA #%00100000
+	STA candyswitches
+	LDA #$01
+  STA action
+  JSR GotCandySubroutine
+  JSR PerformNonTextEventDone
+	RTS
+
+GotCandySubroutine:
+	INC candycounter
+	LDA #LOW(candy_left)
+	STA currenttextlow
+	LDA #HIGH(candy_left)
+	STA currenttexthigh
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional

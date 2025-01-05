@@ -1,25 +1,12 @@
 ;; DECLARE SOME VARIABLES HERE
+;.rs 1 means reserve one byte of space
 currentXtile     .rs 1  ; variable for determining the bg tile next to the cat
 currentYtile     .rs 1  ; variable for determining the bg tile next to the cat
-buttons          .rs 1  ; .rs 1 means reserve one byte of space, store button state in this variable
+buttons          .rs 1  ; store button state in this variable
                         ; A B select start up down left right
+buttons_old      .rs 1  ; last frame's button states
+buttons_pressed  .rs 1  ; current frame's off_to_on transitions
 candycounter     .rs 1  ; stores the number of candy left to collect
-candyswitches    .rs 1  ; stores switches for collecting candy
-                        ; 00000000
-                        ;   ||||||__ old lady candy
-                        ;   |||||__ candy man hand
-                        ;   ||||__ licorice
-                        ;   |||__ ghost candy
-                        ;   ||__ boss candy 1
-                        ;   |__ boss candy 2
-switches         .rs 1  ; stores other switches
-                        ; 00000000
-                        ;   ||||||__ ghost candy drop
-                        ;   |||||__ talked to fren
-                        ;   ||||__ took meds
-                        ;   |||__ visited ghost house
-                        ;   ||__ got ghost pass hint
-                        ;   |__ got ghost pass
 currentbglow     .rs 1  ; 16-bit variable to point to current background
 currentbghigh    .rs 1
 curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
@@ -31,9 +18,26 @@ spritescompare   .rs 1  ; compare iterator to this value during load sprites loo
 loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
 attributenumber  .rs 1  ; define single attribute to load
+candyswitches    .rs 1  ; stores switches for collecting candy
+                        ; 00000000
+                        ;   ||||||__ old lady candy
+                        ;   |||||__ candy man hand
+                        ;   ||||__ licorice
+                        ;   |||__ ghost candy
+                        ;   ||__ boss candy 1
+                        ;   |__ boss candy 2
+switches         .rs 1  ; stores other switches
+                        ; 00000000
+                        ;  |||||||__ ghost candy drop
+                        ;  ||||||__ talked to fren
+                        ;  |||||__ took meds
+                        ;  ||||__ visited ghost house
+                        ;  |||__ got ghost pass hint
+                        ;  ||__ got ghost pass
+                        ;  |__ boss defeated
 sleeping         .rs 1  ; main program sets this and waits for the NMI to clear it.
                         ; Ensures the main program is run only once per frame.
-action           .rs 1  ; action state ( 1 - action active, 0 - not, 2 - text render done, 3 - timeout state)
+action           .rs 1  ; action state ( 1 - action active, 0 - not, +some other states)
 bgrender         .rs 1  ; 0 - don't perform bg render, 1 - perform, 2 - bg render with loading palette
 nmiwaitcounter   .rs 1  ; defines how many frames nmi should wait
 eventwaitcounter .rs 1  ; defines delays in events
@@ -93,9 +97,32 @@ bgscrollposition .rs 1  ; self-explanatory
 loadcache        .rs 1  ; skip DrawCatFromCache when 0
 randomnumber     .rs 1  ; used for death screen
 lives            .rs 1
+shakescreen      .rs 1  ; used for boss fight (1/2 - shake screen, 0 - do not)
 sound_ptr        .rs 2  ; song pointer for sound engine
 sound_ptr2       .rs 2  ; jump pointer for sound engine
 catcache         .rs 24
+fightstate       .rs 1  ; determines the state of boss fight
+dinomvstate      .rs 1  ; defines state of gojira movement (0 - stands, 1 - moves down, 2 - moves up)
+dinomvframe      .rs 1  ; the number of animation frame for gijira
+                        ; (0 - default, 1 - left leg up, 2 - default, 3 - right lef up)
+dinomvcounter    .rs 1  ; animation counter for gojira
+dinojumpstate    .rs 1  ; used for gojira jumping
+dinojumppointer  .rs 1  ; used to point into gojirajumpacceleration
+dinojumpcount    .rs 1  ; needed for performing multiple jumps in a row
+dinoacceleration .rs 1  ; used to store current acceleration
+dinochasestate   .rs 1  ; used for gojira chasing
+fireballsstate   .rs 1  ; used for gojira throwing fireballs
+projectilenumber .rs 1  ; defines current number of projectiles
+projectilestate  .rs 8  ; defines state of projectiles
+projectilecache  .rs 8  ; used to store projectile tiles data before it's loaded to PPU
+projectileframe  .rs 1  ; used for loading projectiles into PPU in turns (due to 1 projectile per line limit)
+projdestroyed    .rs 1  ; number of destroyed projectiles per cycle
+projectiledelay  .rs 2  ; defines for how long a projectile will remain after reaching the wall
+fightcycle       .rs 1  ; counts how many times projectiles were spawned to progress the boss fight
+umbrellastate    .rs 1  ; used for umbrella animation
+dinocoordcompare .rs 1  ; used in passability logic and in boss fight logic to compare coordinates
+hydrantsstate    .rs 1  ; used for state of falling hydrants
+hydrantpointer   .rs 1  ; used for pointing to the needed hydrant in db
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -108,12 +135,27 @@ ACTIONBUTTONS = %11000000
 STARTBUTTON = %00010000
 CANDYGATHERED = %00111111
 CATANIMATIONSPEED = $0A
+BOSSANIMATIONSPEED = $08
+CATBOSSPOSITIONOFFSET = $03
+PROJECTILESPPUADDRESS = $0298
+PROJECTILEDELAY = $06
+; BOSSFIRSTPHASELENGTH = $10
+; BOSSSECONDPHASELENGTH = $20
+BOSSFIRSTPHASELENGTH = $02
+BOSSSECONDPHASELENGTH = $02
+BOSSTHIRDPHASELENGTH = $02
+BOSSENRAGEDPOSITION = $80
+BOSSDEFEATEDDELAY = $90
+HYDRANTSPPUADDRESS = $0298
+HYDRANTSDELAY = $03
+HYDRANTSMAX = $08
+HYDRANTSTIMEOUT = $48
 OBJECTSANIMATIONSPEED = $18
 XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
 EMPTYBGTILEATTRIBUTE = $0F
-EMPTYTILEROWADDRESSES = $80
+EMPTYTILEROWADDRESSES = $A0
 BGPARAMSADDRESS = $06
 BGPARAMSCOMPARE = $0A
 DELAYGHOSTROOM1 = $A0

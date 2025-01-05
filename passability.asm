@@ -5,6 +5,10 @@ CheckPassability:
   LDX $0213          ; load horizontal coordinate of the cat's left bottom tile into X
   LDY $0210          ; load vertical coordinate of the cat's left bottom tile into Y
 
+  LDA action         ; some checks specific for boss fight event
+  CMP #$07
+  BEQ BossFightPassability
+
   LDA direction
   CMP #$02
   BEQ CheckMapBordersLeft
@@ -27,6 +31,46 @@ BordersReached:
 PassableForWalkBackwards:
   LDA #$01
   STA passable       ; set passable to true
+  RTS
+
+BossFightPassability:
+  LDA fightstate  ; at this point the boss is defeated
+  CMP #$08
+  BCS CalculateTileInFrontOfCat
+  LDA direction
+  CMP #$03
+  BEQ BossFightBordersRight
+  CMP #$01
+  BNE CalculateTileInFrontOfCat
+BossFightBordersUp:
+  CPY #$6C
+  BCC BordersReached
+  JSR DefineDinoCompareCoordinate
+  CPY dinocoordcompare
+  BCS CalculateTileInFrontOfCat
+  CPX #$81
+  BCS BordersReached
+  JMP CalculateTileInFrontOfCat
+BossFightBordersRight:
+  JSR DefineDinoCompareCoordinate
+  DEC dinocoordcompare
+  CPY dinocoordcompare
+  BCS CalculateTileInFrontOfCat
+  CPX #$80
+  BCS BordersReached
+  JMP CalculateTileInFrontOfCat
+
+DefineDinoCompareCoordinate:
+  LDA dinojumpcount ; this number indicates when boss becomes enraged
+  BNE DinoCompareCoordinateEnraged
+  LDA $028C         ; boss y coordinate
+  STA dinocoordcompare
+  RTS
+DinoCompareCoordinateEnraged:
+  LDA #BOSSENRAGEDPOSITION
+  CLC
+  ADC #$05
+  STA dinocoordcompare
   RTS
 
 CalculateTileInFrontOfCat:

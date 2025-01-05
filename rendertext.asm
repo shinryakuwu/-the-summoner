@@ -34,7 +34,7 @@ RenderTextDone:
   RTS
 
 SetDeathScreenStatus:
-  LDA #$09
+  LDA #$04
   STA action
   RTS
 
@@ -126,6 +126,6 @@ ClearTextSectionLoop:
 ClearTextSectionSubroutineDone:
   LDA #$00
   STA cleartextstate
-  LDA #$07
+  LDA #$03
   STA action
   RTS

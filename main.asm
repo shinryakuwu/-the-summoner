@@ -22,13 +22,13 @@
   .include "calculate_tile"     ; subroutine to calculate tile in front of the cat
   .include "movement.asm"       ; character movement and animation
   .include "drawcat.asm"        ; subroutine that moves cat graphics data from cache into PPU
-  .include "warp.asm"           ; teleport character to needed location and position
   .include "animatetiles"       ; animate different objects on locations
   .include "actions.asm"        ; checks and params for performing events
   .include "rendertext.asm"
   .include "events.asm"         ; logic for performing any events aside from rendering text
   .include "dots.asm"           ; logic for drawing dots identifying that the action is possible
   .include "scroll.asm"
+  .include "boss_fight.asm"     ; boss fight logic
 
 ;;;;;;;;;;;;;;
 
@@ -43,6 +43,8 @@
   .org $C000
 
   .include "tiles_sprites.asm"    ; stores tiles for sprites
+  .include "projectiles.asm"      ; logic for projectiles
+  .include "warp.asm"             ; teleport character to needed location and position
 
 ;;;;;;;;;;;;;;
 

@@ -1,4 +1,10 @@
 village1:
+  ; .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+  ; .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
+  ; .db $0F,$03,$01,$0F,$1C,$00,$00,$00,$01,$00,$00,$00,$03,$0F,$03,$AB  ;;row 1-3
+  ; .db $B4,$A4,$0F,$03,$C0,$C1,$C2,$FF,$FF,$02,$0F,$09
+
   .db $0F,$23,$01,$0F,$1C,$00,$00,$00,$01,$00,$00,$00,$03,$0F,$03,$AB  ;;row 1-3
   .db $B4,$A4,$0F,$03,$C0,$C1,$C2,$FF,$FF,$02,$0F,$09
 
@@ -91,10 +97,10 @@ village2:
   .db $00,$00,$00,$A8,$FE,$FE,$FE,$FE,$FE,$E5,$99,$00,$FF,$FF,$00,$C0  ;;row 11
   .db $C1,$C2,$01,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
-  .db $F2,$00,$00,$8D,$CA,$A5,$A6,$A7,$C9,$CA,$F2,$F2,$FF,$FF,$00,$D0  ;;row 12
+  .db $00,$00,$F2,$8D,$CA,$A5,$A6,$A7,$C9,$CA,$F2,$F2,$FF,$FF,$00,$D0  ;;row 12
   .db $D1,$D2,$01,$01,$01,$01,$01,$01,$01,$01,$01,$00,$03,$00,$00,$00
 
-  .db $00,$00,$00,$8E,$DA,$B5,$B6,$B7,$D9,$DA,$99,$00,$FF,$FF,$00,$E0  ;;row 13
+  .db $00,$00,$FF,$8E,$DA,$B5,$B6,$B7,$D9,$DA,$99,$00,$FF,$FF,$00,$E0  ;;row 13
   .db $E1,$E2,$00,$00,$00,$00,$00,$00,$00,$01,$01,$00,$00,$00,$00,$00
 
   .db $00,$02,$00,$F4,$FF,$C5,$FF,$C7,$FF,$FF,$99,$00,$FF,$FF,$00,$FF  ;;row 14
@@ -321,11 +327,11 @@ exhouse:
 
   .db $0F,$0E,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$FF,$FF,$9D,$9D,$9A ;;row 7-8
 
-  .db $0F,$0E,$9C,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$FF,$FF,$9D,$9D,$9A ;;row 8-9
+  .db $0F,$0E,$9C,$9D,$9D,$28,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$FF,$FF,$9D,$9D,$9A ;;row 8-9
 
-  .db $0F,$0E,$9C,$9D,$9D,$FF,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$FF,$FF,$9D,$9D,$9A ;;row 9-10
+  .db $0F,$0E,$9C,$9D,$9D,$17,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$9D,$FF,$FF,$9D,$9D,$9A ;;row 9-10
 
-  .db $0F,$0E,$9C,$97,$97,$FF,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$9A ;;row 10-11
+  .db $0F,$0E,$9C,$97,$97,$27,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$97,$9A ;;row 10-11
 
   .db $0F,$0E,$9C,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$9A ;;row 11-12
 
@@ -474,7 +480,7 @@ ghostroom1params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(ghostroom), HIGH(ghostroom), LOW(ghostroom1sprites), HIGH(ghostroom1sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $06, $68, $B4, $00, $01, $00
+  .db $06, $60, $B4, $00, $01, $00
 
 ghostroom2params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
@@ -498,4 +504,4 @@ endparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(end), HIGH(end), LOW(endsprites), HIGH(endsprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $0A, $F4, $85, $01, $00
+  .db $0A, $F8, $85, $01, $00
