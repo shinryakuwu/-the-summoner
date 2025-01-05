@@ -259,17 +259,22 @@ FinalHydrantLoadLoop:
 
 FinalHydrantFall:
 	LDA $0218
-	CMP #$52 ; TODO: fix inconsistencies here
+	CLC
+	ADC #$08 ; add offset
+	CMP $023C
 	BCS FinalHydrantFallDone
 	INC $0218
 	INC $0218
 	RTS
 FinalHydrantFallDone:
-	LDA #$07
+	LDA #$08
   JSR sound_load
 	LDA #$8C
 	STA $023D
-	INC hydrantsstate
+	LDA #BOSSDEFEATEDDELAY
+	STA movecounter
+	INC fightstate
+	INC fightstate
 	RTS
 
 FallingHydrants:

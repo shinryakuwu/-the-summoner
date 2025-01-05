@@ -18,6 +18,8 @@ initial_events_jump_table:
 	.word StartGhostSubroutine-1
 	.word RestartSubroutine-1
 	.word DeathSubroutine-1
+	.word BossCandy1Subroutine-1
+	.word BossCandy2Subroutine-1
 
 NonTextEvents:
 	; implementing the RTS trick here https://www.nesdev.org/wiki/RTS_Trick
@@ -81,7 +83,6 @@ OldLadyWalk:
 	RTS
 
 OldLadyAppear:
-	INC candycounter
 	LDA #$FF
 	STA $0245
 	LDA #LOW(oldlady)
@@ -116,10 +117,7 @@ OldLadyDisappear:
 	LDA #$FF
 	STA switchtile
 	JSR ObjectTransformNoCache
-	LDA #LOW(candy_left)
-  STA currenttextlow
-  LDA #HIGH(candy_left)
-  STA currenttexthigh
+	JSR GotCandySubroutine
   LDA candyswitches
   ORA #%00000001
   STA candyswitches
@@ -542,16 +540,12 @@ AddSpritesComparetoSprites:
 	RTS
 
 MathCandySubroutine:
-	INC candycounter
 	LDA #$00
 	STA $0219             ; candy disappears
 	LDA switches
   AND #%11111110
   STA switches          ; remove candy dropped trigger
-	LDA #LOW(candy_left)
-	STA currenttextlow
-	LDA #HIGH(candy_left)
-	STA currenttexthigh
+  JSR GotCandySubroutine
 	LDA candyswitches
 	ORA #%00001000
 	STA candyswitches
@@ -625,11 +619,7 @@ BucketHatGuyState3:
 
 BucketHatGuyCandyAcquired:
 	DEC eventstate
-	INC candycounter
-	LDA #LOW(candy_left)
-  STA currenttextlow
-  LDA #HIGH(candy_left)
-  STA currenttexthigh
+	JSR GotCandySubroutine
 
 BucketHatGuySubroutineDone:
 	LDA #$01
@@ -911,7 +901,7 @@ boss_events_jump_table:
 	.word FlyingObjects-1
 	.word ObjectsBlink-1
 	.word StopShake-1
-	.word BossAppear-1
+	.word BossAppearWithSound-1
 	.word BossWalk-1
 	.word BossTalk-1
 	.word InitiateBossFight-1
@@ -1039,9 +1029,10 @@ StopShake:
   STA eventwaitcounter
 	RTS
 
-BossAppear:
+BossAppearWithSound:
 	LDA #$03
   JSR sound_load
+BossAppear:
 	LDA #LOW(gojira)
   STA curntspriteslow
   LDA #HIGH(gojira)
@@ -1137,6 +1128,38 @@ BreakWallClearBgLoop:
 	DEX
 	CPX #$00
 	BNE BreakWallClearBgLoop
+	RTS
+
+BossCandy1Subroutine:
+	LDA #$00
+	STA $0239             ; candy disappears
+	LDA candyswitches
+	ORA #%00010000
+	STA candyswitches
+	LDA #$01
+  STA action
+  JSR GotCandySubroutine
+  JSR PerformNonTextEventDone
+	RTS
+
+BossCandy2Subroutine:
+	LDA #$00
+	STA $023D             ; candy disappears
+	LDA candyswitches
+	ORA #%00100000
+	STA candyswitches
+	LDA #$01
+  STA action
+  JSR GotCandySubroutine
+  JSR PerformNonTextEventDone
+	RTS
+
+GotCandySubroutine:
+	INC candycounter
+	LDA #LOW(candy_left)
+	STA currenttextlow
+	LDA #HIGH(candy_left)
+	STA currenttexthigh
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional

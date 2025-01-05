@@ -431,9 +431,24 @@ ExHouseEventsSubroutine:
 	LDY #$0B
 	JSR CheckTilesForEvent
 	BNE DeathParams
+	LDA switches
+	AND #%01000000
+	BEQ ExHouseEventsSubroutineDone
+	LDX #$12
+	LDY #$0F
+	JSR CheckTilesForEvent
+	BNE BossCandy1Params
+	LDX #$14
+	LDY #$10
+	JSR CheckTilesForEvent
+	BNE BossCandy2Params
+ExHouseEventsSubroutineDone:
 	RTS
 
 ExParams:
+	LDA switches
+	AND #%01000000
+	BNE ExParamsBossDefeated
 	LDA #LOW(evil_ex)
 	STA currenttextlow
 	LDA #HIGH(evil_ex)
@@ -443,6 +458,30 @@ ExParams:
 	LDA #$06
 	STA eventnumber
 	JSR SettingEventParamsDone
+	RTS
+ExParamsBossDefeated:
+	LDA #LOW(your_fault)
+	STA currenttextlow
+	LDA #HIGH(your_fault)
+	STA currenttexthigh
+	JSR SettingEventParamsDone
+	RTS
+BossCandy1Params:
+	LDA candyswitches
+	AND #%00010000
+  BNE BossCandyParamsDone ; if candy already gathered, skip event
+	LDA #$4A
+	STA eventnumber
+	JSR SettingEventParamsDone
+	RTS
+BossCandy2Params:
+	LDA candyswitches
+	AND #%00100000
+  BNE BossCandyParamsDone ; if candy already gathered, skip event
+	LDA #$4B
+	STA eventnumber
+	JSR SettingEventParamsDone
+BossCandyParamsDone:
 	RTS
 
 DeathParams:

@@ -391,7 +391,19 @@ ExHouseVillage2WarpCheck:
 ExHouseVillage2WarpCheckDone:
   RTS
 
+ForgotSomethingCheck:
+  LDA candyswitches
+  AND #%00110000
+  CMP #%00110000
+  BNE ForgotSomething
+  JMP ExHouseVillage2WarpAfterCheck
+  RTS
+
 ExHouseVillage2Warp:
+  LDA switches
+  AND #%01000000      ; when boss defeated
+  BNE ForgotSomethingCheck
+ExHouseVillage2WarpAfterCheck:
   JSR SetVillage2Params
   LDA #LOW(exhousevillage2warp)
   STA warpXYlow

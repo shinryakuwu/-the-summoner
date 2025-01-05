@@ -60,7 +60,7 @@ boss_jump_noi:
   .byte endsound
 
 boss_fire_header:
-  .byte $01              ;1 stream
+  .byte $01            ;1 stream
 
   .byte SFX_1          ;which stream
   .byte $01            ;status byte (stream enabled)
@@ -72,4 +72,19 @@ boss_fire_header:
 
 boss_fire_noi:
   .byte $81, $0F
+  .byte endsound
+
+boss_dead_header:
+  .byte $01            ;1 stream
+
+  .byte SFX_1          ;which stream
+  .byte $01            ;status byte (stream enabled)
+  .byte NOISE          ;which channel
+  .byte $70            ;duty (01)
+  .byte $01            ;volume envelope
+  .word boss_dead_noi  ;pointer to stream
+  .byte $08            ;tempo
+
+boss_dead_noi:
+  .byte $81, rest, $81, $0C
   .byte endsound

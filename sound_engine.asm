@@ -422,6 +422,7 @@ song_headers:
   .word boss_crash_header ; the sound of gojira crashing the wall
   .word boss_jump_header  ; the sound of gojira landing after a jump
   .word boss_fire_header  ; the sound of gojira throwing a fireball
+  .word boss_dead_header  ; the sound of gojira being hit
   ; TODO: add more headers here
 
   .include "sound_opcodes.asm"    ;our opcode subroutines, jump table and aliases

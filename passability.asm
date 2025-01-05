@@ -34,6 +34,9 @@ PassableForWalkBackwards:
   RTS
 
 BossFightPassability:
+  LDA fightstate  ; at this point the boss is defeated
+  CMP #$08
+  BCS CalculateTileInFrontOfCat
   LDA direction
   CMP #$03
   BEQ BossFightBordersRight

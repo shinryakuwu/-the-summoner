@@ -491,6 +491,10 @@ hydrantshadowsY:
 finalhydrant:
   .db $00, $2D, $00, $98
 
+candy:
+  .db $60, $4C, $01, $98
+  .db $68, $4C, $02, $A8
+
 gojira:
   .db $30, $A8, $00, $90
   .db $30, $A9, $00, $98

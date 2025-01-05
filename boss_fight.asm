@@ -6,6 +6,9 @@ boss_fight_jump_table:
 	.word OpenUmbrella-1
 	.word FallingHydrants-1
 	.word BossRageJump-1
+	.word BossBlink-1
+	.word BossCandyDrop-1
+	.word CloseUmbrella-1
 
 BossFightEvent:
 	; TODO: move out of NMI later
@@ -122,6 +125,71 @@ OpenUmbrellaFrame2LoadTilesLoop:
   INX
   CPX #$03
   BNE OpenUmbrellaFrame2LoadTilesLoop
+	RTS
+
+CloseUmbrella:
+	LDA movecounter
+	BNE CloseUmbrellaWait
+	LDA umbrellastate
+	BEQ CloseUmbrellaFrame1
+	CMP #$01
+	BEQ CloseUmbrellaFrame2
+	CMP #$02
+	BEQ UmbrellaClosed
+	RTS
+CloseUmbrellaWait:
+	DEC movecounter
+	RTS
+
+CloseUmbrellaFrame1:
+	JSR OpenUmbrellaFrame1
+	LDX #$20
+  LDY #$ED
+  JSR CloseUmbrellaLoadToPPU
+  LDX #$21
+  LDY #$0D
+  JSR CloseUmbrellaLoadToPPU
+  LDX #$20
+  LDY #$EF
+  JSR CloseUmbrellaLoadToPPU
+  LDX #$21
+  LDY #$0F
+  JSR CloseUmbrellaLoadToPPU
+	RTS
+
+CloseUmbrellaFrame2:
+	LDX #$20
+  LDY #$EE
+  JSR CloseUmbrellaLoadToPPU
+  LDX #$21
+  LDY #$0E
+  JSR CloseUmbrellaLoadToPPU
+  LDX #$21
+  LDY #$2E
+  JSR CloseUmbrellaLoadToPPU
+  LDX #$21
+  LDY #$4E
+  JSR CloseUmbrellaLoadToPPU
+  INC umbrellastate
+	RTS
+
+CloseUmbrellaLoadToPPU:
+	JSR SetPPUAddrSubroutine
+	LDA #$9D
+  STA $2007
+	RTS
+
+UmbrellaClosed:
+	LDA switches
+  ORA #%01000000
+  STA switches ; add trigger
+	LDA #$7A
+	STA $022D
+	LDA #$8A
+	STA $0235
+	DEC $022F
+	LDA #$00
+	STA action
 	RTS
 
 BossRageJump:
@@ -570,4 +638,73 @@ MoveBossOnJumpingStoreResult:
   BNE MoveBossOnJumpingLoop
   LDA #$18
   STA ramspriteslow  ; restore default ppu pointer position
+	RTS
+
+BossBlink:
+	LDA movecounter
+	CMP #$60             ; delay before blinking
+	BCS BossBlinkDone
+	AND #%00000001       ; branch depends on whether movecounter is even/odd
+  BNE BossBlinkAppear  ; odd
+BossBlinkDisappear:
+	LDA #$06          ; switch tiles via transform loop
+	STA trnsfrm
+	LDX #$39          ; tiles are stored at address 0200 + this number
+	LDA #$99
+	STA trnsfrmcompare
+	LDA #$00
+	STA switchtile    ; switch to nothing
+	JSR ObjectTransformNoCache
+	LDA #$00          ; erase hydrant
+	STA $0219
+BossBlinkDone:
+	LDA movecounter
+	BEQ BossBlinkCandy
+	DEC movecounter
+	RTS
+BossBlinkCandy:
+	LDA #LOW(candy) ; draw candy
+  STA curntspriteslow
+  LDA #HIGH(candy)
+  STA curntspriteshigh
+  LDA #$08
+  STA spritescompare
+  JSR LoadSprites
+  JSR RenderBossMoveDone
+  LDA #$18
+  STA movecounter
+	INC fightstate
+  RTS
+
+BossBlinkAppear:
+  LDA #$38
+  STA ramspriteslow  ; load into ram starting from this address
+  LDX #$18
+  LDY #$01
+BossBlinkAppearLoop:
+  LDA gojira, y     ; load data from address (sprites +  y)
+  STA [ramspriteslow], y   ; store into RAM address
+  INY                      ; Y = Y + 1
+  INY
+  INY
+  INY
+  DEX
+  CPX #$00
+  BNE BossBlinkAppearLoop
+  JSR BossOpensMouth
+	LDA #$8C
+	STA $023D
+	LDA #$2D          ; draw hydrant
+	STA $0219
+	JMP BossBlinkDone
+
+BossCandyDrop:
+	LDA movecounter
+	BEQ BossCandyDropDone
+	INC $0238
+	INC $023C
+	DEC movecounter
+	RTS
+BossCandyDropDone:
+	INC fightstate
 	RTS

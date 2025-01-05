@@ -28,12 +28,13 @@ candyswitches    .rs 1  ; stores switches for collecting candy
                         ;   |__ boss candy 2
 switches         .rs 1  ; stores other switches
                         ; 00000000
-                        ;   ||||||__ ghost candy drop
-                        ;   |||||__ talked to fren
-                        ;   ||||__ took meds
-                        ;   |||__ visited ghost house
-                        ;   ||__ got ghost pass hint
-                        ;   |__ got ghost pass
+                        ;  |||||||__ ghost candy drop
+                        ;  ||||||__ talked to fren
+                        ;  |||||__ took meds
+                        ;  ||||__ visited ghost house
+                        ;  |||__ got ghost pass hint
+                        ;  ||__ got ghost pass
+                        ;  |__ boss defeated
 sleeping         .rs 1  ; main program sets this and waits for the NMI to clear it.
                         ; Ensures the main program is run only once per frame.
 action           .rs 1  ; action state ( 1 - action active, 0 - not, +some other states)
@@ -144,6 +145,7 @@ BOSSFIRSTPHASELENGTH = $02
 BOSSSECONDPHASELENGTH = $02
 BOSSTHIRDPHASELENGTH = $02
 BOSSENRAGEDPOSITION = $80
+BOSSDEFEATEDDELAY = $90
 HYDRANTSPPUADDRESS = $0298
 HYDRANTSDELAY = $03
 HYDRANTSMAX = $08
