@@ -101,9 +101,10 @@ shakescreen      .rs 1  ; used for boss fight (1/2 - shake screen, 0 - do not)
 sound_ptr        .rs 2  ; song pointer for sound engine
 sound_ptr2       .rs 2  ; jump pointer for sound engine
 catcache         .rs 24
+; keep the boss fight variables together
 fightstate       .rs 1  ; determines the state of boss fight
 dinomvstate      .rs 1  ; defines state of gojira movement (0 - stands, 1 - moves down, 2 - moves up)
-dinomvframe      .rs 1  ; the number of animation frame for gijira
+dinomvframe      .rs 1  ; the number of animation frame for gojira
                         ; (0 - default, 1 - left leg up, 2 - default, 3 - right lef up)
 dinomvcounter    .rs 1  ; animation counter for gojira
 dinojumpstate    .rs 1  ; used for gojira jumping
