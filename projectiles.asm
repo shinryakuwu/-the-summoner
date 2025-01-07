@@ -474,9 +474,16 @@ NoCollision:
 	RTS
 
 ProcessDeath:
-	; TODO: clear boss variables here
 	; JSR DrawOneDot
-	; set ramspriteslow?
+	LDA #$18
+  STA ramspriteslow
+	LDX #$00
+	LDA #$00
+ClearBossFightVariablesLoop:
+	STA fightstate, x
+	INX
+	CPX #$24
+	BNE ClearBossFightVariablesLoop
 	LDA #$49
 	STA eventnumber
 	LDA #$06

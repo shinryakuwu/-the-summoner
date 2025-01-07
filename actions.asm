@@ -485,9 +485,12 @@ BossCandyParamsDone:
 	RTS
 
 DeathParams:
-	LDA #$49
-	STA eventnumber
+	LDA switches
+	AND #%01000000
+	BNE DeathParamsDone
+	JSR ProcessDeath
 	JSR SettingEventParamsDone
+DeathParamsDone:
 	RTS
 
 SettingEventParamsDone:
