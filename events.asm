@@ -842,6 +842,15 @@ RestartWalk:
 	RTS
 
 DeathSubroutine:
+	LDA #$18
+  STA ramspriteslow
+	LDX #$00
+	LDA #$00
+ClearBossFightVariablesLoop:
+	STA fightstate, x
+	INX
+	CPX #$24
+	BNE ClearBossFightVariablesLoop
 	LDA lives
 	BEQ SkipLivesDecrement ; do not decrement lives when there are no more
 	DEC lives

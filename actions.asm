@@ -51,11 +51,17 @@ CheckActionStatus:
 	BEQ ClearTextSectionDone
 	CMP #$04
 	BEQ StartButtonLogic
+	CMP #$07
+	BEQ PerformCollisionLogic
 	RTS
 
 PerformBossFightEvent:
 	JSR BossFightEvent
 	JSR DrawProjectiles
+	RTS
+
+PerformCollisionLogic:
+	JSR CheckCollision
 	RTS
 
 PerformTextEvent:
