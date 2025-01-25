@@ -20,6 +20,7 @@ initial_events_jump_table:
 	.word DeathSubroutine-1
 	.word BossCandy1Subroutine-1
 	.word BossCandy2Subroutine-1
+	.word MistakeSubroutine-1
 
 NonTextEvents:
 	; implementing the RTS trick here https://www.nesdev.org/wiki/RTS_Trick
@@ -760,10 +761,12 @@ StartGhostState2:
   JMP StartGhostSubroutineDone
 
 StartGhostState3:
-	LDA #LOW(predictions)
+	LDA #LOW(care)
 	STA currenttextlow
-	LDA #HIGH(predictions)
+	LDA #HIGH(care)
 	STA currenttexthigh
+	LDA #$02
+  STA textpartscounter
 	JMP StartGhostSubroutineDone
 
 StartGhostSubroutineDone:
@@ -959,6 +962,10 @@ BossCrash:
   STA shakescreen
   INC eventstate
   JSR BreakWall
+  LDA #$00 ; erase lines
+  STA $0261
+  STA $0265
+  STA $0269
   LDA #MVRIGHT
   STA buttons
 	RTS
@@ -996,14 +1003,7 @@ ObjectsBlink:
   AND #%00000001            ; branch depends on whether movecounter is even/odd
   BNE FlyingObjectsAppear   ; odd
 	; even - objects disappear here
-  LDA #$06          ; switch tiles via transform loop
-	STA trnsfrm
-	LDX #$39          ; tiles are stored at address 0200 + this number
-	LDA #$61
-	STA trnsfrmcompare
-	LDA #$00
-	STA switchtile    ; switch to nothing
-	JSR ObjectTransformNoCache
+  JSR FlyingObjectsDisappear
 ObjectsBlinkDone:
 	LDA movecounter
 	BEQ ObjectsBlinkChangeEventState ; if 0
@@ -1011,6 +1011,17 @@ ObjectsBlinkDone:
   RTS
 ObjectsBlinkChangeEventState:
 	INC eventstate
+	RTS
+
+FlyingObjectsDisappear:
+	LDA #$06          ; switch tiles via transform loop
+	STA trnsfrm
+	LDX #$39          ; tiles are stored at address 0200 + this number
+	LDA #$61
+	STA trnsfrmcompare
+	LDA #$00
+	STA switchtile    ; switch to nothing
+	JSR ObjectTransformNoCache
 	RTS
 
 FlyingObjectsAppear:
@@ -1169,6 +1180,32 @@ GotCandySubroutine:
 	STA currenttextlow
 	LDA #HIGH(candy_left)
 	STA currenttexthigh
+	RTS
+
+MistakeSubroutine:
+	LDA eventstate
+	BEQ MistakeWalk
+	CMP #$01
+	BEQ MistakeTalk
+	LDA #$00
+	STA eventstate
+	JSR PerformNonTextEventDone
+	RTS
+
+MistakeWalk:
+	LDX #MVDOWN
+	LDY #$00
+	JSR EventWalkSubroutine
+	RTS
+
+MistakeTalk:
+	LDA #$01
+  STA action
+  LDA #LOW(need_candy)
+	STA currenttextlow
+	LDA #HIGH(need_candy)
+	STA currenttexthigh
+	INC eventstate
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional

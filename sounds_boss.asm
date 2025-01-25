@@ -83,8 +83,8 @@ boss_dead_header:
   .byte $70            ;duty (01)
   .byte $01            ;volume envelope
   .word boss_dead_noi  ;pointer to stream
-  .byte $08            ;tempo
+  .byte $10            ;tempo
 
 boss_dead_noi:
-  .byte $81, rest, $81, $0C
+  .byte $81, $0C
   .byte endsound

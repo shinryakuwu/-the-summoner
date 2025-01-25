@@ -8,12 +8,12 @@ paletteend:
 
 catsprites:
      ;vert tile attr horiz
-  .db $70, $10, $00, $80
-  .db $70, $10, $40, $88
-  .db $78, $20, $00, $80
-  .db $78, $20, $40, $88
-  .db $80, $30, $00, $80
-  .db $80, $04, $40, $88
+  .db $80, $10, $00, $3C
+  .db $80, $10, $40, $44
+  .db $88, $20, $00, $3C
+  .db $88, $20, $40, $44
+  .db $90, $30, $00, $3C
+  .db $90, $04, $40, $44
 
 village1sprites:
   ; pumpkins
@@ -474,6 +474,11 @@ flyingobjects:
   .db $4F, $5D, $00, $A0
   .db $4F, $5D, $40, $A8
   .db $4E, $67, $01, $A8
+
+exhouselines:
+  .db $34, $4E, $01, $98
+  .db $3C, $4E, $01, $B0
+  .db $44, $4E, $01, $88
 
 fireball:
   .db $7B, $00, $96 ; y is dynamic

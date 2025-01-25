@@ -274,6 +274,7 @@ FinalHydrantFallDone:
 	STA movecounter
 	INC fightstate
 	INC fightstate
+	INC hydrantsstate
 	RTS
 
 FallingHydrants:
@@ -415,6 +416,9 @@ HydrantFallsDownDone:
 	STA HYDRANTSPPUADDRESS, y
 	INY
 	STA HYDRANTSPPUADDRESS, y
+	LDA hydrantsstate
+	CMP #$06
+	BEQ AlterHydrantState ; skip making sounds when the final hydrant falls
 	LDA #$03
   JSR sound_load
 AlterHydrantState:

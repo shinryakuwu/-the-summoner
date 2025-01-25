@@ -127,6 +127,7 @@ hydrantpointer   .rs 1  ; used for pointing to the needed hydrant in db
 projectileycmp   .rs 1  ; used in collision check to compare cat y to projectile y
 projectilexcmp   .rs 1  ; used in collision check to compare cat x to projectile x
 catlowcollision  .rs 1  ; an offset value used to define the lowest point of cat hitbox
+animationspeed   .rs 1  ; stores animation speed for current location
 
 ;; DECLARE SOME CONSTANTS HERE
 
