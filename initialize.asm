@@ -279,6 +279,16 @@ SetDefaultAttributes:
   LDA #CATLIVES
   STA lives
 
+  LDA #OBJECTSANIMATIONSPEED ; set default animation speed
+  STA animationspeed
+
+  LDA #$4C         ; event is triggered when you start the game
+  STA eventnumber
+  LDA #$06
+  STA action
+  LDA #$10
+  STA movecounter
+
 ReturnToNMI:
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
   STA $2000

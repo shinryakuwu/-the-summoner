@@ -51,11 +51,17 @@ CheckActionStatus:
 	BEQ ClearTextSectionDone
 	CMP #$04
 	BEQ StartButtonLogic
+	CMP #$07
+	BEQ PerformCollisionLogic
 	RTS
 
 PerformBossFightEvent:
 	JSR BossFightEvent
 	JSR DrawProjectiles
+	RTS
+
+PerformCollisionLogic:
+	JSR CheckCollision
 	RTS
 
 PerformTextEvent:
@@ -377,10 +383,18 @@ GhostRoom2EventsSubroutine:
 	LDY #$0C
 	JSR CheckTilesForEvent
 	BNE Ghost1Params
+	LDX #$0A
+	LDY #$0F
+	JSR CheckTilesForEvent
+	BNE Ghost2Params
 	LDX #$0B
 	LDY #$0F
 	JSR CheckTilesForEvent
 	BNE Ghost2Params
+	LDX #$11
+	LDY #$0D
+	JSR CheckTilesForEvent
+	BNE BigGhostParams
 	LDX #$12
 	LDY #$0D
 	JSR CheckTilesForEvent
@@ -427,10 +441,14 @@ ExHouseEventsSubroutine:
 	LDY #$0B
 	JSR CheckTilesForEvent
 	BNE ExParams
+	LDX #$13
+	LDY #$0B
+	JSR CheckTilesForEvent
+	BNE DinoDoorParams
 	LDX #$14
 	LDY #$0B
 	JSR CheckTilesForEvent
-	BNE DeathParams
+	BNE DinoDoorParams
 	LDA switches
 	AND #%01000000
 	BEQ ExHouseEventsSubroutineDone
@@ -445,16 +463,48 @@ ExHouseEventsSubroutine:
 ExHouseEventsSubroutineDone:
 	RTS
 
+DinoDoorParams:
+	LDA switches
+	AND #%01000000
+	BNE DinoDoorParamsDone
+	LDA lives
+  CMP #CATLIVES
+  BNE DinoDoorSecondAttempt
+	LDA #LOW(dinosaur)
+	STA currenttextlow
+	LDA #HIGH(dinosaur)
+	STA currenttexthigh
+	JMP DinoDoorParamsTextIsSet
+DinoDoorSecondAttempt:
+	LDA #LOW(nothing_new)
+	STA currenttextlow
+	LDA #HIGH(nothing_new)
+	STA currenttexthigh
+DinoDoorParamsTextIsSet:
+	JSR SettingEventParamsDone
+DinoDoorParamsDone:
+	RTS
+
 ExParams:
 	LDA switches
 	AND #%01000000
 	BNE ExParamsBossDefeated
+	LDA lives
+	CMP #CATLIVES
+	BNE ExParamsSecondAttempt ; different dialogues depending on lives
 	LDA #LOW(evil_ex)
 	STA currenttextlow
 	LDA #HIGH(evil_ex)
 	STA currenttexthigh
 	LDA #$03
 	STA textpartscounter
+	JMP ExParamsTextDone
+ExParamsSecondAttempt:
+	LDA #LOW(further_attempts)
+	STA currenttextlow
+	LDA #HIGH(further_attempts)
+	STA currenttexthigh
+ExParamsTextDone:
 	LDA #$06
 	STA eventnumber
 	JSR SettingEventParamsDone
@@ -482,15 +532,6 @@ BossCandy2Params:
 	STA eventnumber
 	JSR SettingEventParamsDone
 BossCandyParamsDone:
-	RTS
-
-DeathParams:
-	LDA switches
-	AND #%01000000
-	BNE DeathParamsDone
-	JSR ProcessDeath
-	JSR SettingEventParamsDone
-DeathParamsDone:
 	RTS
 
 SettingEventParamsDone:

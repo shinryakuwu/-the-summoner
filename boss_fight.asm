@@ -282,7 +282,7 @@ BossChasesDelay:
 	DEC movecounter
 	RTS
 BossChasesDelayDone:
-	LDA #$2C
+	LDA #$20
   STA movecounter
   INC dinochasestate
 	RTS
@@ -570,9 +570,9 @@ BossLands:
   JSR sound_load
   LDA #$01
   STA shakescreen
-  ; LDA $0213
-  ; CMP #$78
-  ; BCS DeathFromJump
+  LDA $0213
+  CMP #$78
+  BCS DeathFromJump
 	JSR RenderBossDefault
 	INC dinojumpstate
 	LDA #$08

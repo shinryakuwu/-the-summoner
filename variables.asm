@@ -124,6 +124,10 @@ umbrellastate    .rs 1  ; used for umbrella animation
 dinocoordcompare .rs 1  ; used in passability logic and in boss fight logic to compare coordinates
 hydrantsstate    .rs 1  ; used for state of falling hydrants
 hydrantpointer   .rs 1  ; used for pointing to the needed hydrant in db
+projectileycmp   .rs 1  ; used in collision check to compare cat y to projectile y
+projectilexcmp   .rs 1  ; used in collision check to compare cat x to projectile x
+catlowcollision  .rs 1  ; an offset value used to define the lowest point of cat hitbox
+animationspeed   .rs 1  ; stores animation speed for current location
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -140,17 +144,17 @@ BOSSANIMATIONSPEED = $08
 CATBOSSPOSITIONOFFSET = $03
 PROJECTILESPPUADDRESS = $0298
 PROJECTILEDELAY = $06
-; BOSSFIRSTPHASELENGTH = $10
-; BOSSSECONDPHASELENGTH = $20
-BOSSFIRSTPHASELENGTH = $02
-BOSSSECONDPHASELENGTH = $02
+BOSSFIRSTPHASELENGTH = $10
+BOSSSECONDPHASELENGTH = $20
+; BOSSFIRSTPHASELENGTH = $02
+; BOSSSECONDPHASELENGTH = $02
 BOSSTHIRDPHASELENGTH = $02
 BOSSENRAGEDPOSITION = $80
 BOSSDEFEATEDDELAY = $90
 HYDRANTSPPUADDRESS = $0298
 HYDRANTSDELAY = $03
 HYDRANTSMAX = $08
-HYDRANTSTIMEOUT = $48
+HYDRANTSTIMEOUT = $50
 OBJECTSANIMATIONSPEED = $18
 XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0

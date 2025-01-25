@@ -10,6 +10,10 @@ care:
   ; I wish you the very best.
   .db $86,$38,$FF,$46,$38,$42,$37,$FF,$48,$3E,$44,$FF,$43,$37,$34,$FF,$45,$34,$41,$48,$FF,$31,$34,$42,$43,$54,$FE
 
+need_candy:
+  ; I need to gather 6 candy.
+  .db $85,$38,$FF,$3D,$34,$34,$33,$FF,$43,$3E,$FF,$36,$30,$43,$37,$34,$41,$FF,$4F,$FF,$32,$30,$3D,$33,$48,$54,$FE
+
 computer:
   ; I'm not into harassing minorities today.
   .db $85,$38,$53,$3C,$FF,$3D,$3E,$43,$FF,$38,$3D,$43,$3E,$FF,$37,$30,$41,$30,$42,$42,$38,$3D,$36,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$3C,$38,$3D,$3E,$41,$38,$43,$38,$34,$42,$FF,$43,$3E,$33,$30,$48,$54,$FE
@@ -162,7 +166,11 @@ forgot:
 
 dinosaur:
   ; i don't feel like going there. there's a dinosaur staring at me through the door window in a hostile manner.
-  .db $85,$38,$FF,$33,$3E,$3D,$53,$43,$FF,$35,$34,$34,$3B,$FF,$3B,$38,$3A,$34,$FF,$36,$3E,$38,$3D,$36,$FF,$43,$37,$34,$41,$34,$54,$FF,$43,$37,$34,$41,$34,$53,$42,$FF,$30,$FF,$33,$38,$3D,$3E,$42,$30,$44,$41,$FF,$42,$43,$30,$41,$38,$3D,$36,$FF,$30,$43,$FF,$3C,$34,$FF,$43,$37,$41,$3E,$44,$36,$37,$FF,$43,$37,$34,$FF,$33,$3E,$3E,$41,$FF,$46,$38,$3D,$33,$3E,$46,$FF,$38,$3D,$FF,$30,$FF,$37,$3E,$42,$43,$38,$3B,$34,$FF,$3C,$30,$3D,$3D,$34,$41,$54,$FE
+  .db $85,$38,$FF,$33,$3E,$3D,$53,$43,$FF,$35,$34,$34,$3B,$FF,$3B,$38,$3A,$34,$FF,$36,$3E,$38,$3D,$36,$FF,$43,$37,$34,$41,$34,$54,$FF,$FF,$43,$37,$34,$41,$34,$53,$42,$FF,$30,$FF,$33,$38,$3D,$3E,$42,$30,$44,$41,$FF,$42,$43,$30,$41,$38,$3D,$36,$FF,$30,$43,$FF,$FF,$FF,$3C,$34,$FF,$43,$37,$41,$3E,$44,$36,$37,$FF,$43,$37,$34,$FF,$33,$3E,$3E,$41,$FF,$46,$38,$3D,$33,$3E,$46,$FF,$38,$3D,$FF,$FF,$FF,$30,$FF,$37,$3E,$42,$43,$38,$3B,$34,$FF,$3C,$30,$3D,$3D,$34,$41,$54,$FE
+
+nothing_new:
+  ; nothing new.
+  .db $85,$3D,$3E,$43,$37,$38,$3D,$36,$FF,$3D,$34,$46,$54,$FE
 
 evil_ex:
   ; hey... got candy?
@@ -185,9 +193,9 @@ your_fault:
   ; it's all your fault.
   .db $64,$38,$43,$53,$42,$FF,$30,$3B,$3B,$FF,$48,$3E,$44,$41,$FF,$35,$30,$44,$3B,$43,$54,$FE
 
-nevermore:
-  ; nevermore.
-  .db $85,$3D,$34,$45,$34,$41,$3C,$3E,$41,$34,$54,$FE
+further_attempts:
+  ; we can do it all day, no problem.
+  .db $64,$46,$34,$FF,$32,$30,$3D,$FF,$33,$3E,$FF,$38,$43,$FF,$30,$3B,$3B,$FF,$33,$30,$48,$55,$FF,$3D,$3E,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$3F,$41,$3E,$31,$3B,$34,$3C,$54,$FE
 
 proceed_no_more:
   ; proceed no more. entrance without the ghost pass is prohibited.
@@ -204,10 +212,6 @@ ceo:
   .db $86,$38,$FF,$32,$30,$3D,$FF,$42,$34,$34,$FF,$48,$3E,$44,$FF,$43,$37,$41,$3E,$44,$36,$37,$FF,$30,$3D,$33,$FF,$38,$FF,$FF,$FF,$FF,$FF,$3A,$3D,$3E,$46,$FF,$37,$34,$53,$42,$FF,$46,$37,$3E,$FF,$48,$3E,$44,$53,$41,$34,$FF,$3B,$3E,$3E,$3A,$38,$3D,$36,$FF,$FF,$FF,$FF,$35,$3E,$41,$54,$FE
   ; When you find the right spot, close your eyes and imagine yourself in a room. This is how you can meet him.
   .db $86,$46,$37,$34,$3D,$FF,$48,$3E,$44,$FF,$35,$38,$3D,$33,$FF,$43,$37,$34,$FF,$41,$38,$36,$37,$43,$FF,$42,$3F,$3E,$43,$55,$FF,$FF,$FF,$32,$3B,$3E,$42,$34,$FF,$48,$3E,$44,$41,$FF,$34,$48,$34,$42,$FF,$30,$3D,$33,$FF,$38,$3C,$30,$36,$38,$3D,$34,$FF,$FF,$FF,$FF,$FF,$48,$3E,$44,$41,$42,$34,$3B,$35,$FF,$38,$3D,$FF,$30,$FF,$41,$3E,$3E,$3C,$54,$FF,$43,$37,$38,$42,$FF,$38,$42,$FF,$FF,$FF,$FF,$FF,$37,$3E,$46,$FF,$48,$3E,$44,$FF,$32,$30,$3D,$FF,$3C,$34,$34,$43,$FF,$37,$38,$3C,$54,$FE
-
-predictions:
-  ; I have a passion for predictions.
-  .db $86,$38,$FF,$37,$30,$45,$34,$FF,$30,$FF,$3F,$30,$42,$42,$38,$3E,$3D,$FF,$35,$3E,$41,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$3F,$41,$34,$33,$38,$32,$43,$38,$3E,$3D,$42,$54,$FE
 
 nothing:
   ; Ok, so here goes nothing.

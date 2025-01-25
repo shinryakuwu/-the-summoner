@@ -38,8 +38,7 @@ LoadSpritesForLocation:
   JSR DrawCatFromCache
   JSR LoadSprites
   JSR AdditionalRender
-  LDA #OBJECTSANIMATIONSPEED ; renew the animation counter
-  STA animatecounter
+  JSR SetAnimationSpeed
   JMP EndBgRenderSubroutine
 
 ReloadLocation:
@@ -53,6 +52,7 @@ DrawEndScreen:
   JSR DisableNMIRendering
   JSR ClearBG
   JSR LoadDeadCat
+  JSR SetAnimationSpeed
   JMP EndBgRenderSubroutine
 
 ClearBG:
@@ -153,7 +153,7 @@ ParkAdditionalRenderDone:
   RTS
 
 ExHouseAdditionalRender:
-  ; add code
+  JSR ExHouseAdditionalRenderSubroutine
   RTS
 
 EndAdditionalRender:
@@ -189,6 +189,28 @@ GhostRoom1AdditionalRender:
   STA $2007
   RTS
 
+ExHouseAdditionalRenderSubroutine:
+  LDA switches
+  AND #%01000000
+  BNE ExHouseDrawHole ; when boss is defeated
+  LDA lives
+  CMP #CATLIVES
+  BNE ExHouseDrawLines
+  RTS
+ExHouseDrawLines:
+  LDX #$00
+ExHouseDrawLinesLoop:
+  LDA exhouselines, x
+  STA $0260, x
+  INX
+  CPX #$0C
+  BNE ExHouseDrawLinesLoop
+  RTS
+ExHouseDrawHole:
+  JSR BreakWall
+  JSR FlyingObjectsDisappear
+  RTS
+
 SetPPUAddrSubroutine:
   ; high byte in X, low byte in Y
   LDA $2002             ; read PPU status to reset the high/low latch
@@ -196,4 +218,27 @@ SetPPUAddrSubroutine:
   STA $2006             ; write the high byte of $224F address
   TYA
   STA $2006             ; write the low byte of $224F address
+  RTS
+
+SetAnimationSpeed:
+  LDA location
+  CMP #$09
+  BEQ SetExHouseAnimationSpeed
+  CMP #$0A
+  BEQ SetEndAnimationSpeed
+  JMP SetDefaultAnimationSpeed
+SetExHouseAnimationSpeed:
+  LDA #$05
+  STA animationspeed
+  JMP SetAnimationSpeedDone
+SetEndAnimationSpeed:
+  LDA #$0A
+  STA animationspeed
+  JMP SetAnimationSpeedDone
+SetDefaultAnimationSpeed:
+  LDA #OBJECTSANIMATIONSPEED
+  STA animationspeed
+SetAnimationSpeedDone:
+  LDA animationspeed ; renew the animation counter
+  STA animatecounter
   RTS

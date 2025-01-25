@@ -36,7 +36,6 @@ ProcessProjectiles:
 ProcessProjectilesLoop:
 	CPX projectilenumber
 	BCS ProcessProjectilesLoopDone
-	; JSR CheckCollision
 	JSR ProjectileLifecycle
 	INX
 	JMP ProcessProjectilesLoop
@@ -275,6 +274,7 @@ FinalHydrantFallDone:
 	STA movecounter
 	INC fightstate
 	INC fightstate
+	INC hydrantsstate
 	RTS
 
 FallingHydrants:
@@ -361,6 +361,8 @@ FallingHydrantsDropDone:
 HydrantLifecycleSubroutine:
 	LDA projectilestate, x
 	BEQ HydrantFallsDown
+	CMP #$01
+	BEQ HydrantFallsDownWithDamage
 	CMP #$11
 	BCC HydrantBlinks
 	BEQ HydrantDestroyed
@@ -376,11 +378,33 @@ HydrantFallsDown:
 	CLC
 	ADC #$04
 	TAY
+	LDA HYDRANTSPPUADDRESS, x ; get hydrant y coordinate
+	CLC
+	ADC #$18                  ; add offset
+	CMP HYDRANTSPPUADDRESS, y ; compare hydrant y to shadow y
+	BCS HydrantFallsDownDamageState
+	JMP AlterHydrantCoordinates
+HydrantFallsDownDamageState:
+	INC HYDRANTSPPUADDRESS, x ; move hydrant's y coordinate by 2 pixels each frame
+	INC HYDRANTSPPUADDRESS, x
+	JMP AlterHydrantState
+
+HydrantFallsDownWithDamage:
+	TXA
+	PHA
+	ASL A
+	ASL A
+	ASL A                     ; multiply by 8
+	TAX
+	CLC
+	ADC #$04
+	TAY
 	LDA HYDRANTSPPUADDRESS, y ; get shadow y coordinate
 	SEC
 	SBC #$03                  ; add offset
 	CMP HYDRANTSPPUADDRESS, x ; compare hydrant y to shadow y
 	BCC HydrantFallsDownDone
+AlterHydrantCoordinates:
 	INC HYDRANTSPPUADDRESS, x ; move hydrant's y coordinate by 2 pixels each frame
 	INC HYDRANTSPPUADDRESS, x
 	PLA
@@ -392,9 +416,12 @@ HydrantFallsDownDone:
 	STA HYDRANTSPPUADDRESS, y
 	INY
 	STA HYDRANTSPPUADDRESS, y
+	LDA hydrantsstate
+	CMP #$06
+	BEQ AlterHydrantState ; skip making sounds when the final hydrant falls
 	LDA #$03
   JSR sound_load
-  ; JSR CheckCollision
+AlterHydrantState:
   PLA
 	TAX
 	INC projectilestate, x
@@ -441,29 +468,77 @@ HydrantDestroyed:
 	RTS
 
 CheckCollision:
+	LDA projectilenumber
+	BEQ CheckCollisionDone
+	LDA fightstate ; different logic for hydrants
+	CMP #$05
+	BCS HydrantCollision
+	JMP FireballCollision
+CheckCollisionDone:
+	RTS
+FireballCollision:
+	; set variables for fireball collision
+	LDA $0298
+	STA projectileycmp
+	LDA $029B
+	STA projectilexcmp
+	LDA #$14
+	STA catlowcollision
+	JMP CollisionCompareCoordinates
+HydrantCollision:
+	LDA #$07
+	STA catlowcollision
+	LDX #$00
+HydrantCollisionLoop:
+	LDA projectilestate, x
+	CMP #$01 ; compare to damage state
+	BNE SkipHydrantCollision
+	TXA
+	PHA
+	ASL A ; transform to pointer, multiply by 8
+	ASL A
+	ASL A
+	CLC
+	ADC #$04 ; attach collision to shadow, not to hydrant (tiles are stored hydrants first, shadows after)
+	TAX
+	LDA HYDRANTSPPUADDRESS, x
+	SEC
+	SBC #$10
+	STA projectileycmp
+	INX
+	INX
+	INX
+	LDA HYDRANTSPPUADDRESS, x
+	STA projectilexcmp
+	JSR CollisionCompareCoordinates
+	PLA
+	TAX
+SkipHydrantCollision:
+	INX
+	CPX projectilenumber
+	BNE HydrantCollisionLoop
+	RTS
+CollisionCompareCoordinates:
 	; take upper cat sprite coordinates, add offset
 	; take projectile coordinates
 	; compare y, then x
 	LDA $0200 ; upper cat tile y
 	SEC
 	SBC #$05  ; offset
-	CMP $0298 ; compare with projectile y
+	CMP projectileycmp ; compare with projectile y
 	BCS NoCollision
 	CLC
-	; TODO: might want to alter this number for hydrant projectiles
-	; ||
-	; \/
-	ADC #$14
-	CMP $0298 ; compare with projectile y
+	ADC catlowcollision
+	CMP projectileycmp ; compare with projectile y
 	BCC NoCollision
-	LDA $0203 ; upper cat tile x
+	LDA $0203          ; upper cat tile x
 	SEC
 	SBC #$03
-	CMP $029B ; compare with projectile x
+	CMP projectilexcmp ; compare with projectile x
 	BCS NoCollision
 	CLC
 	ADC #$0F
-	CMP $029B ; compare with projectile x
+	CMP projectilexcmp ; compare with projectile x
 	BCC NoCollision
 	LDA #$01
 	STA dotsframe
@@ -475,15 +550,6 @@ NoCollision:
 
 ProcessDeath:
 	; JSR DrawOneDot
-	LDA #$18
-  STA ramspriteslow
-	LDX #$00
-	LDA #$00
-ClearBossFightVariablesLoop:
-	STA fightstate, x
-	INX
-	CPX #$24
-	BNE ClearBossFightVariablesLoop
 	LDA #$49
 	STA eventnumber
 	LDA #$06

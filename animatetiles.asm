@@ -34,7 +34,7 @@ SkeletonDance:
 
 AnimateTiles:
 	; implementing the RTS trick here https://www.nesdev.org/wiki/RTS_Trick
-	LDA #OBJECTSANIMATIONSPEED ; renew the counter
+	LDA animationspeed    ; renew the counter
 	STA animatecounter
 	LDA location
 	ASL A            		  ; we have a table of addresses, which are two bytes each. double that index.
