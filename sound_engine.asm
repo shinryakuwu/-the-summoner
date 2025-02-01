@@ -423,6 +423,7 @@ song_headers:
   .word boss_jump_header  ; the sound of gojira landing after a jump
   .word boss_fire_header  ; the sound of gojira throwing a fireball
   .word boss_dead_header  ; the sound of gojira being hit
+  .word cat_talk_header   ; talk beep for cat
   ; TODO: add more headers here
 
   .include "sound_opcodes.asm"    ;our opcode subroutines, jump table and aliases
@@ -432,3 +433,4 @@ song_headers:
 	.include "song_boss_bgm.asm"
 	.include "sounds_boss.asm"
 	.include "song_avril14_bgm.asm"
+	.include "sounds_talk.asm"

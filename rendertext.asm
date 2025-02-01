@@ -1,5 +1,6 @@
 RenderText:
   JSR SetTextCursor       ; each piece of text begins with cursor that should be defined for it, define it if textpointer is zero
+  JSR TalkBeep
   JSR CalculateTextPPUAddress
   LDA $2002               ; read PPU status to reset the high/low latch
   LDA textppuaddrhigh
@@ -128,4 +129,16 @@ ClearTextSectionSubroutineDone:
   STA cleartextstate
   LDA #$03
   STA action
+  RTS
+
+TalkBeep:
+  LDA talkbeepdelay
+  BNE TalkBeepDone
+  LDA #$09
+  JSR sound_load
+  LDA #$04
+  STA talkbeepdelay
+  RTS
+TalkBeepDone:
+  DEC talkbeepdelay
   RTS

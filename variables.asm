@@ -128,6 +128,7 @@ projectileycmp   .rs 1  ; used in collision check to compare cat y to projectile
 projectilexcmp   .rs 1  ; used in collision check to compare cat x to projectile x
 catlowcollision  .rs 1  ; an offset value used to define the lowest point of cat hitbox
 animationspeed   .rs 1  ; stores animation speed for current location
+talkbeepdelay    .rs 1  ; defines how long to wait between talk beeping
 
 ;; DECLARE SOME CONSTANTS HERE
 
