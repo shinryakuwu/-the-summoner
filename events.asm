@@ -780,9 +780,6 @@ ForgotSubroutine:
 	BEQ ForgotWalk
 	CMP #$01
 	BEQ ForgotTalk
-	LDA #$00
-	STA eventstate
-	JSR PerformNonTextEventDone
 	RTS
 
 ForgotWalk:
@@ -798,7 +795,8 @@ ForgotTalk:
 	STA currenttexthigh
 	LDA #$01
   STA action
-	INC eventstate
+	LDA #$00
+	STA eventstate
 	JSR PerformNonTextEventDone
 	JSR CalculateTileInFrontOfCatSubroutine ; same thing as with ghost guard
 	RTS
@@ -884,8 +882,7 @@ SetDeathText:
 	LDA lives
 	BNE RestartText
 	LDA randomnumber
-	CMP #XAHASCREENCHANCE
-	BCC XahaText            ; if randomnumber < XAHASCREENCHANCE
+	BEQ XahaText
 ItsOverText:
 	LDA #LOW(deadd)
   STA currenttextlow
@@ -1097,9 +1094,8 @@ BossTalk:
 	RTS
 
 InitiateBossFight:
-	; TODO: start playing a song here
-	; LDA #$01
-  ; JSR sound_load
+	LDA #$01
+  JSR sound_load
   LDA #$00
   STA eventstate
 ProceedFightSubroutine:

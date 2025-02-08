@@ -45,6 +45,8 @@ CheckActionStatusNMIDone:
 CheckActionStatus:
 	LDA action
 	BEQ CheckActionButtons ; if zero action state
+	CMP #$01
+	BEQ PerformTalkBeep
 	CMP #$02
 	BEQ ActionTimeout
 	CMP #$03
@@ -53,6 +55,10 @@ CheckActionStatus:
 	BEQ StartButtonLogic
 	CMP #$07
 	BEQ PerformCollisionLogic
+	RTS
+
+PerformTalkBeep:
+	JSR TalkBeep
 	RTS
 
 PerformBossFightEvent:
