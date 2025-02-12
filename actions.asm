@@ -595,7 +595,8 @@ StartButtonLogicSubroutine:
 	LDA location
   CMP #$0B
   BEQ SetRestartEvent
-  ; TODO: add start screen logic here
+  CMP #$0C
+  BEQ SetStartEvent
 StartButtonNotPressed:
 	RTS
 
@@ -607,4 +608,11 @@ SetRestartEvent:
 	LDA #$48
 	STA eventnumber
 SkipSetRestartEvent:
+	RTS
+
+SetStartEvent:
+	LDA #$4C         ; event is triggered when you start the game
+  STA eventnumber
+  LDA #$06
+  STA action
 	RTS

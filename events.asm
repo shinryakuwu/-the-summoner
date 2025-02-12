@@ -1180,12 +1180,22 @@ GotCandySubroutine:
 
 MistakeSubroutine:
 	LDA eventstate
-	BEQ MistakeWalk
+	BEQ MistakeWarp
 	CMP #$01
+	BEQ MistakeWalk
+	CMP #$02
 	BEQ MistakeTalk
-	LDA #$00
-	STA eventstate
-	JSR PerformNonTextEventDone
+	CMP #$03
+	BEQ MistakeMusic
+	RTS
+
+MistakeWarp:
+	JSR TitleVillage1Warp
+  LDA #$01
+  STA loadcache
+  STA eventstate
+  LDA #$10
+  STA movecounter
 	RTS
 
 MistakeWalk:
@@ -1202,6 +1212,13 @@ MistakeTalk:
 	LDA #HIGH(need_candy)
 	STA currenttexthigh
 	INC eventstate
+	RTS
+
+MistakeMusic:
+	; TODO: add music here
+	LDA #$00
+	STA eventstate
+	JSR PerformNonTextEventDone
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional
