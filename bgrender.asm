@@ -10,6 +10,10 @@ BgRenderSubroutine:
   BEQ ReloadLocation ; after the glitch event
   CMP #$05
   BEQ DrawEndScreen
+  CMP #$06
+  BEQ StartGame
+  CMP #$07
+  BEQ InitialGameSetup
   RTS
 
 EndBgRenderSubroutine:
@@ -54,6 +58,23 @@ DrawEndScreen:
   JSR LoadDeadCat
   JSR SetAnimationSpeed
   JMP EndBgRenderSubroutine
+
+StartGame:
+  LDA #$07
+  STA bgrender
+  JSR DisableNMIRendering
+  RTS
+
+InitialGameSetup:
+  ; TODO: alter palette
+  JSR SetCatCache
+  LDA #$18
+  STA ramspriteslow       ; from now on load sprites starting from 0218 RAM address (without reloading cat sprites)
+  LDA #$02
+  STA ramspriteshigh      ; load sprites starting from 0200 RAM address
+  LDA #$02
+  STA bgrender
+  RTS
 
 ClearBG:
   JSR InitializeLoadBackground
@@ -241,4 +262,17 @@ SetDefaultAnimationSpeed:
 SetAnimationSpeedDone:
   LDA animationspeed ; renew the animation counter
   STA animatecounter
+  RTS
+
+SetCatCache:
+  LDA #LOW(catsprites)
+  STA curntspriteslow     ; put the low byte of the address of tiles into pointer
+  LDA #HIGH(catsprites)
+  STA curntspriteshigh    ; put the high byte of the address into pointer
+  LDA #LOW(catcache)
+  STA ramspriteslow
+  LDA #HIGH(catcache)
+  STA ramspriteshigh      ; load sprites into cache
+  LDA #$18
+  STA spritescompare
   RTS

@@ -13,7 +13,7 @@ curntspriteslow  .rs 1  ; 16-bit variable to point to current set of sprites
 curntspriteshigh .rs 1
 location         .rs 1  ; location identifier ( 0 - village, 1 - cat house, 2 - village 2, 3 - skeleton house,
                         ; 4 - server room, 5 - bsod, 6 - ghost room 1, 7 - ghost room 2, 8 - park, 9 - ex house
-                        ; 10 - end, 11 - death)
+                        ; 10 - end, 11 - death, 12 - title screen)
 spritescompare   .rs 1  ; compare iterator to this value during load sprites loop
 loadbgcompare    .rs 2  ; loadbgcompare - compare y, loadbgcompare+1 - compare x
 singleattribute  .rs 1  ; set to 1 if needed to fill attribute table with the same number
@@ -128,6 +128,7 @@ projectileycmp   .rs 1  ; used in collision check to compare cat y to projectile
 projectilexcmp   .rs 1  ; used in collision check to compare cat x to projectile x
 catlowcollision  .rs 1  ; an offset value used to define the lowest point of cat hitbox
 animationspeed   .rs 1  ; stores animation speed for current location
+talkbeepdelay    .rs 1  ; defines how long to wait between talk beeping
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -144,10 +145,8 @@ BOSSANIMATIONSPEED = $08
 CATBOSSPOSITIONOFFSET = $03
 PROJECTILESPPUADDRESS = $0298
 PROJECTILEDELAY = $06
-BOSSFIRSTPHASELENGTH = $10
-BOSSSECONDPHASELENGTH = $20
-; BOSSFIRSTPHASELENGTH = $02
-; BOSSSECONDPHASELENGTH = $02
+BOSSFIRSTPHASELENGTH = $08
+BOSSSECONDPHASELENGTH = $10
 BOSSTHIRDPHASELENGTH = $02
 BOSSENRAGEDPOSITION = $80
 BOSSDEFEATEDDELAY = $90
@@ -156,7 +155,6 @@ HYDRANTSDELAY = $03
 HYDRANTSMAX = $08
 HYDRANTSTIMEOUT = $50
 OBJECTSANIMATIONSPEED = $18
-XAHASCREENCHANCE = $05
 INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
 EMPTYBGTILEATTRIBUTE = $0F

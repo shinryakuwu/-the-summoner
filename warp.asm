@@ -436,6 +436,19 @@ CatHouseEndWarp:
   JSR PrepareForBGRender
   RTS
 
+TitleVillage1Warp:
+  JSR SetVillage1Params
+  LDA #LOW(cathousevillage1warp)
+  STA warpXYlow
+  LDA #HIGH(cathousevillage1warp)
+  STA warpXYhigh
+  LDA #$06
+  STA bgrender
+  LDA #$05
+  STA nmiwaitcounter  ; skip nmi subroutines in the first n frames after bg is changed
+  JSR SetBgParams
+  RTS
+
 SetVillage1Params:
   LDA #LOW(village1params)
   STA currentbgparams
