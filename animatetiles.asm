@@ -49,6 +49,9 @@ SkipAnimateSubroutine:
 	RTS
 
 AnimateVillage1Subroutine:
+	LDA switches
+  AND #%10000000
+  BEQ AnimateTitleScreen
 	LDA #$00
   STA walkbackwards ; fix for very silly bug with ghost moving backwards when a cat moves backwards
 	LDA objectframenum
@@ -67,6 +70,56 @@ MoveGhost:
 	STA trnsfrmcompare
 	LDX #$34          ; ghost tiles are stored at address 0200 + this number
 	JSR ObjectTransformNoCache
+	RTS
+
+AnimateTitleScreen:
+	LDX #$22
+  LDY #$C7
+	JSR SetPPUAddrSubroutine
+	LDY objectframenum
+	LDA skull0, y
+	STA $2007
+	; LDX #$22
+  LDY #$C9
+	JSR SetPPUAddrSubroutine
+	LDY objectframenum
+	LDA skull1, y
+	STA $2007
+	; LDX #$22
+  LDY #$D6
+	JSR SetPPUAddrSubroutine
+	LDY objectframenum
+	LDA skull2, y
+	STA $2007
+	; LDX #$22
+  LDY #$D8
+	JSR SetPPUAddrSubroutine
+	LDY objectframenum
+	LDA skull3, y
+	STA $2007
+	LDA objectframenum
+	CMP #$03
+	BEQ AnimateTitleScreenResetFrame
+	INC objectframenum
+	RTS
+AnimateTitleScreenResetFrame:
+	LDA #$00
+	STA objectframenum
+AnimateTitleText:
+	LDX #$3F
+  LDY #$0F
+	JSR SetPPUAddrSubroutine
+	LDY titleframenum
+	LDA titlecolor, y
+	STA $2007
+	LDA titleframenum
+	CMP #$03
+	BEQ AnimateTitleTextResetFrame
+	INC titleframenum
+	RTS
+AnimateTitleTextResetFrame:
+	LDA #$00
+	STA titleframenum
 	RTS
 
 AnimateCatHouseSubroutine:

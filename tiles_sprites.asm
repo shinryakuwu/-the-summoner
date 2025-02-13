@@ -628,6 +628,21 @@ deadsprites:
   ; ghost
   .db $52, $6B, $00, $7C
 
+skull0:
+  .db $1E,$1F,$2F,$2E
+
+skull1:
+  .db $2E,$1E,$1F,$2F
+
+skull2:
+  .db $2F,$2E,$1E,$1F
+
+skull3:
+  .db $1F,$2F,$2E,$1E
+
+titlecolor:
+  .db $14,$24,$13,$25
+
 
 front:
       ;tiles                        ;attributes                   ;animation

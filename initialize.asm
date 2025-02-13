@@ -238,22 +238,11 @@ SetCatCache:
 
   JSR LoadSprites
 
-SetDefaultSprites:
-  LDA #LOW(village1sprites)
-  STA curntspriteslow     ; put the low byte of the address of tiles into pointer
-  LDA #HIGH(village1sprites)
-  STA curntspriteshigh    ; put the high byte of the address into pointer
-  LDA #$18
-  STA ramspriteslow       ; from now on load sprites starting from 0218 RAM address (without reloading cat sprites)
-  LDA #$02
-  STA ramspriteshigh      ; load sprites starting from 0200 RAM address
-  LDA #$30
-  STA spritescompare
-
-  JSR LoadSprites
-
-SetDefaultBackground:
-  JSR SetVillage1Params
+SetInitialBackground:
+  LDA #LOW(titleparams)
+  STA currentbgparams
+  LDA #HIGH(titleparams)
+  STA currentbgparams+1
   JSR SetBgParams
 
   JSR LoadBackground
@@ -262,32 +251,25 @@ SetDefaultBackground:
   STA clearbgcompare
   JSR ClearRemainingBG   ; the rest of bg is empty
 
-SetDefaultAttributes:
-  LDA #LOW(village1attributes)
-  STA currentattrlow            ; put the low byte of the address of attributes into pointer
-  LDA #HIGH(village1attributes)
-  STA currentattrhigh           ; put the high byte of the address into pointer
+SetInitialAttributes:
+  LDA #LOW(titleattributes)
+  STA currentattrlow
+  LDA #HIGH(titleattributes)
+  STA currentattrhigh
 
   JSR LoadAttribute
 
   ; LDA #$FF
   ; STA candyswitches
 
-  LDA #$01
-  STA loadcache
-
   LDA #CATLIVES
   STA lives
 
-  LDA #OBJECTSANIMATIONSPEED ; set default animation speed
+  LDA #TITLEANIMATIONSPEED ; set animation speed for title screen
   STA animationspeed
 
-  LDA #$4C         ; event is triggered when you start the game
-  STA eventnumber
-  LDA #$06
-  STA action
-  LDA #$10
-  STA movecounter
+  LDA #$04
+  STA action ; initial state is waiting for start button to be pressed
 
 ReturnToNMI:
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1

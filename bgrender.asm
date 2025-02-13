@@ -10,6 +10,10 @@ BgRenderSubroutine:
   BEQ ReloadLocation ; after the glitch event
   CMP #$05
   BEQ DrawEndScreen
+  CMP #$06
+  BEQ StartGame
+  CMP #$07
+  BEQ InitialGameSetup
   RTS
 
 EndBgRenderSubroutine:
@@ -54,6 +58,22 @@ DrawEndScreen:
   JSR LoadDeadCat
   JSR SetAnimationSpeed
   JMP EndBgRenderSubroutine
+
+StartGame:
+  LDA #$07
+  STA bgrender
+  JSR DisableNMIRendering
+  RTS
+
+InitialGameSetup:
+  ; TODO: alter palette
+  LDA #$18
+  STA ramspriteslow ; from now on load sprites starting from 0218 RAM address (without reloading cat sprites)
+  LDA #$02
+  STA ramspriteshigh
+  LDA #$02
+  STA bgrender
+  RTS
 
 ClearBG:
   JSR InitializeLoadBackground

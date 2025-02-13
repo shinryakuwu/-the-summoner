@@ -28,13 +28,14 @@ candyswitches    .rs 1  ; stores switches for collecting candy
                         ;   |__ boss candy 2
 switches         .rs 1  ; stores other switches
                         ; 00000000
-                        ;  |||||||__ ghost candy drop
-                        ;  ||||||__ talked to fren
-                        ;  |||||__ took meds
-                        ;  ||||__ visited ghost house
-                        ;  |||__ got ghost pass hint
-                        ;  ||__ got ghost pass
-                        ;  |__ boss defeated
+                        ; |||||||__ ghost candy drop
+                        ; ||||||__ talked to fren
+                        ; ||||||__ took meds
+                        ; |||||__ visited ghost house
+                        ; ||||__ got ghost pass hint
+                        ; |||__ got ghost pass
+                        ; ||__ boss defeated
+                        ; |__ start pressed
 sleeping         .rs 1  ; main program sets this and waits for the NMI to clear it.
                         ; Ensures the main program is run only once per frame.
 action           .rs 1  ; action state ( 1 - action active, 0 - not, +some other states)
@@ -129,6 +130,7 @@ projectilexcmp   .rs 1  ; used in collision check to compare cat x to projectile
 catlowcollision  .rs 1  ; an offset value used to define the lowest point of cat hitbox
 animationspeed   .rs 1  ; stores animation speed for current location
 talkbeepdelay    .rs 1  ; defines how long to wait between talk beeping
+titleframenum    .rs 1  ; used for title text color animation
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -155,6 +157,7 @@ HYDRANTSDELAY = $03
 HYDRANTSMAX = $08
 HYDRANTSTIMEOUT = $50
 OBJECTSANIMATIONSPEED = $18
+TITLEANIMATIONSPEED = $0C
 INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
 EMPTYBGTILEATTRIBUTE = $0F
