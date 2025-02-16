@@ -218,9 +218,9 @@ Clrmem:
   JSR sound_init
 
 SetPalettes:
-  LDA #LOW(palette)
+  LDA #LOW(palettestart)
   STA curntpalette
-  LDA #HIGH(palette)
+  LDA #HIGH(palettestart)
   STA curntpalette+1
   JSR LoadPalettes
 

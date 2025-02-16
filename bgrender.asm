@@ -66,7 +66,11 @@ StartGame:
   RTS
 
 InitialGameSetup:
-  ; TODO: alter palette
+  LDA #LOW(palette)
+  STA curntpalette
+  LDA #HIGH(palette)
+  STA curntpalette+1
+  JSR LoadPalettes
   LDA #$18
   STA ramspriteslow ; from now on load sprites starting from 0218 RAM address (without reloading cat sprites)
   LDA #$02

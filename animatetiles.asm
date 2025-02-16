@@ -17,8 +17,43 @@ CheckAnimateTiles:
 	BEQ AnimateTiles   ; animate only when counter = 0
 	DEC animatecounter ; if not 0, decrement counter
 	LDA location
+	BEQ TitleScreenCheck
 	CMP #$03
 	BEQ SkeletonDanceCheck ; separate logic for dancing skeletons animation, I hope it's worth it...
+	RTS
+
+TitleScreenCheck:
+	LDA switches
+  AND #%10000000
+  BNE TitleScreenCheckDone
+  LDA animatecounter
+  CMP #$01
+  BNE TitleScreenCheckDone
+  LDA objectframenum
+  BEQ AnimateTitleText
+TitleScreenCheckDone:
+	RTS
+
+AnimateTitleText:
+	LDX #$23
+  LDY #$CC
+	JSR SetPPUAddrSubroutine
+	LDY titleframenum
+	LDX #$00
+AnimateTitleTextLoop:
+	LDA titlecolor, y
+	STA $2007
+	INX
+	CPX #$1C
+	BNE AnimateTitleTextLoop
+	LDA titleframenum
+	CMP #$02
+	BEQ AnimateTitleTextResetFrame
+	INC titleframenum
+	RTS
+AnimateTitleTextResetFrame:
+	LDA #$00
+	STA titleframenum
 	RTS
 
 SkeletonDanceCheck:
@@ -79,19 +114,16 @@ AnimateTitleScreen:
 	LDY objectframenum
 	LDA skull0, y
 	STA $2007
-	; LDX #$22
   LDY #$C9
 	JSR SetPPUAddrSubroutine
 	LDY objectframenum
 	LDA skull1, y
 	STA $2007
-	; LDX #$22
   LDY #$D6
 	JSR SetPPUAddrSubroutine
 	LDY objectframenum
 	LDA skull2, y
 	STA $2007
-	; LDX #$22
   LDY #$D8
 	JSR SetPPUAddrSubroutine
 	LDY objectframenum
@@ -105,21 +137,6 @@ AnimateTitleScreen:
 AnimateTitleScreenResetFrame:
 	LDA #$00
 	STA objectframenum
-AnimateTitleText:
-	LDX #$3F
-  LDY #$0F
-	JSR SetPPUAddrSubroutine
-	LDY titleframenum
-	LDA titlecolor, y
-	STA $2007
-	LDA titleframenum
-	CMP #$03
-	BEQ AnimateTitleTextResetFrame
-	INC titleframenum
-	RTS
-AnimateTitleTextResetFrame:
-	LDA #$00
-	STA titleframenum
 	RTS
 
 AnimateCatHouseSubroutine:

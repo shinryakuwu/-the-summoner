@@ -1,35 +1,37 @@
 title:
-  .db $0F,$F3,$9B,$9B,$9B,$9B,$0F,$0C,$9C,$67,$FF,$FF,$9A,$9A,$FF,$9C  ;;row 1-10
-  .db $FF,$9A,$FF,$FF,$9A,$0F,$05,$9A,$9C,$FF,$FF,$66,$97,$97,$0F,$07
+  .db $0F,$F3,$9B,$9B,$9B,$9B,$FF,$FF,$FF,$9B,$9B,$0F,$07,$9C,$67,$FF,$FF,$66,$FF  ;;row 1-10
+  .db $FF,$FF,$66,$FF,$FF,$FF,$9A,$0F,$05,$9A,$9C,$FF,$FF,$66,$0F,$09
 
-  .db $9C,$67,$67,$FF,$9A,$9A,$FF,$9C,$FF,$9A,$FF,$FF  ;;row 10-11
+  .db $9C,$67,$67,$FF,$66,$FF,$FF,$FF,$66,$FF,$FF,$FF  ;;row 10-11
   .db $9A,$0F,$05,$9A,$9C,$9B,$9B,$66,$9B,$0F,$08
 
-  .db $9C,$FF,$67,$67,$9A,$9A,$FF,$9C,$FF,$9A,$FF  ;;row 11-12
+  .db $9C,$FF,$67,$67,$66,$FF,$FF,$FF,$66,$FF,$FF  ;;row 11-12
   .db $FF,$9A,$0F,$05,$9A,$9C,$FF,$FF,$66,$0F,$09
 
-  .db $9C,$FF,$FF,$67,$9A,$9A,$FF,$9C,$FF,$9A,$FF,$FF  ;;row 11-13
-  .db $9A,$0F,$05,$9A,$9C,$FF,$FF,$66,$9B,$9B,$0F,$0C
+  .db $9C,$FF,$FF,$67,$66,$FF,$FF,$FF,$66,$FF,$FF,$FF  ;;row 11-13
+  .db $9A,$0F,$05,$9A,$9C,$FF,$FF,$66,$0F,$0E
 
-  .db $97,$97,$97,$FF,$97,$97,$97,$97,$97,$97,$0F,$30,$9B,$9B,$0F,$05  ;;row 13-15
-  .db $9B,$FF,$9B,$FF,$9B,$FF,$9B,$FF,$9B,$9B,$9B,$0F,$0E
+  .db $97,$97,$97,$FF,$97,$97,$97,$97,$97,$97,$0F,$08,$97,$97,$0F,$26  ;;row 13-14
 
-  .db $9A,$FF,$FF,$9A,$FF,$9C,$9C,$FF,$5B,$9C,$9C,$FF,$5B,$9C,$9C,$67  ;;row 15-16
-  .db $FF,$FF,$66,$67,$FF,$FF,$66,$97,$97,$9C,$97,$97,$9A,$FF,$FF,$FF
+  .db $9B,$9B,$9B,$0F,$04,$9B,$FF,$9B,$FF,$9B,$FF,$9B,$FF ;;row 14-15
+  .db $9B,$9B,$9B,$0F,$05,$9B,$9B,$FF,$9B,$9B,$FF,$FF,$FF
 
-  .db $9A,$FF,$FF,$9A,$FF,$9C,$9C,$FF,$FF,$9C,$9C,$FF,$FF,$9C,$9C,$67  ;;row 16-17
+  .db $9C,$FF,$FF,$9C,$FF,$FF,$FF,$66,$FF,$5B,$FF,$66,$FF,$5B,$FF,$66,$67  ;;row 15-16
+  .db $FF,$FF,$66,$67,$FF,$FF,$66,$FF,$FF,$9C,$FF,$FF,$9A,$FF,$FF
+
+  .db $9C,$FF,$FF,$9C,$FF,$FF,$FF,$66,$FF,$FF,$FF,$66,$FF,$FF,$FF,$66,$67  ;;row 16-17
   .db $67,$FF,$66,$67,$67,$FF,$66,$9B,$FF,$9C,$9B,$9B,$9A,$FF,$FF,$FF
 
-  .db $97,$97,$9A,$9A,$FF,$9C,$9C,$FF,$FF,$9C,$9C,$FF,$FF,$9C,$9C,$FF  ;;row 17-18
+  .db $97,$97,$66,$FF,$FF,$FF,$66,$FF,$FF,$FF,$66,$FF,$FF,$FF,$66,$FF  ;;row 17-18
   .db $67,$67,$66,$FF,$67,$67,$66,$FF,$FF,$9C,$67,$0F,$07
 
-  .db $9A,$9A,$FF,$9C,$9C,$FF,$FF,$9C,$9C,$FF,$FF,$9C,$9C,$FF,$FF,$67  ;;row 18-19
-  .db $66,$FF,$FF,$67,$66,$9B,$9B,$9C,$FF,$67,$0F,$04
+  .db $66,$FF,$FF,$FF,$66,$FF,$FF,$FF,$66,$FF,$FF,$FF,$66,$FF,$FF,$67  ;;row 18-19
+  .db $66,$FF,$FF,$67,$66,$FF,$FF,$9C,$FF,$67,$0F,$04
 
-  .db $97,$97,$FF,$97,$97,$97,$0F,$09,$97,$97,$97,$0F,$53,$1E,$FF,$2E ;;row 19-22
-  .db $FF,$3F,$44,$42,$37,$FF,$42,$43,$30,$41,$43,$FF,$2F,$FF,$1F
+  .db $97,$97,$FF,$97,$97,$97,$0F,$04,$97,$0F,$04,$97,$97,$97,$0F,$05,$97,$97,$0F ;;row 19-22
+  .db $4C,$1E,$FF,$2E,$FF,$3F,$44,$42,$37,$FF,$42,$43,$30,$41,$43,$FF,$2F,$FF,$1F
 
-  .db $0F, $27  ;;row 22-23
+  .db $0F,$27  ;;row 22-23
 
 village1:
   .db $0F,$23,$01,$0F,$1C,$00,$00,$00,$01,$00,$00,$00,$03,$0F,$03,$AB  ;;row 1-3
@@ -476,8 +478,8 @@ endattributes:
   .db $00, $00, $00, $00, $00, $00, $00, $00
 
 titleattributes:
-  .db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-  .db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+  .db $00, $00, $00, $00, $00, $00, $00, $00
+  .db $00, $00, $00, $00, $FF, $FF, $FF, $FF
   .db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
   .db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
   .db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
@@ -549,4 +551,4 @@ titleparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(title), HIGH(title), $00, $00
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $00, $00, $1C, $01, $00
+  .db $00, $00, $32, $01, $00
