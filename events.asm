@@ -780,9 +780,6 @@ ForgotSubroutine:
 	BEQ ForgotWalk
 	CMP #$01
 	BEQ ForgotTalk
-	LDA #$00
-	STA eventstate
-	JSR PerformNonTextEventDone
 	RTS
 
 ForgotWalk:
@@ -798,7 +795,8 @@ ForgotTalk:
 	STA currenttexthigh
 	LDA #$01
   STA action
-	INC eventstate
+	LDA #$00
+	STA eventstate
 	JSR PerformNonTextEventDone
 	JSR CalculateTileInFrontOfCatSubroutine ; same thing as with ghost guard
 	RTS
@@ -884,8 +882,7 @@ SetDeathText:
 	LDA lives
 	BNE RestartText
 	LDA randomnumber
-	CMP #XAHASCREENCHANCE
-	BCC XahaText            ; if randomnumber < XAHASCREENCHANCE
+	BEQ XahaText
 ItsOverText:
 	LDA #LOW(deadd)
   STA currenttextlow
@@ -1097,9 +1094,8 @@ BossTalk:
 	RTS
 
 InitiateBossFight:
-	; TODO: start playing a song here
-	; LDA #$01
-  ; JSR sound_load
+	LDA #$01
+  JSR sound_load
   LDA #$00
   STA eventstate
 ProceedFightSubroutine:
@@ -1184,12 +1180,25 @@ GotCandySubroutine:
 
 MistakeSubroutine:
 	LDA eventstate
-	BEQ MistakeWalk
+	BEQ MistakeWarp
 	CMP #$01
+	BEQ MistakeWalk
+	CMP #$02
 	BEQ MistakeTalk
-	LDA #$00
-	STA eventstate
-	JSR PerformNonTextEventDone
+	CMP #$03
+	BEQ MistakeMusic
+	RTS
+
+MistakeWarp:
+	JSR TitleVillage1Warp
+  LDA #$01
+  STA loadcache
+  STA eventstate
+  LDA #$10
+  STA movecounter
+  LDA switches
+  ORA #%10000000
+  STA switches
 	RTS
 
 MistakeWalk:
@@ -1206,6 +1215,13 @@ MistakeTalk:
 	LDA #HIGH(need_candy)
 	STA currenttexthigh
 	INC eventstate
+	RTS
+
+MistakeMusic:
+	; TODO: add music here
+	LDA #$00
+	STA eventstate
+	JSR PerformNonTextEventDone
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional

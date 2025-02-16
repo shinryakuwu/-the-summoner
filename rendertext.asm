@@ -129,3 +129,53 @@ ClearTextSectionSubroutineDone:
   LDA #$03
   STA action
   RTS
+
+TalkBeep:
+  LDA talkbeepdelay
+  BNE TalkBeepDone
+  JSR DefineBeepTone
+  CMP #$FF
+  BEQ TalkBeepSkip
+  JSR sound_load ; the song is stored in A at this point
+  LDA #$04
+  STA talkbeepdelay
+TalkBeepSkip:
+  RTS
+TalkBeepDone:
+  DEC talkbeepdelay
+  RTS
+
+DefineBeepTone:
+  ; the tone is defined based on the current cursor
+  LDA textcursor
+  CMP #$85
+  BEQ SetCatBeep
+  CMP #$64
+  BEQ SetGrilBeep
+  CMP #$74
+  BEQ SetGrilBeep
+  CMP #$76
+  BEQ SetBossBeep
+  CMP #$77
+  BEQ SetBossBeep
+  CMP #$86
+  BEQ SetFellaBeep
+  CMP #$75
+  BEQ SetFellaBeep
+  CMP #$65
+  BEQ SetFellaBeep
+  CMP #$87
+  BEQ SetFellaBeep
+  RTS
+SetCatBeep:
+  LDA #$0A
+  RTS
+SetGrilBeep:
+  LDA #$0B
+  RTS
+SetBossBeep:
+  LDA #$0C
+  RTS
+SetFellaBeep:
+  LDA #$0D
+  RTS

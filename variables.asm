@@ -28,13 +28,14 @@ candyswitches    .rs 1  ; stores switches for collecting candy
                         ;   |__ boss candy 2
 switches         .rs 1  ; stores other switches
                         ; 00000000
-                        ;  |||||||__ ghost candy drop
-                        ;  ||||||__ talked to fren
-                        ;  |||||__ took meds
-                        ;  ||||__ visited ghost house
-                        ;  |||__ got ghost pass hint
-                        ;  ||__ got ghost pass
-                        ;  |__ boss defeated
+                        ; |||||||__ ghost candy drop
+                        ; ||||||__ talked to fren
+                        ; ||||||__ took meds
+                        ; |||||__ visited ghost house
+                        ; ||||__ got ghost pass hint
+                        ; |||__ got ghost pass
+                        ; ||__ boss defeated
+                        ; |__ start pressed
 sleeping         .rs 1  ; main program sets this and waits for the NMI to clear it.
                         ; Ensures the main program is run only once per frame.
 action           .rs 1  ; action state ( 1 - action active, 0 - not, +some other states)
@@ -128,6 +129,8 @@ projectileycmp   .rs 1  ; used in collision check to compare cat y to projectile
 projectilexcmp   .rs 1  ; used in collision check to compare cat x to projectile x
 catlowcollision  .rs 1  ; an offset value used to define the lowest point of cat hitbox
 animationspeed   .rs 1  ; stores animation speed for current location
+talkbeepdelay    .rs 1  ; defines how long to wait between talk beeping
+titleframenum    .rs 1  ; used for title text color animation
 
 ;; DECLARE SOME CONSTANTS HERE
 
@@ -138,16 +141,15 @@ MVDOWN = %00000100
 MVUP = %00001000
 ACTIONBUTTONS = %11000000
 STARTBUTTON = %00010000
+PASSABILITYSEPARATOR = $10
 CANDYGATHERED = %00111111
 CATANIMATIONSPEED = $0A
 BOSSANIMATIONSPEED = $08
 CATBOSSPOSITIONOFFSET = $03
 PROJECTILESPPUADDRESS = $0298
 PROJECTILEDELAY = $06
-BOSSFIRSTPHASELENGTH = $10
-BOSSSECONDPHASELENGTH = $20
-; BOSSFIRSTPHASELENGTH = $02
-; BOSSSECONDPHASELENGTH = $02
+BOSSFIRSTPHASELENGTH = $08
+BOSSSECONDPHASELENGTH = $10
 BOSSTHIRDPHASELENGTH = $02
 BOSSENRAGEDPOSITION = $80
 BOSSDEFEATEDDELAY = $90
@@ -156,7 +158,7 @@ HYDRANTSDELAY = $03
 HYDRANTSMAX = $08
 HYDRANTSTIMEOUT = $50
 OBJECTSANIMATIONSPEED = $18
-XAHASCREENCHANCE = $05
+TITLEANIMATIONSPEED = $0C
 INITIALTEXTPPUADDR = $22E0
 ENDOFTEXT = $FE
 EMPTYBGTILEATTRIBUTE = $0F

@@ -180,7 +180,7 @@ DefinePassabilityOfTile:
   LDA [currenttilelow], y
   CMP #EMPTYBGTILEATTRIBUTE
   BEQ TileIsNotPassable
-  CMP #$60               ; check if the tile is within the passable tiles in the tiletable (they currently end by address $60 but will change later)
+  CMP #PASSABILITYSEPARATOR  ; check if the tile is within the passable tiles in the tiletable
   BCC TileIsPassable
 TileIsNotPassable:
   LDY #$00

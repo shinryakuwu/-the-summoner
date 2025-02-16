@@ -48,6 +48,8 @@ OpenUmbrellaWait:
 	RTS
 
 UmbrellaOpened:
+	LDA #$09
+  JSR sound_load
 	LDA #$00
 	STA umbrellastate
 	INC fightstate
@@ -215,6 +217,8 @@ BossRageJumpDropHydrants:
 BossRageTalk:
 	LDA projectilenumber
 	BNE BossRageTalkWait
+	LDA #$00
+  JSR sound_load
 	JSR BossOpensMouth
 	LDA #LOW(enraged)
   STA currenttextlow

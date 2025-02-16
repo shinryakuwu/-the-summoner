@@ -266,15 +266,20 @@ FinalHydrantFall:
 	INC $0218
 	RTS
 FinalHydrantFallDone:
+	LDA #$00
+  JSR sound_load
+  LDA #$8C
+	STA $023D
+	INC hydrantsstate
+	RTS
+
+FinalHydrantSound:
 	LDA #$08
   JSR sound_load
-	LDA #$8C
-	STA $023D
 	LDA #BOSSDEFEATEDDELAY
 	STA movecounter
 	INC fightstate
 	INC fightstate
-	INC hydrantsstate
 	RTS
 
 FallingHydrants:
@@ -290,6 +295,8 @@ FallingHydrants:
 	BEQ FinalHydrantLoad
 	CMP #$05
 	BEQ FinalHydrantFall
+	CMP #$06
+	BEQ FinalHydrantSound
 	RTS
 
 FallingHydrantsDelay:
@@ -416,9 +423,6 @@ HydrantFallsDownDone:
 	STA HYDRANTSPPUADDRESS, y
 	INY
 	STA HYDRANTSPPUADDRESS, y
-	LDA hydrantsstate
-	CMP #$06
-	BEQ AlterHydrantState ; skip making sounds when the final hydrant falls
 	LDA #$03
   JSR sound_load
 AlterHydrantState:
@@ -550,6 +554,8 @@ NoCollision:
 
 ProcessDeath:
 	; JSR DrawOneDot
+	LDA #$00
+  JSR sound_load
 	LDA #$49
 	STA eventnumber
 	LDA #$06

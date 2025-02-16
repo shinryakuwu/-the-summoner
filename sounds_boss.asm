@@ -77,7 +77,7 @@ boss_fire_noi:
 boss_dead_header:
   .byte $01            ;1 stream
 
-  .byte SFX_1          ;which stream
+  .byte SFX_2          ;which stream
   .byte $01            ;status byte (stream enabled)
   .byte NOISE          ;which channel
   .byte $70            ;duty (01)

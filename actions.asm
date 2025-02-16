@@ -45,6 +45,8 @@ CheckActionStatusNMIDone:
 CheckActionStatus:
 	LDA action
 	BEQ CheckActionButtons ; if zero action state
+	CMP #$01
+	BEQ PerformTalkBeep
 	CMP #$02
 	BEQ ActionTimeout
 	CMP #$03
@@ -53,6 +55,10 @@ CheckActionStatus:
 	BEQ StartButtonLogic
 	CMP #$07
 	BEQ PerformCollisionLogic
+	RTS
+
+PerformTalkBeep:
+	JSR TalkBeep
 	RTS
 
 PerformBossFightEvent:
@@ -587,9 +593,9 @@ StartButtonLogicSubroutine:
 	AND #STARTBUTTON
 	BEQ StartButtonNotPressed
 	LDA location
+	BEQ SetStartEvent
   CMP #$0B
   BEQ SetRestartEvent
-  ; TODO: add start screen logic here
 StartButtonNotPressed:
 	RTS
 
@@ -601,4 +607,11 @@ SetRestartEvent:
 	LDA #$48
 	STA eventnumber
 SkipSetRestartEvent:
+	RTS
+
+SetStartEvent:
+	LDA #$4C         ; event is triggered when you start the game
+  STA eventnumber
+  LDA #$06
+  STA action
 	RTS
