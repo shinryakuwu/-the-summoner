@@ -52,6 +52,8 @@ NonTextEventsDone:
 	RTS
 
 CandymanHandSubroutine:
+	LDA #$10
+  JSR sound_load
 	INC candycounter
 	LDA #$34         ; tear off hand
 	STA $0221
@@ -70,11 +72,23 @@ CandymanHandSubroutine:
 
 OldLadySubroutine:
 	LDA eventstate
-	BEQ OldLadyWalk
+	BEQ OldLadyKnock
 	CMP #$01
-	BEQ OldLadyAppear
+	BEQ OldLadyWalk
 	CMP #$02
+	BEQ OldLadyAppear
+	CMP #$03
 	BEQ OldLadyDisappear
+	RTS
+
+OldLadyKnock:
+	LDA #$0F
+  JSR sound_load
+	LDA #$15
+	STA movecounter
+	LDA #$30
+	STA eventwaitcounter
+	INC eventstate
 	RTS
 
 OldLadyWalk:
@@ -101,8 +115,7 @@ OldLadyAppear:
   STA currenttexthigh
   LDA #$01
   STA textpartscounter
-	LDA #$02
-	STA eventstate
+	INC eventstate
   LDA #$01
   STA action
 	RTS
@@ -191,6 +204,8 @@ LoadGlitchText:
 	RTS
 
 SatanGlitchInitiate:
+	LDA #$13
+  JSR sound_load
 	LDA #$01
 	STA eventstate
 	STA glitchcount
@@ -845,6 +860,8 @@ RestartWalk:
 DeathSubroutine:
 	LDA #$18
   STA ramspriteslow
+  LDA #$12
+  JSR sound_load
 	LDX #$00
 	LDA #$00
 ClearBossFightVariablesLoop:
@@ -1218,7 +1235,8 @@ MistakeTalk:
 	RTS
 
 MistakeMusic:
-	; TODO: add music here
+	; LDA #$0E
+  ; JSR sound_load
 	LDA #$00
 	STA eventstate
 	JSR PerformNonTextEventDone

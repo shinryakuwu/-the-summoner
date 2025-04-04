@@ -4,6 +4,10 @@ volume_envelopes:
   .word se_ve_beat_loud
   .word se_ve_beat_medium
   .word se_ve_beat_quiet
+  .word se_ve_fast_fade_out
+  .word se_ve_vibrate
+  .word se_ve_triangle_vibrate
+  .word se_ve_quiet
 
 
 se_ve_default:
@@ -23,3 +27,16 @@ se_ve_beat_medium:
 se_ve_beat_quiet:
   .byte $04, $04, $04, $04, $03, $03, $03, $03, $02, $02, $02, $01, $01, $01, $00
   .byte $FF
+
+se_ve_fast_fade_out:
+  .byte $0C, $0A, $08, $06, $04, $02, $00
+
+se_ve_vibrate:
+  .byte $0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$FF
+
+se_ve_triangle_vibrate:
+  .byte $0F,$00,$0F,$00,$0F,$00,$0F,$00,$0F,$00,$0F,$00,$0F,$00,$0F,$00,$FF
+
+se_ve_quiet:
+  .byte $01, $FF
+

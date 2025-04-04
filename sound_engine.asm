@@ -428,6 +428,12 @@ song_headers:
   .word ex_talk_header    ; talk beep for ex
   .word boss_talk_header  ; talk beep for boss
   .word fella_talk_header ; talk beep for other chars
+  .word main_bgm_header   ; main theme
+  .word knock_header      ; the sound of knocking the door
+  .word tear_header       ; the sound of tearing off the hand
+  .word start_header      ; the sound of pressing start
+  .word death_header      ; sounds when you die
+  .word satan_header      ; sounds when satan is spawning
   ; TODO: add more headers here
 
   .include "sound_opcodes.asm"    ;our opcode subroutines, jump table and aliases
@@ -435,6 +441,8 @@ song_headers:
   .include "vol_envelopes.i"
 	.include "song0.i"      ;holds the data for song 0 (header and data streams)
 	.include "song_boss_bgm.asm"
+	.include "song_main_bgm.asm"
 	.include "sounds_boss.asm"
 	.include "song_avril14_bgm.asm"
 	.include "sounds_talk.asm"
+	.include "sounds.asm"
