@@ -25,7 +25,7 @@ tear_header:
   .byte $30            ;tempo
 
 tear_noise:
-  .byte $81, $0A, $09
+  .byte $81, $0A, $09, $08
   .byte volume_envelope, $05
   .byte $08
   .byte endsound
@@ -62,19 +62,36 @@ death_square1:
   .word death_square1
 
 satan_header:
-  .byte $01            ;1 stream
+  .byte $02            ;1 streams
+
+  .byte SFX_1            ;which stream
+  .byte $01              ;status byte (stream enabled)
+  .byte SQUARE_1         ;which channel
+  .byte $B0              ;initial duty
+  .byte $08              ;volume envelope
+  .word satan_square1    ;pointer to stream
+  .byte $30              ;tempo
 
   .byte SFX_2          ;which stream
   .byte $01            ;status byte (stream enabled)
   .byte NOISE          ;which channel
   .byte $70            ;duty (01)
-  .byte $08            ;volume envelope
+  .byte $09            ;volume envelope
   .word satan_noise    ;pointer to stream
   .byte $20            ;tempo
 
 satan_noise:
   .byte $86, $03, $88, $09, $81, $0D, $83, $0C
   .byte $81, $0A, $09, $84, $0E
-satan_noise_loop:
   .byte $95, $0D
+  .byte endsound
+
+satan_square1:
+  .byte $8C, rest
+  .byte $88, C6
+  .byte $81, rest, C6, $83, rest, $81, C6, rest, C6
+  .byte rest, C6, rest, C6, $82, rest, $81, C6, rest
+  .byte rest, C6, $85, rest, $81, C6
+  .byte rest, C6, rest, C6, $82, rest, $82, C6
+  .byte $81, rest, C6, $83, rest, $81, C6, rest, C6
   .byte endsound

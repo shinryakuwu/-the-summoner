@@ -29,8 +29,8 @@ TitleScreenCheck:
   LDA animatecounter
   CMP #$01
   BNE TitleScreenCheckDone
-  LDA objectframenum
-  BEQ AnimateTitleText
+  LDA sync_graphics
+  BNE AnimateTitleText
 TitleScreenCheckDone:
 	RTS
 
@@ -40,6 +40,7 @@ AnimateTitleText:
 	JSR SetPPUAddrSubroutine
 	LDY titleframenum
 	LDX #$00
+	STX sync_graphics ; reset sync trigger
 AnimateTitleTextLoop:
 	LDA titlecolor, y
 	STA $2007

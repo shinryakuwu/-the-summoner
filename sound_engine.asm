@@ -17,6 +17,7 @@ sound_temp1 .rs 1           ;temporary variables
 sound_temp2 .rs 1
 sound_sq1_old .rs 1  ;the last value written to $4003
 sound_sq2_old .rs 1  ;the last value written to $4007
+sync_graphics .rs 1  ; used as a trigger to synchronize graphics with the music
 soft_apu_ports .rs 16
 
 ;reserve 6 bytes, one for each stream
@@ -434,6 +435,7 @@ song_headers:
   .word start_header      ; the sound of pressing start
   .word death_header      ; sounds when you die
   .word satan_header      ; sounds when satan is spawning
+  .word ih8myself_bgm_header ; title screen song
   ; TODO: add more headers here
 
   .include "sound_opcodes.asm"    ;our opcode subroutines, jump table and aliases
@@ -442,6 +444,7 @@ song_headers:
 	.include "song0.i"      ;holds the data for song 0 (header and data streams)
 	.include "song_boss_bgm.asm"
 	.include "song_main_bgm.asm"
+	.include "song_ih8myself.asm"
 	.include "sounds_boss.asm"
 	.include "song_avril14_bgm.asm"
 	.include "sounds_talk.asm"

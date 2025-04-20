@@ -5,6 +5,7 @@ volume_envelope = $A2
 duty = $A3
 set_loop1_counter = $A4
 loop1 = $A5
+sync = $A6
 
 ;-----------------------------------------------------------------------
 ;this is our JUMP TABLE!
@@ -15,6 +16,7 @@ sound_opcodes:
   .word se_op_duty                ;$A3
   .word se_op_set_loop1_counter   ;$A4
   .word se_op_loop1               ;$A5
+  .word se_op_sync                ;$A6
   ;etc, 1 entry per subroutine
 
 
@@ -77,4 +79,9 @@ se_op_loop1:
   iny                     ;skip the first byte of the address argument
                           ; the second byte will be skipped automatically upon return
                           ; (see se_fetch_byte after "jsr se_opcode_launcher")
+  rts
+
+se_op_sync:
+  lda [sound_ptr], y
+  sta sync_graphics  ; trigger sound synchronization with the graphics
   rts

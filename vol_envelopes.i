@@ -8,6 +8,9 @@ volume_envelopes:
   .word se_ve_vibrate
   .word se_ve_triangle_vibrate
   .word se_ve_quiet
+  .word se_ve_medium
+  .word se_ve_pulse_vibe
+  .word se_ve_drums
 
 
 se_ve_default:
@@ -29,10 +32,10 @@ se_ve_beat_quiet:
   .byte $FF
 
 se_ve_fast_fade_out:
-  .byte $0C, $0A, $08, $06, $04, $02, $00
+  .byte $0C, $0A, $08, $06, $04, $02, $00, $FF
 
 se_ve_vibrate:
-  .byte $0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$FF
+  .byte $0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$0F,$06,$FF
 
 se_ve_triangle_vibrate:
   .byte $0F,$00,$0F,$00,$0F,$00,$0F,$00,$0F,$00,$0F,$00,$0F,$00,$0F,$00,$FF
@@ -40,3 +43,11 @@ se_ve_triangle_vibrate:
 se_ve_quiet:
   .byte $01, $FF
 
+se_ve_medium:
+  .byte $04, $FF
+
+se_ve_pulse_vibe:
+  .byte $06, $08, $09, $08, $07, $08, $07, $06, $07, $06, $04, $FF
+
+se_ve_drums:
+  .byte $06, $06, $05, $05, $04, $04, $03, $02, $01, $00, $FF

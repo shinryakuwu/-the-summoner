@@ -1197,25 +1197,35 @@ GotCandySubroutine:
 
 MistakeSubroutine:
 	LDA eventstate
-	BEQ MistakeWarp
+	BEQ MistakeStart
 	CMP #$01
-	BEQ MistakeWalk
+	BEQ MistakeWarp
 	CMP #$02
-	BEQ MistakeTalk
+	BEQ MistakeWalk
 	CMP #$03
+	BEQ MistakeTalk
+	CMP #$04
 	BEQ MistakeMusic
+	RTS
+
+MistakeStart:
+	LDA #$11
+  JSR sound_load
+  LDA #$60
+  STA eventwaitcounter
+	INC eventstate
 	RTS
 
 MistakeWarp:
 	JSR TitleVillage1Warp
   LDA #$01
   STA loadcache
-  STA eventstate
   LDA #$10
   STA movecounter
   LDA switches
   ORA #%10000000
   STA switches
+  INC eventstate
 	RTS
 
 MistakeWalk:

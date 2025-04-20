@@ -610,9 +610,9 @@ SkipSetRestartEvent:
 	RTS
 
 SetStartEvent:
-	LDA #$11
+  LDA #$00
   JSR sound_load
-  LDA #$60
+  LDA #$02
   STA eventwaitcounter
 	LDA #$4C         ; event is triggered when you start the game
   STA eventnumber
