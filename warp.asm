@@ -218,6 +218,9 @@ Village2GhostRoom2Warp:
   LDA switches
   AND #%00100000
   BEQ GhostGuardEvent ; if no ghost pass, cannot enter the house
+  LDX #$01 ; stream
+  LDY #$0D ; volume envelope
+  JSR change_stream_ve ; mute the square chanel when inside the ghost room
   LDA #LOW(ghostroom2params)
   STA currentbgparams
   LDA #HIGH(ghostroom2params)
@@ -317,6 +320,9 @@ GhostRoom2Village2Warp:
   LDA switches
   AND #%00000001      ; when candy dropped
   BNE ForgotSomething
+  LDX #$01 ; stream
+  LDY #$0C ; volume envelope
+  JSR change_stream_ve ; restore the square chanel
   JSR SetVillage2Params
   LDA #LOW(ghostroom2village2warp)
   STA warpXYlow

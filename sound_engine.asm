@@ -172,6 +172,18 @@ sound_play_frame:
   rts
 
 ;--------------------------
+; change_stream_ve changes the volume of streams by in-game triggers
+;   input: 
+;       X: stream number
+;       Y: volume envelope
+change_stream_ve:
+	tya
+	sta stream_ve, x
+	lda #$00
+  sta stream_ve_index, x  ;reset volume envelope index to the beginning
+	rts
+
+;--------------------------
 ; se_fetch_byte reads one byte from a sound data stream and handles it
 ;   input: 
 ;       X: stream number    
@@ -429,7 +441,7 @@ song_headers:
   .word ex_talk_header    ; talk beep for ex
   .word boss_talk_header  ; talk beep for boss
   .word fella_talk_header ; talk beep for other chars
-  .word main_bgm_header   ; main theme
+  .word no_milk_bgm_header   ; main theme
   .word knock_header      ; the sound of knocking the door
   .word tear_header       ; the sound of tearing off the hand
   .word start_header      ; the sound of pressing start
@@ -443,8 +455,8 @@ song_headers:
   .include "vol_envelopes.i"
 	.include "song0.i"      ;holds the data for song 0 (header and data streams)
 	.include "song_boss_bgm.asm"
-	.include "song_main_bgm.asm"
-	.include "song_ih8myself.asm"
+	.include "song_no_milk_bgm.asm"
+	.include "song_ih8myself_bgm.asm"
 	.include "sounds_boss.asm"
 	.include "song_avril14_bgm.asm"
 	.include "sounds_talk.asm"

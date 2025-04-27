@@ -1245,8 +1245,8 @@ MistakeTalk:
 	RTS
 
 MistakeMusic:
-	; LDA #$0E
-  ; JSR sound_load
+	LDA #$0E
+  JSR sound_load
 	LDA #$00
 	STA eventstate
 	JSR PerformNonTextEventDone
