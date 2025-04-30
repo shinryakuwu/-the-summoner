@@ -5,12 +5,33 @@ knock_header:
   .byte $01            ;status byte (stream enabled)
   .byte NOISE          ;which channel
   .byte $70            ;duty (01)
-  .byte $05            ;volume envelope
+  .byte $0A            ;volume envelope
   .word knock_noise    ;pointer to stream
-  .byte $28            ;tempo
+  .byte $38            ;tempo
 
 knock_noise:
-  .byte $81, $0E, rest, $0E
+  .byte $81, $0C, $0D
+  .byte volume_envelope, $05
+  .byte $0E, rest
+  .byte volume_envelope, $0A
+  .byte $81, $0C, $0D
+  .byte volume_envelope, $05
+  .byte $0E, rest
+  .byte endsound
+
+drop_header:
+  .byte $01            ;1 stream
+
+  .byte SFX_1          ;which stream
+  .byte $01            ;status byte (stream enabled)
+  .byte NOISE          ;which channel
+  .byte $70            ;duty (01)
+  .byte $05            ;volume envelope
+  .word drop_noise     ;pointer to stream
+  .byte $20            ;tempo
+
+drop_noise:
+  .byte $81, $0E
   .byte endsound
 
 tear_header:

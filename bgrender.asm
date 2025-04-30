@@ -149,6 +149,8 @@ GhostRoom2AdditionalRender:
 GhostRoom2EraseCandyTile:
   LDA #$00
   STA $0219
+DrawCredits:
+  JSR DrawCreditsSubroutine
   RTS
 
 SkeletonHouseAdditionalRender:
@@ -233,6 +235,66 @@ ExHouseDrawLinesLoop:
 ExHouseDrawHole:
   JSR BreakWall
   JSR FlyingObjectsDisappear
+  RTS
+
+DrawCreditsSubroutine:
+  ; line 1
+  LDX #$20
+  LDY #$8C
+  JSR SetPPUAddrSubroutine
+  LDA #LOW(music)
+  STA creditslineaddr
+  LDA #HIGH(music)
+  STA creditslineaddr+1
+  JSR LoadCreditsTiles
+  ; line 2
+  LDX #$20
+  LDY #$AD
+  JSR SetPPUAddrSubroutine
+  LDA #LOW(xalins)
+  STA creditslineaddr
+  LDA #HIGH(xalins)
+  STA creditslineaddr+1
+  JSR LoadCreditsTiles
+  ; line 3
+  LDX #$20
+  LDY #$CD
+  JSR SetPPUAddrSubroutine
+  LDA #LOW(my_dad)
+  STA creditslineaddr
+  LDA #HIGH(my_dad)
+  STA creditslineaddr+1
+  JSR LoadCreditsTiles
+  ; line 4
+  LDX #$20
+  LDY #$EB
+  JSR SetPPUAddrSubroutine
+  LDA #LOW(all_else)
+  STA creditslineaddr
+  LDA #HIGH(all_else)
+  STA creditslineaddr+1
+  JSR LoadCreditsTiles
+  ; line 5
+  LDX #$21
+  LDY #$0B
+  JSR SetPPUAddrSubroutine
+  LDA #LOW(shinryakuwu)
+  STA creditslineaddr
+  LDA #HIGH(shinryakuwu)
+  STA creditslineaddr+1
+  JSR LoadCreditsTiles
+  RTS
+
+LoadCreditsTiles:
+  LDY #$00
+LoadCreditsTilesLoop:
+  LDA [creditslineaddr], y
+  CMP #$FE
+  BEQ LoadCreditsTilesDone
+  STA $2007
+  INY
+  JMP LoadCreditsTilesLoop
+LoadCreditsTilesDone:
   RTS
 
 SetPPUAddrSubroutine:

@@ -448,6 +448,8 @@ song_headers:
   .word death_header      ; sounds when you die
   .word satan_header      ; sounds when satan is spawning
   .word ih8myself_bgm_header ; title screen song
+  .word no_milk2_bgm_header  ; main theme, but starting from another fragment
+  .word drop_header       ; the sound of dropping a bag
   ; TODO: add more headers here
 
   .include "sound_opcodes.asm"    ;our opcode subroutines, jump table and aliases

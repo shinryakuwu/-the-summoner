@@ -86,7 +86,7 @@ OldLadyKnock:
   JSR sound_load
 	LDA #$15
 	STA movecounter
-	LDA #$30
+	LDA #$40
 	STA eventwaitcounter
 	INC eventstate
 	RTS
@@ -163,8 +163,12 @@ SatanWalkSubroutineDone:
 	STA eventnumber
 	LDA #$00
 	STA loadcache      ; disable loading cat graphics from cache
+	LDA #$16
+  JSR sound_load
 	LDA #$21           ; cat puts down his bag
 	STA $0211
+	LDA #$30
+	STA eventwaitcounter
 	RTS
 
 SatanGlitchSubroutine:
@@ -287,22 +291,30 @@ LoadGlitchTextDone:
   STA glitchcount
 	RTS
 
+OfficeDisableMusic:
+	LDA #$00
+  JSR sound_load
+  INC eventstate
+	RTS
+
 OfficeSubroutine:
 	LDA eventstate
-	BEQ OfficeTeleport
+	BEQ OfficeDisableMusic
 	CMP #$01
-	BEQ OfficeLookUp
+	BEQ OfficeTeleport
 	CMP #$02
-	BEQ OfficeGhostMovesLeft
+	BEQ OfficeLookUp
 	CMP #$03
-	BEQ OfficeCatMovesLeft
+	BEQ OfficeGhostMovesLeft
 	CMP #$04
-	BEQ OfficeCatMovesRight
+	BEQ OfficeCatMovesLeft
 	CMP #$05
-	BEQ OfficeCatMovesDown
+	BEQ OfficeCatMovesRight
 	CMP #$06
-	BEQ OfficeGhostMovesRight
+	BEQ OfficeCatMovesDown
 	CMP #$07
+	BEQ OfficeGhostMovesRight
+	CMP #$08
 	BEQ ParkTeleport
 	RTS
 
@@ -316,8 +328,7 @@ OfficeTeleport:
 	STA buttons
 	LDA #$40
 	STA eventwaitcounter
-	LDA #$01
-	STA eventstate
+	INC eventstate
 	LDA #DELAYGHOSTROOM1
   STA nmiwaitcounter
 	RTS
@@ -333,8 +344,7 @@ OfficeLookUp:
   STA textpartscounter
   LDA #$01
   STA action
-  LDA #$02
-	STA eventstate
+  INC eventstate
 	RTS
 
 OfficeGhostMovesLeft:
@@ -343,29 +353,25 @@ OfficeGhostMovesLeft:
 	JSR OfficeGhostMoves
 	LDA #$60
 	STA eventwaitcounter
-	LDA #$03
-	STA eventstate
+	INC eventstate
 	RTS
 
 OfficeCatMovesLeft:
 	LDX #MVLEFT
 	JSR OfficeCatMoves
-	LDA #$04
-	STA eventstate
+	INC eventstate
 	RTS
 
 OfficeCatMovesRight:
 	LDX #MVRIGHT
 	JSR OfficeCatMoves
-	LDA #$05
-	STA eventstate
+	INC eventstate
 	RTS
 
 OfficeCatMovesDown:
 	LDX #MVDOWN
 	JSR OfficeCatMoves
-	LDA #$06
-	STA eventstate
+	INC eventstate
 	RTS
 
 OfficeGhostMovesRight:
@@ -382,8 +388,7 @@ OfficeGhostMovesRight:
   STA textpartscounter
   LDA #$01
   STA action
-  LDA #$07
-	STA eventstate
+  INC eventstate
 	RTS
 
 OfficeGhostMoves:
@@ -839,6 +844,8 @@ RestartSubroutine:
 	RTS
 
 RestartWarp:
+	LDA #$0E
+  JSR sound_load
 	LDA #$00
   STA shakescreen
 	LDA #MVRIGHT

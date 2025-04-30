@@ -100,7 +100,7 @@ Village1Village2Warp:
   RTS
 
 Village1SkeletonHouseWarp:
-  LDA #$02
+  LDA #$00
   JSR sound_load
   LDA #LOW(skeletonhouseparams)
   STA currentbgparams
@@ -203,6 +203,8 @@ Village2ServerRoomWarp:
   RTS
 
 Village2ExHouseWarp:
+  LDA #$00
+  JSR sound_load
   LDA #LOW(exhouseparams)
   STA currentbgparams
   LDA #HIGH(exhouseparams)
@@ -273,7 +275,7 @@ SkeletonHouseVillage1WarpCheckDone:
   RTS
 
 SkeletonHouseVillage1Warp:
-  LDA #$00
+  LDA #$0E
   JSR sound_load
   JSR SetVillage1Params
   LDA #LOW(skeletonhousevillage1warp)
@@ -375,12 +377,22 @@ ParkGhostRoom1Warp:
   RTS
 
 GhostRoom1ParkWarp:
+  LDA #$0E
+  JSR sound_load
   JSR SetParkParams
   LDA #LOW(ghostroom1parkwarp)
   STA warpXYlow
   LDA #HIGH(ghostroom1parkwarp)
   STA warpXYhigh
   JSR PrepareForBGRender
+  RTS
+
+ForgotSomethingCheck:
+  LDA candyswitches
+  AND #%00110000
+  CMP #%00110000
+  BNE ForgotSomething
+  JMP ExHouseVillage2WarpAfterCheck
   RTS
 
 ExHouseVillage2WarpCheck:
@@ -397,19 +409,13 @@ ExHouseVillage2WarpCheck:
 ExHouseVillage2WarpCheckDone:
   RTS
 
-ForgotSomethingCheck:
-  LDA candyswitches
-  AND #%00110000
-  CMP #%00110000
-  BNE ForgotSomething
-  JMP ExHouseVillage2WarpAfterCheck
-  RTS
-
 ExHouseVillage2Warp:
   LDA switches
   AND #%01000000      ; when boss defeated
   BNE ForgotSomethingCheck
 ExHouseVillage2WarpAfterCheck:
+  LDA #$15
+  JSR sound_load
   JSR SetVillage2Params
   LDA #LOW(exhousevillage2warp)
   STA warpXYlow
@@ -419,6 +425,8 @@ ExHouseVillage2WarpAfterCheck:
   RTS
 
 DeadCatHouseWarp:
+  LDA #$0E
+  JSR sound_load
   LDA #LOW(cathouseparams)
   STA currentbgparams
   LDA #HIGH(cathouseparams)
@@ -493,6 +501,8 @@ SatanEventParams:
   AND #CANDYGATHERED
   CMP #CANDYGATHERED
   BNE SatanEventParamsDone
+  LDA #$00
+  JSR sound_load
   LDA #$43
   STA eventnumber
   LDA #$0E

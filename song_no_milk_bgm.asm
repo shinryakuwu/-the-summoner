@@ -25,6 +25,33 @@ no_milk_bgm_header:
   .word milk_bgm_noise   ;pointer to stream
   .byte $40              ;tempo
 
+no_milk2_bgm_header:
+  .byte $03              ;3 streams
+
+  .byte MUSIC_SQ2        ;which stream
+  .byte $01              ;status byte (stream enabled)
+  .byte SQUARE_2         ;which channel
+  .byte $B0              ;initial duty
+  .byte $0C              ;volume envelope
+  .word milk2_bgm_square ;pointer to stream
+  .byte $40              ;tempo
+
+  .byte MUSIC_TRI        ;which stream
+  .byte $01              ;status byte (stream enabled)
+  .byte TRIANGLE         ;which channel
+  .byte $80              ;initial volume (on)
+  .byte $00              ;volume envelope
+  .word milk2_bgm_tri    ;pointer to stream
+  .byte $40              ;tempo
+
+  .byte MUSIC_NOI        ;which stream
+  .byte $01
+  .byte NOISE            ;which channel
+  .byte $30              ;initial duty
+  .byte $0B              ;volume envelope
+  .word milk2_bgm_noise  ;pointer to stream
+  .byte $40              ;tempo
+
 milk_bgm_square:
   .byte set_loop1_counter, $02
 .part1
@@ -51,6 +78,7 @@ milk_bgm_square:
   .byte E4, $83, D4, $81, rest, $83, D4, $81, rest, $84, D4, E4, $88, A3, rest
 .part4
   .byte $9F, rest, $9F, rest, $82, rest
+milk2_bgm_square:
 .part5
   .byte $84, rest, A4, A4, $83, B4, $81, rest, $85, B4, $83, rest
   .byte $84, B4, E5, $86, Cs5, $82, rest, $84, B4, E5, $86, Cs5, $82, rest, $88, B4
@@ -106,9 +134,10 @@ milk_bgm_tri:
   .byte A3, E4, C5, E4
   .byte loop1                             ;finite loop (2 times)
   .word .part4
+milk2_bgm_tri:
   .byte set_loop1_counter, $03
 .part5
-  .byte A3, E4, A4, E4
+  .byte $84, A3, E4, A4, E4
   .byte Gs3, B3, E4, B3
   .byte Fs4, A3, D4, A3
   .byte E3, B3, E4, B3
@@ -149,6 +178,7 @@ milk_bgm_noise:
   .byte $88, $0E, $84, $0A, $0E, $88, $0E, $84, $0A, $82, $0A, $0A
 .part4
   .byte $88, $0E, $0A, $0E, $0A, $0E, $0A, $0E, $0A
+milk2_bgm_noise:
   .byte set_loop1_counter, $03
 .part5
   .byte $88, $0E, $84, $0A, $0E, $88, $0E, $0A
