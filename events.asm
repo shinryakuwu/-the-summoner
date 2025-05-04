@@ -824,6 +824,9 @@ ForgotTalk:
 SkatingSubroutine:
 	LDA eventstate
 	BEQ SkatingWarp
+	CMP #$01
+	BEQ SkatingMusic
+	; at the end this code will be running forever intentionally
 	RTS
 
 SkatingWarp:
@@ -831,6 +834,12 @@ SkatingWarp:
 	INC eventstate
 	LDA #DELAYENDSCREEN
   STA nmiwaitcounter
+	RTS
+
+SkatingMusic:
+	LDA #$17
+  JSR sound_load
+  INC eventstate
 	RTS
 
 RestartSubroutine:

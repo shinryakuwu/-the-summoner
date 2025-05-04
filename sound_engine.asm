@@ -450,6 +450,7 @@ song_headers:
   .word ih8myself_bgm_header ; title screen song
   .word no_milk2_bgm_header  ; main theme, but starting from another fragment
   .word drop_header       ; the sound of dropping a bag
+  .word fren_bgm_header   ; ending screen theme
   ; TODO: add more headers here
 
   .include "sound_opcodes.asm"    ;our opcode subroutines, jump table and aliases
@@ -459,6 +460,7 @@ song_headers:
 	.include "song_boss_bgm.asm"
 	.include "song_no_milk_bgm.asm"
 	.include "song_ih8myself_bgm.asm"
+	.include "song_fren_bgm.asm"
 	.include "sounds_boss.asm"
 	.include "song_avril14_bgm.asm"
 	.include "sounds_talk.asm"

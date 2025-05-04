@@ -13,6 +13,8 @@ volume_envelopes:
   .word se_ve_drums
   .word se_ve_pulse_quiet
   .word se_ve_muted
+  .word se_ve_pulse_medium
+  .word se_ve_pulse_loud
 
 se_ve_default:
   .byte $0A, $FF
@@ -58,3 +60,9 @@ se_ve_pulse_quiet:
 
 se_ve_muted:
   .byte $00, $FF
+
+se_ve_pulse_medium:
+  .byte $05, $07, $08, $07, $06, $05, $FF
+
+se_ve_pulse_loud:
+  .byte $07, $09, $0A, $09, $08, $07, $FF
