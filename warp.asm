@@ -277,6 +277,8 @@ SkeletonHouseVillage1WarpCheckDone:
 SkeletonHouseVillage1Warp:
   LDA #$0E
   JSR sound_load
+  LDA #$00
+  STA jukeboxtrigger
   JSR SetVillage1Params
   LDA #LOW(skeletonhousevillage1warp)
   STA warpXYlow

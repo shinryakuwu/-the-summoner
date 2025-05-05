@@ -289,6 +289,14 @@ SkeletonHouseEventsSubroutine:
 	LDY #$10
 	JSR CheckTilesForEvent
 	BNE SkeletonParams
+	LDX #$08
+	LDY #$06
+	JSR CheckTilesForEvent
+	BNE JukeboxParams
+	LDX #$09
+	LDY #$06
+	JSR CheckTilesForEvent
+	BNE JukeboxParams
 SkeletonHouseEventsSubroutineDone:
 	RTS
 
@@ -312,6 +320,14 @@ CandymanParams:
 	STA eventnumber
 	JSR SettingEventParamsDone
 CandymanParamsDone:
+	RTS
+JukeboxParams:
+	LDA jukeboxtrigger
+	BNE JukeboxParamsDone
+	LDA #$4D
+	STA eventnumber
+	JSR SettingEventParamsDone
+JukeboxParamsDone:
 	RTS
 
 ServerRoomEventsSubroutine:

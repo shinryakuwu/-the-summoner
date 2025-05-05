@@ -21,6 +21,7 @@ initial_events_jump_table:
 	.word BossCandy1Subroutine-1
 	.word BossCandy2Subroutine-1
 	.word MistakeSubroutine-1
+	.word JukeboxSubroutine-1
 
 NonTextEvents:
 	; implementing the RTS trick here https://www.nesdev.org/wiki/RTS_Trick
@@ -1266,6 +1267,14 @@ MistakeMusic:
 	LDA #$00
 	STA eventstate
 	JSR PerformNonTextEventDone
+	RTS
+
+JukeboxSubroutine:
+	LDA #$18
+  JSR sound_load
+  LDA #$01
+  STA jukeboxtrigger
+  JSR PerformNonTextEventDone
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional
