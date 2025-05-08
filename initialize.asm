@@ -271,6 +271,9 @@ SetInitialAttributes:
   LDA #$04
   STA action ; initial state is waiting for start button to be pressed
 
+  LDA #$14
+  JSR sound_load
+
 ReturnToNMI:
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
   STA $2000

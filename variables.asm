@@ -131,6 +131,8 @@ catlowcollision  .rs 1  ; an offset value used to define the lowest point of cat
 animationspeed   .rs 1  ; stores animation speed for current location
 talkbeepdelay    .rs 1  ; defines how long to wait between talk beeping
 titleframenum    .rs 1  ; used for title text color animation
+creditslineaddr  .rs 2  ; used for drawing credits to store current line
+jukeboxtrigger   .rs 1  ; defines whether jukebox is on (0 - off, 1 - on)
 
 ;; DECLARE SOME CONSTANTS HERE
 

@@ -28,7 +28,6 @@
   .include "events.asm"         ; logic for performing any events aside from rendering text
   .include "dots.asm"           ; logic for drawing dots identifying that the action is possible
   .include "scroll.asm"
-  .include "boss_fight.asm"     ; boss fight logic
 
 ;;;;;;;;;;;;;;
 
@@ -43,6 +42,7 @@
   .org $C000
 
   .include "tiles_sprites.asm"    ; stores tiles for sprites
+  .include "boss_fight.asm"       ; boss fight logic
   .include "projectiles.asm"      ; logic for projectiles
   .include "warp.asm"             ; teleport character to needed location and position
 

@@ -203,6 +203,8 @@ Village2ServerRoomWarp:
   RTS
 
 Village2ExHouseWarp:
+  LDA #$00
+  JSR sound_load
   LDA #LOW(exhouseparams)
   STA currentbgparams
   LDA #HIGH(exhouseparams)
@@ -218,6 +220,9 @@ Village2GhostRoom2Warp:
   LDA switches
   AND #%00100000
   BEQ GhostGuardEvent ; if no ghost pass, cannot enter the house
+  LDX #$01 ; stream
+  LDY #$0D ; volume envelope
+  JSR change_stream_ve ; mute the square chanel when inside the ghost room
   LDA #LOW(ghostroom2params)
   STA currentbgparams
   LDA #HIGH(ghostroom2params)
@@ -270,8 +275,10 @@ SkeletonHouseVillage1WarpCheckDone:
   RTS
 
 SkeletonHouseVillage1Warp:
-  LDA #$00
+  LDA #$0E
   JSR sound_load
+  LDA #$00
+  STA jukeboxtrigger
   JSR SetVillage1Params
   LDA #LOW(skeletonhousevillage1warp)
   STA warpXYlow
@@ -317,6 +324,9 @@ GhostRoom2Village2Warp:
   LDA switches
   AND #%00000001      ; when candy dropped
   BNE ForgotSomething
+  LDX #$01 ; stream
+  LDY #$0C ; volume envelope
+  JSR change_stream_ve ; restore the square chanel
   JSR SetVillage2Params
   LDA #LOW(ghostroom2village2warp)
   STA warpXYlow
@@ -369,12 +379,22 @@ ParkGhostRoom1Warp:
   RTS
 
 GhostRoom1ParkWarp:
+  LDA #$0E
+  JSR sound_load
   JSR SetParkParams
   LDA #LOW(ghostroom1parkwarp)
   STA warpXYlow
   LDA #HIGH(ghostroom1parkwarp)
   STA warpXYhigh
   JSR PrepareForBGRender
+  RTS
+
+ForgotSomethingCheck:
+  LDA candyswitches
+  AND #%00110000
+  CMP #%00110000
+  BNE ForgotSomething
+  JMP ExHouseVillage2WarpAfterCheck
   RTS
 
 ExHouseVillage2WarpCheck:
@@ -391,19 +411,13 @@ ExHouseVillage2WarpCheck:
 ExHouseVillage2WarpCheckDone:
   RTS
 
-ForgotSomethingCheck:
-  LDA candyswitches
-  AND #%00110000
-  CMP #%00110000
-  BNE ForgotSomething
-  JMP ExHouseVillage2WarpAfterCheck
-  RTS
-
 ExHouseVillage2Warp:
   LDA switches
   AND #%01000000      ; when boss defeated
   BNE ForgotSomethingCheck
 ExHouseVillage2WarpAfterCheck:
+  LDA #$15
+  JSR sound_load
   JSR SetVillage2Params
   LDA #LOW(exhousevillage2warp)
   STA warpXYlow
@@ -413,6 +427,8 @@ ExHouseVillage2WarpAfterCheck:
   RTS
 
 DeadCatHouseWarp:
+  LDA #$0E
+  JSR sound_load
   LDA #LOW(cathouseparams)
   STA currentbgparams
   LDA #HIGH(cathouseparams)
@@ -487,6 +503,8 @@ SatanEventParams:
   AND #CANDYGATHERED
   CMP #CANDYGATHERED
   BNE SatanEventParamsDone
+  LDA #$00
+  JSR sound_load
   LDA #$43
   STA eventnumber
   LDA #$0E
