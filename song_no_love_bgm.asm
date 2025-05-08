@@ -55,6 +55,7 @@ love_bgm_square:
   .byte C3
   .byte volume_envelope, $13
   .byte Cs3
+  .byte volume_envelope, $11
   .byte loop                              ;infinite loop
   .word love_bgm_square
 

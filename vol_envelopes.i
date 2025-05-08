@@ -17,7 +17,11 @@ volume_envelopes:
   .word se_ve_pulse_loud
   .word se_ve_drums_echo
   .word se_ve_pulse_vibe_loud
+  .word se_ve_pulse_vibe_echo
   .word se_ve_pulse_vibe_fade_in
+  .word se_ve_pulse_echo
+  .word se_ve_pulse_vibe_medium
+  .word se_ve_pulse_vibe_soft
 
 se_ve_default:
   .byte $0A, $FF
@@ -78,3 +82,15 @@ se_ve_pulse_vibe_echo:
 
 se_ve_pulse_vibe_fade_in:
   .byte $04, $07, $0A, $07, $05, $09, $0B, $0E, $0B, $09, $07, $09, $0B, $09, $07, $05, $07, $09, $07, $05, $03, $04, $06, $04, $02, $FF
+
+se_ve_pulse_echo:
+  .byte $09, $07, $05, $03, $07, $05, $03, $05, $03, $01, $09, $07, $05, $03, $07, $05, $03, $05, $03, $01
+  .byte $09, $07, $05, $03, $07, $05, $03, $05, $03, $01, $09, $07, $05, $03, $07, $05, $03, $05, $03, $01
+  .byte $09, $07, $05, $03, $07, $05, $03, $05, $03, $01, $09, $07, $05, $03, $07, $05, $03, $05, $03, $01, $FF
+
+se_ve_pulse_vibe_medium:
+  .byte $09, $07, $05, $02, $05, $07, $09, $07, $05, $02, $05, $07, $09, $07, $05, $02, $05, $07
+  .byte $09, $07, $05, $02, $05, $07, $09, $07, $05, $02, $05, $07, $FF
+
+se_ve_pulse_vibe_soft:
+  .byte $08, $06, $04, $06, $08, $06, $04, $06, $08, $06, $04, $06, $08, $06, $04, $06, $08, $06, $04, $06, $08, $06, $04, $06, $08, $06, $04, $06, $FF

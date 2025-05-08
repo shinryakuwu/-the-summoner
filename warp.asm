@@ -100,7 +100,7 @@ Village1Village2Warp:
   RTS
 
 Village1SkeletonHouseWarp:
-  LDA #$00
+  LDA #$02
   JSR sound_load
   LDA #LOW(skeletonhouseparams)
   STA currentbgparams

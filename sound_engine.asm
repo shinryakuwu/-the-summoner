@@ -429,9 +429,9 @@ se_set_apu:
 song_headers:
 	.word song0_header     ;this is a silence song.  See song0.i for more details
   .word boss_bgm_header  ; boss fight theme
-  .word avril14_bgm_header
-  .word boss_step_header ; sounds of gojira approaching
-  .word boss_steps_header
+  .word tired_bgm_header ; skeleton house music
+  .word boss_step_header ; the sound of gojira stepping
+  .word boss_steps_header ; sounds of gojira approaching
   .word boss_crash_header ; the sound of gojira crashing the wall
   .word boss_jump_header  ; the sound of gojira landing after a jump
   .word boss_fire_header  ; the sound of gojira throwing a fireball
@@ -452,7 +452,6 @@ song_headers:
   .word drop_header       ; the sound of dropping a bag
   .word fren_bgm_header   ; ending screen theme
   .word no_love_bgm_header   ; jukebox song
-  ; TODO: add more headers here
 
   .include "sound_opcodes.asm"    ;our opcode subroutines, jump table and aliases
   .include "note_table.i" ;period lookup table for notes
@@ -464,6 +463,6 @@ song_headers:
 	.include "song_fren_bgm.asm"
 	.include "song_no_love_bgm.asm"
 	.include "sounds_boss.asm"
-	.include "song_avril14_bgm.asm"
+	.include "song_tired_bgm.asm"
 	.include "sounds_talk.asm"
 	.include "sounds.asm"
