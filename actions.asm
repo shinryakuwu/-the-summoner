@@ -193,7 +193,7 @@ StartGhostParams:
 OldLadyParams:
 	LDA candyswitches
 	AND #%00000001
-  BNE OldLadyParamsDone ; if candy already gathered, skip event
+	BNE OldLadyParamsDone ; if candy already gathered, skip event
 	LDA #$40
 	STA eventnumber
 	JSR SettingEventParamsDone
@@ -310,7 +310,7 @@ SkeletonParams:
 CandymanParams:
 	LDA candyswitches
 	AND #%00000010
-  BNE CandymanParamsDone ; if candy already gathered, skip event
+	BNE CandymanParamsDone ; if candy already gathered, skip event
 	LDA #LOW(candyman)
 	STA currenttextlow
 	LDA #HIGH(candyman)
@@ -383,17 +383,17 @@ ParkEventsCheckLeft:
 
 OfficeWarpParams:
 	LDA switches
-  AND #%00100000
-  BNE OfficeWarpParamsDone ; event appears when no ghost pass
+	AND #%00100000
+	BNE OfficeWarpParamsDone ; event appears when no ghost pass
 	LDA switches
-  AND #%00010000
-  BEQ OfficeWarpParamsDone ; event appears after getting a hint
+	AND #%00010000
+	BEQ OfficeWarpParamsDone ; event appears after getting a hint
 	LDA #$03
 	STA eventnumber
 	LDA #LOW(nothing)
-  STA currenttextlow
-  LDA #HIGH(nothing)
-  STA currenttexthigh
+	STA currenttextlow
+	LDA #HIGH(nothing)
+	STA currenttexthigh
 	JSR SettingEventParamsDone
 OfficeWarpParamsDone:
 	RTS
@@ -449,7 +449,7 @@ BigGhostParams:
 MathCandyParams:
 	LDA candyswitches
 	AND #%00001000
-  BNE MathCandyParamsDone ; if candy already gathered, skip event
+	BNE MathCandyParamsDone ; if candy already gathered, skip event
 	LDA #$42
 	STA eventnumber
 	JSR SettingEventParamsDone
@@ -488,8 +488,8 @@ DinoDoorParams:
 	AND #%01000000
 	BNE DinoDoorParamsDone
 	LDA lives
-  CMP #CATLIVES
-  BNE DinoDoorSecondAttempt
+	CMP #CATLIVES
+	BNE DinoDoorSecondAttempt
 	LDA #LOW(dinosaur)
 	STA currenttextlow
 	LDA #HIGH(dinosaur)
@@ -539,7 +539,7 @@ ExParamsBossDefeated:
 BossCandy1Params:
 	LDA candyswitches
 	AND #%00010000
-  BNE BossCandyParamsDone ; if candy already gathered, skip event
+	BNE BossCandyParamsDone ; if candy already gathered, skip event
 	LDA #$4A
 	STA eventnumber
 	JSR SettingEventParamsDone
@@ -547,7 +547,7 @@ BossCandy1Params:
 BossCandy2Params:
 	LDA candyswitches
 	AND #%00100000
-  BNE BossCandyParamsDone ; if candy already gathered, skip event
+	BNE BossCandyParamsDone ; if candy already gathered, skip event
 	LDA #$4B
 	STA eventnumber
 	JSR SettingEventParamsDone
@@ -608,8 +608,8 @@ StartButtonLogicSubroutine:
 	BEQ StartButtonNotPressed
 	LDA location
 	BEQ SetStartEvent
-  CMP #$0B
-  BEQ SetRestartEvent
+	CMP #$0B
+	BEQ SetRestartEvent
 StartButtonNotPressed:
 	RTS
 
@@ -621,67 +621,67 @@ SetRestartEvent:
 	LDA #$48
 	STA eventnumber
 	LDA #$00
-  JSR sound_load
+	JSR sound_load
 SkipSetRestartEvent:
 	RTS
 
 SetStartEvent:
-  LDA #$00
-  JSR sound_load
-  LDA #$02
-  STA eventwaitcounter
+	LDA #$00
+	JSR sound_load
+	LDA #$02
+	STA eventwaitcounter
 	LDA #$4C         ; event is triggered when you start the game
-  STA eventnumber
-  LDA #$06
-  STA action
+	STA eventnumber
+	LDA #$06
+	STA action
 	RTS
 
 TalkBeep:
-  LDA talkbeepdelay
-  BNE TalkBeepDone
-  JSR DefineBeepTone
-  CMP #$FF
-  BEQ TalkBeepSkip
-  JSR sound_load ; the song is stored in A at this point
-  LDA #$04
-  STA talkbeepdelay
+	LDA talkbeepdelay
+	BNE TalkBeepDone
+	JSR DefineBeepTone
+	CMP #$FF
+	BEQ TalkBeepSkip
+	JSR sound_load ; the song is stored in A at this point
+	LDA #$04
+	STA talkbeepdelay
 TalkBeepSkip:
-  RTS
+	RTS
 TalkBeepDone:
-  DEC talkbeepdelay
-  RTS
+	DEC talkbeepdelay
+	RTS
 
 DefineBeepTone:
-  ; the tone is defined based on the current cursor
-  LDA textcursor
-  CMP #$85
-  BEQ SetCatBeep
-  CMP #$64
-  BEQ SetGrilBeep
-  CMP #$74
-  BEQ SetGrilBeep
-  CMP #$76
-  BEQ SetBossBeep
-  CMP #$77
-  BEQ SetBossBeep
-  CMP #$86
-  BEQ SetFellaBeep
-  CMP #$75
-  BEQ SetFellaBeep
-  CMP #$65
-  BEQ SetFellaBeep
-  CMP #$87
-  BEQ SetFellaBeep
-  RTS
+	; the tone is defined based on the current cursor
+	LDA textcursor
+	CMP #$85
+	BEQ SetCatBeep
+	CMP #$64
+	BEQ SetGrilBeep
+	CMP #$74
+	BEQ SetGrilBeep
+	CMP #$76
+	BEQ SetBossBeep
+	CMP #$77
+	BEQ SetBossBeep
+	CMP #$86
+	BEQ SetFellaBeep
+	CMP #$75
+	BEQ SetFellaBeep
+	CMP #$65
+	BEQ SetFellaBeep
+	CMP #$87
+	BEQ SetFellaBeep
+	RTS
 SetCatBeep:
-  LDA #$0A
-  RTS
+	LDA #$0A
+	RTS
 SetGrilBeep:
-  LDA #$0B
-  RTS
+	LDA #$0B
+	RTS
 SetBossBeep:
-  LDA #$0C
-  RTS
+	LDA #$0C
+	RTS
 SetFellaBeep:
-  LDA #$0D
-  RTS
+	LDA #$0D
+	RTS

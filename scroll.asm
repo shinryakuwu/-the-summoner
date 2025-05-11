@@ -12,14 +12,14 @@ MoveScreenRight:
 	JMP BgScrollSetValues
 EndScreenScroll:
 	INC bgscrollposition
-  INC bgscrollposition
-  LDA bgscrollposition
+	INC bgscrollposition
+	LDA bgscrollposition
 BgScrollSetValues:
-  STA $2005       ; store the needed value for horizontal scroll
-  LDA #$00
-  STA $2005
-  STA sleeping    ; wake up the main program
-  RTS
+	STA $2005       ; store the needed value for horizontal scroll
+	LDA #$00
+	STA $2005
+	STA sleeping    ; wake up the main program
+	RTS
 
 SkipScroll:
 	LDA #$00

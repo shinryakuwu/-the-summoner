@@ -1,7 +1,7 @@
 BgRenderSubroutine:
-	LDA bgrender
-	CMP #$01
-	BEQ ActivateChangeLocationSequence
+  LDA bgrender
+  CMP #$01
+  BEQ ActivateChangeLocationSequence
   CMP #$02
   BEQ LoadBackgroundForLocation
   CMP #$03
@@ -17,8 +17,8 @@ BgRenderSubroutine:
   RTS
 
 EndBgRenderSubroutine:
-	LDA #$00
-	STA bgrender
+  LDA #$00
+  STA bgrender
   RTS
 
 ActivateChangeLocationSequence:

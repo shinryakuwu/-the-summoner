@@ -169,8 +169,8 @@ BossSpawnsFireball:
 	; when limit not reached, proceed throwing fireballs
 	JSR BossOpensMouth
 	LDA #$07
-  JSR sound_load
-  ; load a fireball tile into projectile cache
+	JSR sound_load
+	; load a fireball tile into projectile cache
 	LDA projectilenumber
 	ASL A
 	ASL A    ; multiply by 4 to make it a pointer
@@ -241,8 +241,8 @@ FallingHydrantsStopShakescreen:
 	RTS
 FallingHydrantsStopShakescreenDone:
 	LDA #$00
-  STA shakescreen
-  STA hydrantsstate
+	STA shakescreen
+	STA hydrantsstate
 	RTS
 
 FinalHydrantLoad:
@@ -267,15 +267,15 @@ FinalHydrantFall:
 	RTS
 FinalHydrantFallDone:
 	LDA #$00
-  JSR sound_load
-  LDA #$8C
+	JSR sound_load
+	LDA #$8C
 	STA $023D
 	INC hydrantsstate
 	RTS
 
 FinalHydrantSound:
 	LDA #$08
-  JSR sound_load
+	JSR sound_load
 	LDA #BOSSDEFEATEDDELAY
 	STA movecounter
 	INC fightstate
@@ -424,9 +424,9 @@ HydrantFallsDownDone:
 	INY
 	STA HYDRANTSPPUADDRESS, y
 	LDA #$03
-  JSR sound_load
+	JSR sound_load
 AlterHydrantState:
-  PLA
+	PLA
 	TAX
 	INC projectilestate, x
 	RTS
@@ -442,7 +442,7 @@ HydrantBlinks:
 	INX
 	LDA projectilestate, y
 	AND #%00000001      ; branch depends on whether projectilestate is even/odd
-  BNE HydrantAppears  ; odd
+	BNE HydrantAppears  ; odd
 HydrantDisappears:
 	LDA #$00
 	STA HYDRANTSPPUADDRESS, x
@@ -555,7 +555,7 @@ NoCollision:
 ProcessDeath:
 	; JSR DrawOneDot
 	LDA #$00
-  JSR sound_load
+	JSR sound_load
 	LDA #$49
 	STA eventnumber
 	LDA #$06
