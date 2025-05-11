@@ -11,7 +11,7 @@ CheckActionDots:
 	BEQ DotsInactive
 	INC dotscounter
 	LDA dotscounter
-	CMP #$40            ; TODO: change to constant, add different values for PAL/NTSC
+	CMP #DELAYACTIONDOTS
 	BEQ RenewDotsCounter
 	JMP DefineCurrentDotsFrame
 DotsInactive:

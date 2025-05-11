@@ -17,7 +17,7 @@ sound_temp1 .rs 1           ;temporary variables
 sound_temp2 .rs 1
 sound_sq1_old .rs 1  ;the last value written to $4003
 sound_sq2_old .rs 1  ;the last value written to $4007
-sync_graphics .rs 1  ; used as a trigger to synchronize graphics with the music
+sync_graphics .rs 1  ;used as a trigger to synchronize graphics with the music
 soft_apu_ports .rs 16
 
 ;reserve 6 bytes, one for each stream

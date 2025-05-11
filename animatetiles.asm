@@ -454,7 +454,6 @@ BigGhostTilesWithoutCandy:
 	JMP TransformBigGhost
 
 AnimateEndSubroutine:
-	; TODO: might wanna make this animation faster
 	LDA objectframenum
 	BEQ AnimateCatSkating
 	DEC objectframenum

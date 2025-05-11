@@ -125,10 +125,10 @@ LoadAttribute:
 LoadAttributesLoop:
   LDA [currentattrlow], y ; load data from address (attribute + the value in y)
   STA $2007               ; write to PPU
-  INY                     ; X = X + 1
-  ; TODO: add different values for PAL/NTSC
-  CPY #$40                ; load attributes to bg attributes table 64 times
+  INY                     ; Y = Y + 1
+  CPY #$30                ; load attributes to bg attributes table 48 times
   BNE LoadAttributesLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
+  JSR LoadZeroAttribute
   RTS
 
 LoadSingleAttribute:
@@ -137,10 +137,18 @@ LoadSingleAttribute:
 LoadSingleAttributeLoop:
   STX $2007                    ; write to PPU
   INY
-  ; TODO: add different values for PAL/NTSC
-  ; CPY #$40                     ; load X to bg attributes table 64 times
-  CPY #$28
-  BNE LoadSingleAttributeLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
+  CPY #$28                     ; load X to bg attributes table 40 times
+  BNE LoadSingleAttributeLoop  ; Branch to LoadSingleAttributeLoop if compare was Not Equal to zero
+  RTS
+
+LoadZeroAttribute:
+  LDY #$00
+  LDA #$00
+LoadZeroAttributeLoop:
+  STA $2007               ; write to PPU
+  INY                     ; Y = Y + 1
+  CPY #$10                ; load zero attribute to bg attributes table 16 times
+  BNE LoadZeroAttributeLoop  ; Branch to LoadZeroAttributeLoop if compare was Not Equal to zero
   RTS
 
 LoadSprites:
@@ -247,7 +255,7 @@ SetInitialBackground:
 
   JSR LoadBackground
 
-  LDA #$C0               ; TODO: add different values for PAL/NTSC
+  LDA #$C0
   STA clearbgcompare
   JSR ClearRemainingBG   ; the rest of bg is empty
 

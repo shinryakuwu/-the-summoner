@@ -188,7 +188,7 @@ EndGlitch:
   STA textpartscounter
   LDA #$04
   STA bgrender        ; activate background rendering and perform it via main loop (outside of NMI)
-  LDA #$80            ; TODO: add different values for PAL/NTSC
+  LDA #$80
   STA nmiwaitcounter  ; skip nmi subroutines in the first 32 frames after bg is changed
   STA eventwaitcounter
   LDA #LOW(satan_talk)
@@ -256,7 +256,7 @@ GlitchClearSprites:
 
 LoadGlitchTextSubroutine:
 	LDA glitchcount
-	CMP #$20 ; TODO: move to constant 'glitch delay'
+	CMP #GLITCHDELAY
 	BEQ LoadGlitchTextDone
   LDA $2002               ; read PPU status to reset the high/low latch
   LDA textppuaddrhigh
@@ -273,14 +273,12 @@ LoadGlitchTextLoop:
   LDA [currenttextlow], y ; load data from address
   STA $2007               ; write to PPU
   INY
-  ; TODO: add different values for PAL/NTSC
-  CPY #$FF
+  CPY #GLITCHCOMPAREVALUE
   BNE LoadGlitchTextLoop
   INC glitchcount
   LDA textppuaddrlow
   CLC
-  ; TODO: add different values for PAL/NTSC (equals to value above)
-  ADC #$FF
+  ADC #GLITCHCOMPAREVALUE
   STA textppuaddrlow    ; save current ppu address for the next frame
   LDA textppuaddrhigh
   ADC #$00              ; add 0 and carry from previous add
@@ -427,7 +425,6 @@ ParkTeleportSubroutine:
   JSR PerformNonTextEventDone
   LDA #MVLEFT
 	STA buttons
-  ; TODO: add different values for PAL/NTSC
   LDA #DELAYGHOSTROOM1
   STA nmiwaitcounter
 	RTS
@@ -1116,15 +1113,24 @@ BossWalkDone:
 	RTS
 
 BossTalk:
-	LDA #LOW(smash)
-	STA currenttextlow
-	LDA #HIGH(smash)
-	STA currenttexthigh
 	LDA #$01
   STA action
 	LDA #$80
   STA eventwaitcounter
 	INC eventstate
+	LDA lives
+  CMP #CATLIVES
+  BNE BossTalkSecondAttempt
+	LDA #LOW(smash)
+	STA currenttextlow
+	LDA #HIGH(smash)
+	STA currenttexthigh
+	RTS
+BossTalkSecondAttempt:
+	LDA #LOW(end_you)
+	STA currenttextlow
+	LDA #HIGH(end_you)
+	STA currenttexthigh
 	RTS
 
 InitiateBossFight:
@@ -1278,7 +1284,6 @@ JukeboxSubroutine:
 	RTS
 
 PerformNonTextEventDone: ; might need to set one more event after the next text part, so this code should be optional
-	; TODO: check if can move setting eventstate to zero here
 	LDA #$00
 	STA eventnumber
 	RTS

@@ -11,7 +11,6 @@ boss_fight_jump_table:
 	.word CloseUmbrella-1
 
 BossFightEvent:
-	; TODO: move out of NMI later
 	JSR ProcessProjectiles
 	LDA dinojumpstate
 	BNE BossJumpInProcess
@@ -190,6 +189,8 @@ UmbrellaClosed:
 	LDA #$8A
 	STA $0235
 	DEC $022F
+	LDA #$18
+  STA ramspriteslow  ; restore default ppu pointer position
 	LDA #$00
 	STA action
 	RTS
@@ -438,7 +439,7 @@ RenderBossDefaultLoop:
   DEX
   CPX #$00
   BNE RenderBossDefaultLoop
-	JMP RenderBossMoveDone
+	RTS
 
 RenderBossLeftUp:
   LDA #$6D
@@ -455,7 +456,7 @@ RenderBossLeftUpLoop:
   INX
   CPX #$04
   BNE RenderBossLeftUpLoop
-  JMP RenderBossMoveDone
+  RTS
 
 RenderBossRightUp:
   LDA #$7D
@@ -472,13 +473,7 @@ RenderBossRightUpLoop:
   INX
   CPX #$05
   BNE RenderBossRightUpLoop
-  ; JMP RenderBossMoveDone
-
-RenderBossMoveDone:
-	; TODO: might want to refactor restoring this pointer across the project, no need to do this everytime
-	LDA #$18
-  STA ramspriteslow  ; restore default ppu pointer position
-	RTS
+  RTS
 
 BossStops:
 	LDA #$00
@@ -640,8 +635,6 @@ MoveBossOnJumpingStoreResult:
   DEX
   CPX #$00
   BNE MoveBossOnJumpingLoop
-  LDA #$18
-  STA ramspriteslow  ; restore default ppu pointer position
 	RTS
 
 BossBlink:
@@ -674,7 +667,6 @@ BossBlinkCandy:
   LDA #$08
   STA spritescompare
   JSR LoadSprites
-  JSR RenderBossMoveDone
   LDA #$18
   STA movecounter
 	INC fightstate

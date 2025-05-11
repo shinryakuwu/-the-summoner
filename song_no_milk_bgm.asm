@@ -7,7 +7,8 @@ no_milk_bgm_header:
   .byte $B0              ;initial duty
   .byte $0C              ;volume envelope
   .word milk_bgm_square  ;pointer to stream
-  .byte $40              ;tempo
+  ; .byte $40              ;tempo ntsc
+  .byte $50              ;tempo pal
 
   .byte MUSIC_TRI        ;which stream
   .byte $01              ;status byte (stream enabled)
@@ -15,7 +16,8 @@ no_milk_bgm_header:
   .byte $80              ;initial volume (on)
   .byte $00              ;volume envelope
   .word milk_bgm_tri     ;pointer to stream
-  .byte $40              ;tempo
+  ; .byte $40              ;tempo ntsc
+  .byte $50              ;tempo pal
 
   .byte MUSIC_NOI        ;which stream
   .byte $01
@@ -23,7 +25,8 @@ no_milk_bgm_header:
   .byte $30              ;initial duty
   .byte $0B              ;volume envelope
   .word milk_bgm_noise   ;pointer to stream
-  .byte $40              ;tempo
+  ; .byte $40              ;tempo ntsc
+  .byte $50              ;tempo pal
 
 no_milk2_bgm_header:
   .byte $03              ;3 streams
@@ -34,7 +37,8 @@ no_milk2_bgm_header:
   .byte $B0              ;initial duty
   .byte $0C              ;volume envelope
   .word milk2_bgm_square ;pointer to stream
-  .byte $40              ;tempo
+  ; .byte $40              ;tempo ntsc
+  .byte $50              ;tempo pal
 
   .byte MUSIC_TRI        ;which stream
   .byte $01              ;status byte (stream enabled)
@@ -42,7 +46,8 @@ no_milk2_bgm_header:
   .byte $80              ;initial volume (on)
   .byte $00              ;volume envelope
   .word milk2_bgm_tri    ;pointer to stream
-  .byte $40              ;tempo
+  ; .byte $40              ;tempo ntsc
+  .byte $50              ;tempo pal
 
   .byte MUSIC_NOI        ;which stream
   .byte $01
@@ -50,7 +55,8 @@ no_milk2_bgm_header:
   .byte $30              ;initial duty
   .byte $0B              ;volume envelope
   .word milk2_bgm_noise  ;pointer to stream
-  .byte $40              ;tempo
+  ; .byte $40              ;tempo ntsc
+  .byte $50              ;tempo pal
 
 milk_bgm_square:
   .byte set_loop1_counter, $02
