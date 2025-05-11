@@ -7,8 +7,8 @@ no_love_bgm_header:
   .byte $B0              ;initial duty
   .byte $11              ;volume envelope
   .word love_bgm_square  ;pointer to stream
-  ; .byte $2A              ;tempo ntsc
-  .byte $34              ;tempo pal
+  .byte $2A              ;tempo ntsc
+  ; .byte $34              ;tempo pal
 
   .byte MUSIC_TRI        ;which stream
   .byte $01              ;status byte (stream enabled)
@@ -16,8 +16,8 @@ no_love_bgm_header:
   .byte $80              ;initial volume (on)
   .byte $00              ;volume envelope
   .word love_bgm_tri     ;pointer to stream
-  ; .byte $2A              ;tempo ntsc
-  .byte $34              ;tempo pal
+  .byte $2A              ;tempo ntsc
+  ; .byte $34              ;tempo pal
 
   .byte MUSIC_NOI        ;which stream
   .byte $01
@@ -25,8 +25,8 @@ no_love_bgm_header:
   .byte $30              ;initial duty
   .byte $10              ;volume envelope
   .word love_bgm_noise   ;pointer to stream
-  ; .byte $2A              ;tempo ntsc
-  .byte $34              ;tempo pal
+  .byte $2A              ;tempo ntsc
+  ; .byte $34              ;tempo pal
 
 love_bgm_square:
   .byte $84, Cs3

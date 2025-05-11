@@ -7,8 +7,8 @@ boss_bgm_header:
   .byte $B0              ;initial duty
   .byte $00              ;volume envelope
   .word boss_bgm_square1 ;pointer to stream
-  ; .byte $20              ;tempo ntsc
-  .byte $28              ;tempo pal
+  .byte $20              ;tempo ntsc
+  ; .byte $28              ;tempo pal
 
   .byte MUSIC_SQ2        ;which stream
   .byte $01              ;status byte (stream enabled)
@@ -16,8 +16,8 @@ boss_bgm_header:
   .byte $B0              ;initial duty
   .byte $00              ;volume envelope
   .word boss_bgm_square2 ;pointer to stream
-  ; .byte $20              ;tempo ntsc
-  .byte $28              ;tempo pal
+  .byte $20              ;tempo ntsc
+  ; .byte $28              ;tempo pal
 
   .byte MUSIC_TRI        ;which stream
   .byte $01              ;status byte (stream enabled)
@@ -25,8 +25,8 @@ boss_bgm_header:
   .byte $80              ;initial volume (on)
   .byte $00              ;volume envelope
   .word boss_bgm_intro   ;pointer to stream
-; .byte $20              ;tempo ntsc
-  .byte $28              ;tempo pal
+  .byte $20              ;tempo ntsc
+  ; .byte $28              ;tempo pal
 
   .byte MUSIC_NOI        ;which stream
   .byte $01
@@ -34,8 +34,8 @@ boss_bgm_header:
   .byte $30              ;initial duty
   .byte $00              ;volume envelope
   .word boss_bgm_noise   ;pointer to stream
-; .byte $20              ;tempo ntsc
-  .byte $28              ;tempo pal
+  .byte $20              ;tempo ntsc
+  ; .byte $28              ;tempo pal
 
 
 boss_bgm2_header:
@@ -47,8 +47,8 @@ boss_bgm2_header:
   .byte $B0              ;initial duty
   .byte $00              ;volume envelope
   .word boss_bgm_square1 ;pointer to stream
-  ; .byte $24              ;tempo ntsc
-  .byte $2C              ;tempo pal
+  .byte $24              ;tempo ntsc
+  ; .byte $2C              ;tempo pal
 
   .byte MUSIC_SQ2        ;which stream
   .byte $01              ;status byte (stream enabled)
@@ -56,8 +56,8 @@ boss_bgm2_header:
   .byte $B0              ;initial duty
   .byte $00              ;volume envelope
   .word boss_bgm_square2 ;pointer to stream
-  ; .byte $24              ;tempo ntsc
-  .byte $2C              ;tempo pal
+  .byte $24              ;tempo ntsc
+  ; .byte $2C              ;tempo pal
 
   .byte MUSIC_TRI        ;which stream
   .byte $01              ;status byte (stream enabled)
@@ -65,8 +65,8 @@ boss_bgm2_header:
   .byte $80              ;initial volume (on)
   .byte $00              ;volume envelope
   .word boss_bgm_tri     ;pointer to stream
-  ; .byte $24              ;tempo ntsc
-  .byte $2C              ;tempo pal
+  .byte $24              ;tempo ntsc
+  ; .byte $2C              ;tempo pal
 
   .byte MUSIC_NOI        ;which stream
   .byte $01
@@ -74,8 +74,8 @@ boss_bgm2_header:
   .byte $30              ;initial duty
   .byte $00              ;volume envelope
   .word boss_bgm_noise   ;pointer to stream
-  ; .byte $24              ;tempo ntsc
-  .byte $2C              ;tempo pal
+  .byte $24              ;tempo ntsc
+  ; .byte $2C              ;tempo pal
 
 boss_bgm_square1:
   .byte $83, C2, $8D, C3

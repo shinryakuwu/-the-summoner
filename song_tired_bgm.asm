@@ -7,8 +7,8 @@ tired_bgm_header:
   .byte $B0              ;initial duty
   .byte $14              ;volume envelope
   .word tired_bgm_square ;pointer to stream
-  ; .byte $34              ;tempo ntsc
-  .byte $40              ;tempo pal
+  .byte $34              ;tempo ntsc
+  ; .byte $40              ;tempo pal
 
   .byte MUSIC_TRI        ;which stream
   .byte $01              ;status byte (stream enabled)
@@ -16,8 +16,8 @@ tired_bgm_header:
   .byte $80              ;initial volume (on)
   .byte $00              ;volume envelope
   .word tired_bgm_tri    ;pointer to stream
-  ; .byte $34              ;tempo ntsc
-  .byte $40              ;tempo pal
+  .byte $34              ;tempo ntsc
+  ; .byte $40              ;tempo pal
 
   .byte MUSIC_NOI        ;which stream
   .byte $01
@@ -25,8 +25,8 @@ tired_bgm_header:
   .byte $30              ;initial duty
   .byte $0B              ;volume envelope
   .word tired_bgm_noise  ;pointer to stream
-  ; .byte $34              ;tempo ntsc
-  .byte $40              ;tempo pal
+  .byte $34              ;tempo ntsc
+  ; .byte $40              ;tempo pal
 
 tired_bgm_square:
   .byte set_loop1_counter, $02

@@ -1,0 +1,1 @@
+The game is intended to be played in NTSC, so please use the NTSC build unless impossible otherwise (f.e, if you want to run the game on your PAL console).
