@@ -103,11 +103,11 @@ village2:
   ; .db $02,$FF,$C0,$C1,$C2,$FF,$A0,$A2,$A3,$B8,$B9,$A1,$A1,$BA,$FF,$FF
 
   ; hard to explain....
-  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$02,$0F,$06  ;;row 3
+  .db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$02,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 3
   .db $02,$FF,$C0,$C1,$C2,$FF,$A0,$A2,$A3,$B8,$B9,$A1,$A1,$BA,$FF,$FF
 
-  .db $FF,$C0,$C1,$C2,$FF,$03,$0F,$0C  ;;row 4
-  .db $D0,$D1,$D2,$FF,$B0,$B2,$B3,$BB,$BC,$B1,$B1,$BD,$FF,$FF
+  .db $FF,$C0,$C1,$C2,$FF,$03,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF  ;;row 4
+  .db $FF,$FF,$D0,$D1,$D2,$FF,$B0,$B2,$B3,$BB,$BC,$B1,$B1,$BD,$FF,$FF
 
   .db $00,$D0,$D1,$D2,$00,$00,$00,$02,$00,$00,$00,$00,$FF,$FF,$00,$03  ;;row 5
   .db $00,$00,$E0,$F0,$E2,$00,$C3,$9E,$9E,$9E,$9E,$9E,$9E,$C8,$00,$00
@@ -490,7 +490,7 @@ village2params:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
   .db LOW(village2), HIGH(village2), LOW(village2sprites), HIGH(village2sprites)
   ; location, spritescompare, loadbgcompare, loadbgcompare+1, singleattribute, attributenumber (optional)
-  .db $02, $DC, $74, $02, $00
+  .db $02, $DC, $82, $02, $00
 
 skeletonhouseparams:
   ; currentbglow, currentbghigh, curntspriteslow, curntspriteshigh
