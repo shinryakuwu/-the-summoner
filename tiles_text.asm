@@ -185,6 +185,10 @@ smash:
   ; i'll smash you like an unprivatized minecraft house!
   .db $76,$38,$53,$3B,$3B,$FF,$42,$3C,$30,$42,$37,$FF,$48,$3E,$44,$FF,$3B,$38,$3A,$34,$FF,$30,$3D,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$44,$3D,$3F,$41,$38,$45,$30,$43,$38,$49,$34,$33,$FF,$3C,$38,$3D,$34,$32,$41,$30,$35,$43,$FF,$37,$3E,$44,$42,$34,$5A,$FE
 
+end_you:
+  ; i will end you!
+  .db $76,$38,$FF,$46,$38,$3B,$3B,$FF,$34,$3D,$33,$FF,$48,$3E,$44,$5A,$FE
+
 enraged:
   ; * enraged, to put it mildly *
   .db $76,$58,$FF,$34,$3D,$41,$30,$36,$34,$33,$55,$FF,$43,$3E,$FF,$3F,$44,$43,$FF,$38,$43,$FF,$3C,$38,$3B,$33,$3B,$48,$FF,$58,$FE

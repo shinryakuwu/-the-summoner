@@ -17,7 +17,7 @@ sound_temp1 .rs 1           ;temporary variables
 sound_temp2 .rs 1
 sound_sq1_old .rs 1  ;the last value written to $4003
 sound_sq2_old .rs 1  ;the last value written to $4007
-sync_graphics .rs 1  ; used as a trigger to synchronize graphics with the music
+sync_graphics .rs 1  ;used as a trigger to synchronize graphics with the music
 soft_apu_ports .rs 16
 
 ;reserve 6 bytes, one for each stream
@@ -180,7 +180,7 @@ change_stream_ve:
 	tya
 	sta stream_ve, x
 	lda #$00
-  sta stream_ve_index, x  ;reset volume envelope index to the beginning
+	sta stream_ve_index, x  ;reset volume envelope index to the beginning
 	rts
 
 ;--------------------------
@@ -428,34 +428,34 @@ se_set_apu:
 ;this is our pointer table.  Each entry is a pointer to a song header                
 song_headers:
 	.word song0_header     ;this is a silence song.  See song0.i for more details
-  .word boss_bgm_header  ; boss fight theme
-  .word tired_bgm_header ; skeleton house music
-  .word boss_step_header ; the sound of gojira stepping
-  .word boss_steps_header ; sounds of gojira approaching
-  .word boss_crash_header ; the sound of gojira crashing the wall
-  .word boss_jump_header  ; the sound of gojira landing after a jump
-  .word boss_fire_header  ; the sound of gojira throwing a fireball
-  .word boss_dead_header  ; the sound of gojira being hit
-  .word boss_bgm2_header  ; boss fight theme progression
-  .word cat_talk_header   ; talk beep for cat
-  .word ex_talk_header    ; talk beep for ex
-  .word boss_talk_header  ; talk beep for boss
-  .word fella_talk_header ; talk beep for other chars
-  .word no_milk_bgm_header   ; main theme
-  .word knock_header      ; the sound of knocking the door
-  .word tear_header       ; the sound of tearing off the hand
-  .word start_header      ; the sound of pressing start
-  .word death_header      ; sounds when you die
-  .word satan_header      ; sounds when satan is spawning
-  .word ih8myself_bgm_header ; title screen song
-  .word no_milk2_bgm_header  ; main theme, but starting from another fragment
-  .word drop_header       ; the sound of dropping a bag
-  .word fren_bgm_header   ; ending screen theme
-  .word no_love_bgm_header   ; jukebox song
+	.word boss_bgm_header  ; boss fight theme
+	.word tired_bgm_header ; skeleton house music
+	.word boss_step_header ; the sound of gojira stepping
+	.word boss_steps_header ; sounds of gojira approaching
+	.word boss_crash_header ; the sound of gojira crashing the wall
+	.word boss_jump_header  ; the sound of gojira landing after a jump
+	.word boss_fire_header  ; the sound of gojira throwing a fireball
+	.word boss_dead_header  ; the sound of gojira being hit
+	.word boss_bgm2_header  ; boss fight theme progression
+	.word cat_talk_header   ; talk beep for cat
+	.word ex_talk_header    ; talk beep for ex
+	.word boss_talk_header  ; talk beep for boss
+	.word fella_talk_header ; talk beep for other chars
+	.word no_milk_bgm_header   ; main theme
+	.word knock_header      ; the sound of knocking the door
+	.word tear_header       ; the sound of tearing off the hand
+	.word start_header      ; the sound of pressing start
+	.word death_header      ; sounds when you die
+	.word satan_header      ; sounds when satan is spawning
+	.word ih8myself_bgm_header ; title screen song
+	.word no_milk2_bgm_header  ; main theme, but starting from another fragment
+	.word drop_header       ; the sound of dropping a bag
+	.word fren_bgm_header   ; ending screen theme
+	.word no_love_bgm_header   ; jukebox song
 
-  .include "sound_opcodes.asm"    ;our opcode subroutines, jump table and aliases
-  .include "note_table.i" ;period lookup table for notes
-  .include "vol_envelopes.i"
+	.include "sound_opcodes.asm"    ;our opcode subroutines, jump table and aliases
+	.include "note_table.i" ;period lookup table for notes
+	.include "vol_envelopes.i"
 	.include "song0.i"      ;holds the data for song 0 (header and data streams)
 	.include "song_boss_bgm.asm"
 	.include "song_no_milk_bgm.asm"

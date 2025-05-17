@@ -1,29 +1,32 @@
 ih8myself_bgm_header:
   .byte $03              ;3 streams
-  
+
   .byte MUSIC_SQ1        ;which stream
   .byte $01              ;status byte (stream enabled)
   .byte SQUARE_1         ;which channel
   .byte $B0              ;initial duty
   .byte $0A              ;volume envelope
   .word h8_bgm_square1   ;pointer to stream
-  .byte $2A              ;tempo
-  
+  .byte $2A              ;tempo ntsc
+  ; .byte $34              ;tempo pal
+
   .byte MUSIC_SQ2        ;which stream
   .byte $01              ;status byte (stream enabled)
   .byte SQUARE_2         ;which channel
   .byte $B0              ;initial duty
   .byte $09              ;volume envelope
   .word h8_bgm_square2   ;pointer to stream
-  .byte $2A              ;tempo
-  
+  .byte $2A              ;tempo ntsc
+  ; .byte $34              ;tempo pal
+
   .byte MUSIC_NOI        ;which stream
   .byte $01
   .byte NOISE            ;which channel
   .byte $30              ;initial duty
   .byte $0B              ;volume envelope
   .word h8_bgm_noise     ;pointer to stream
-  .byte $2A              ;tempo
+  .byte $2A              ;tempo ntsc
+  ; .byte $34              ;tempo pal
 
 h8_bgm_square1:
 .h8_wait:

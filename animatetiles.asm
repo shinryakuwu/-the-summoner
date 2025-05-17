@@ -24,19 +24,19 @@ CheckAnimateTiles:
 
 TitleScreenCheck:
 	LDA switches
-  AND #%10000000
-  BNE TitleScreenCheckDone
-  LDA animatecounter
-  CMP #$01
-  BNE TitleScreenCheckDone
-  LDA sync_graphics
-  BNE AnimateTitleText
+	AND #%10000000
+	BNE TitleScreenCheckDone
+	LDA animatecounter
+	CMP #$01
+	BNE TitleScreenCheckDone
+	LDA sync_graphics
+	BNE AnimateTitleText
 TitleScreenCheckDone:
 	RTS
 
 AnimateTitleText:
 	LDX #$23
-  LDY #$CC
+	LDY #$CC
 	JSR SetPPUAddrSubroutine
 	LDY titleframenum
 	LDX #$00
@@ -74,22 +74,22 @@ AnimateTiles:
 	STA animatecounter
 	LDA location
 	ASL A            		  ; we have a table of addresses, which are two bytes each. double that index.
-  TAX
-  LDA animate_tiles_jump_table+1, x    ; RTS will expect the low byte to be popped first,       
-  PHA                                  ; so we need to push the high byte first
-  LDA animate_tiles_jump_table, x      ; push the low byte
-  PHA
-  RTS 									; this rts will launch our subroutine
+	TAX
+	LDA animate_tiles_jump_table+1, x    ; RTS will expect the low byte to be popped first,       
+	PHA                                  ; so we need to push the high byte first
+	LDA animate_tiles_jump_table, x      ; push the low byte
+	PHA
+	RTS 									; this rts will launch our subroutine
 
 SkipAnimateSubroutine:
 	RTS
 
 AnimateVillage1Subroutine:
 	LDA switches
-  AND #%10000000
-  BEQ AnimateTitleScreen
+	AND #%10000000
+	BEQ AnimateTitleScreen
 	LDA #$00
-  STA walkbackwards ; fix for very silly bug with ghost moving backwards when a cat moves backwards
+	STA walkbackwards ; fix for very silly bug with ghost moving backwards when a cat moves backwards
 	LDA objectframenum
 	BEQ MoveGhostDown
 MoveGhostUp:
@@ -110,22 +110,22 @@ MoveGhost:
 
 AnimateTitleScreen:
 	LDX #$22
-  LDY #$C7
+	LDY #$C7
 	JSR SetPPUAddrSubroutine
 	LDY objectframenum
 	LDA skull0, y
 	STA $2007
-  LDY #$C9
+	LDY #$C9
 	JSR SetPPUAddrSubroutine
 	LDY objectframenum
 	LDA skull1, y
 	STA $2007
-  LDY #$D6
+	LDY #$D6
 	JSR SetPPUAddrSubroutine
 	LDY objectframenum
 	LDA skull2, y
 	STA $2007
-  LDY #$D8
+	LDY #$D8
 	JSR SetPPUAddrSubroutine
 	LDY objectframenum
 	LDA skull3, y
@@ -218,12 +218,12 @@ ChangeSkeletonHousePalette:
 
 SkeletonHouseLoadAttributes:
 	LDA $2002     ; read PPU status to reset the high/low latch
-  LDA #$23
-  STA $2006     ; write the high byte of $23CB/$23D3 address
-  STY $2006     ; write the low byte of $23CB/$23D3 address             
-  STX $2007
-  STX $2007     ; load attribute to PPU twice
-  RTS
+	LDA #$23
+	STA $2006     ; write the high byte of $23CB/$23D3 address
+	STY $2006     ; write the low byte of $23CB/$23D3 address             
+	STX $2007
+	STX $2007     ; load attribute to PPU twice
+	RTS
 
 SkeletonDanceSubroutine:
 	LDA skeletonframenum
@@ -454,7 +454,6 @@ BigGhostTilesWithoutCandy:
 	JMP TransformBigGhost
 
 AnimateEndSubroutine:
-	; TODO: might wanna make this animation faster
 	LDA objectframenum
 	BEQ AnimateCatSkating
 	DEC objectframenum

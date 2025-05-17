@@ -1,11 +1,11 @@
 Warp:
-	; compare current x and y to needed numbers and compare position, if everything matches, perform a warp
-	LDA location
-	BEQ Village1WarpCheck ; when equals zero
-	CMP #$01
-	BEQ CatHouseWarpCheck
-	CMP #$02
-	BEQ Village2WarpCheck
+  ; compare current x and y to needed numbers and compare position, if everything matches, perform a warp
+  LDA location
+  BEQ Village1WarpCheck ; when equals zero
+  CMP #$01
+  BEQ CatHouseWarpCheck
+  CMP #$02
+  BEQ Village2WarpCheck
   CMP #$03
   BEQ SkeletonHouseWarpCheck
   CMP #$04
@@ -16,17 +16,17 @@ Warp:
   BEQ ParkWarpCheck
   CMP #$09
   BEQ ExHouseWarpCheck
-	RTS
+  RTS
 
 Village1WarpCheck:
-	JSR Village1CatHouseWarpCheck
-	RTS
+  JSR Village1CatHouseWarpCheck
+  RTS
 CatHouseWarpCheck:
-	JSR CatHouseVillage1WarpCheck
-	RTS
+  JSR CatHouseVillage1WarpCheck
+  RTS
 Village2WarpCheck:
-	JSR Village2Village1WarpCheck
-	RTS
+  JSR Village2Village1WarpCheck
+  RTS
 SkeletonHouseWarpCheck:
   JSR SkeletonHouseVillage1WarpCheck
   RTS
@@ -45,23 +45,23 @@ ExHouseWarpCheck:
 
 
 Village1CatHouseWarpCheck:
-	LDA currentYtile
-	CMP #$11
-	BNE Village1Village2WarpCheck
-	LDA currentXtile
-	CMP #$07
-	BEQ Village1CatHouseWarp
-	CMP #$08
-	BEQ Village1CatHouseWarp
+  LDA currentYtile
+  CMP #$11
+  BNE Village1Village2WarpCheck
+  LDA currentXtile
+  CMP #$07
+  BEQ Village1CatHouseWarp
+  CMP #$08
+  BEQ Village1CatHouseWarp
 Village1Village2WarpCheck:
-	LDA currentXtile
-	CMP #$1F
-	BNE Village1SkeletonHouseWarpCheck
-	LDA currentYtile
-	CMP #$06
-	BEQ Village1Village2Warp
-	CMP #$07
-	BEQ Village1Village2Warp
+  LDA currentXtile
+  CMP #$1F
+  BNE Village1SkeletonHouseWarpCheck
+  LDA currentYtile
+  CMP #$06
+  BEQ Village1Village2Warp
+  CMP #$07
+  BEQ Village1Village2Warp
   CMP #$08
   BEQ Village1Village2Warp
 Village1SkeletonHouseWarpCheck:
@@ -75,7 +75,7 @@ Village1ParkWarpCheck:
   LDA currentYtile
   CMP #$02
   BEQ Village1ParkWarp
-	RTS
+  RTS
 
 Village1CatHouseWarp:
   LDA #LOW(cathouseparams)
@@ -123,16 +123,16 @@ Village1ParkWarp:
   RTS
 
 CatHouseVillage1WarpCheck:
-	LDA currentXtile
-	CMP #$0F
-	BNE CatHouseVillage1WarpCheckDone
-	LDA currentYtile
-	CMP #$13
-	BNE CatHouseVillage1WarpCheckDone
-	LDA direction
-	BEQ CatHouseVillage1Warp ; when equals zero
+  LDA currentXtile
+  CMP #$0F
+  BNE CatHouseVillage1WarpCheckDone
+  LDA currentYtile
+  CMP #$13
+  BNE CatHouseVillage1WarpCheckDone
+  LDA direction
+  BEQ CatHouseVillage1Warp ; when equals zero
 CatHouseVillage1WarpCheckDone:
-	RTS
+  RTS
 
 CatHouseVillage1Warp:
   JSR SetVillage1Params
@@ -144,11 +144,11 @@ CatHouseVillage1Warp:
   RTS
 
 Village2Village1WarpCheck:
-	LDA currentYtile
-	CMP #$06
-	BNE Village2ServerRoomWarpCheck
-	LDA currentXtile
-	BEQ Village2Village1Warp ; when equals zero
+  LDA currentYtile
+  CMP #$06
+  BNE Village2ServerRoomWarpCheck
+  LDA currentXtile
+  BEQ Village2Village1Warp ; when equals zero
 Village2ServerRoomWarpCheck:
   LDA currentYtile
   CMP #$0D

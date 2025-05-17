@@ -7,7 +7,8 @@ knock_header:
   .byte $70            ;duty (01)
   .byte $0A            ;volume envelope
   .word knock_noise    ;pointer to stream
-  .byte $38            ;tempo
+  .byte $38            ;tempo ntsc
+  ; .byte $44            ;tempo pal
 
 knock_noise:
   .byte $81, $0C, $0D
@@ -28,7 +29,8 @@ drop_header:
   .byte $70            ;duty (01)
   .byte $05            ;volume envelope
   .word drop_noise     ;pointer to stream
-  .byte $20            ;tempo
+  .byte $20              ;tempo ntsc
+  ; .byte $28              ;tempo pal
 
 drop_noise:
   .byte $81, $0E
@@ -43,7 +45,8 @@ tear_header:
   .byte $70            ;duty (01)
   .byte $06            ;volume envelope
   .word tear_noise     ;pointer to stream
-  .byte $30            ;tempo
+  .byte $30            ;tempo ntsc
+  ; .byte $38            ;tempo pal
 
 tear_noise:
   .byte $81, $0A, $09, $08
@@ -60,7 +63,8 @@ start_header:
   .byte $80           ;initial volume (on)
   .byte $07           ;volume envelope
   .word start_tri     ;pointer to stream
-  .byte $50           ;tempo
+  .byte $50           ;tempo ntsc
+  ; .byte $64           ;tempo pal
 
 start_tri:
   .byte $81, C3, C4, C5, C6, C7, C8, C9

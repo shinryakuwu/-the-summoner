@@ -1,7 +1,7 @@
 BgRenderSubroutine:
-	LDA bgrender
-	CMP #$01
-	BEQ ActivateChangeLocationSequence
+  LDA bgrender
+  CMP #$01
+  BEQ ActivateChangeLocationSequence
   CMP #$02
   BEQ LoadBackgroundForLocation
   CMP #$03
@@ -17,8 +17,8 @@ BgRenderSubroutine:
   RTS
 
 EndBgRenderSubroutine:
-	LDA #$00
-	STA bgrender
+  LDA #$00
+  STA bgrender
   RTS
 
 ActivateChangeLocationSequence:
@@ -48,7 +48,8 @@ LoadSpritesForLocation:
 ReloadLocation:
   JSR DisableNMIRendering
   JSR ClearBG
-  JSR LoadSatanBGAttributes
+  JSR LoadAttribute ; single attribute #$00 at this point
+  JSR LoadZeroAttribute ; doesn't load the full screen of attributes but it's ok
   JSR LoadPalettes
   JMP EndBgRenderSubroutine
 
@@ -107,12 +108,6 @@ ChangeCatCoordinates:
   LDX #$00
   LDY #$00
   JSR ObjectTransformLoop
-  RTS
-
-LoadSatanBGAttributes: ; TODO: might need to remove or reconsider this mess
-  LDA #$00
-  STA singleattribute ; no need to set attributes address because it's already set to village1attributes
-  JSR LoadAttribute
   RTS
 
 LoadDeadCat:
@@ -283,6 +278,11 @@ DrawCreditsSubroutine:
   LDA #HIGH(shinryakuwu)
   STA creditslineaddr+1
   JSR LoadCreditsTiles
+  ; line 6, actually a line
+  LDX #$21
+  LDY #$2A
+  JSR SetPPUAddrSubroutine
+  JSR LoadCreditsLine
   RTS
 
 LoadCreditsTiles:
@@ -295,6 +295,16 @@ LoadCreditsTilesLoop:
   INY
   JMP LoadCreditsTilesLoop
 LoadCreditsTilesDone:
+  RTS
+
+LoadCreditsLine:
+  LDY #$00
+  LDA #$0F
+LoadCreditsLineLoop:
+  STA $2007
+  INY
+  CPY #$0C
+  BNE LoadCreditsLineLoop
   RTS
 
 SetPPUAddrSubroutine:

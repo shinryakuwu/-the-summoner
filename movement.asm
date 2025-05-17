@@ -2,7 +2,7 @@ MovementSubroutine:
   LDA buttons
   AND #%00001111    ; check only the state of the arrow buttons
   BNE CatMoves      ; branch if any button is pressed
-  JMP StaticOrNotPassable
+  JMP StaticRender
 CatMoves:
   LDA #$00
   STA staticrender
@@ -68,7 +68,7 @@ SkipRender:
   JSR CheckAnimateCat
   RTS
 
-StaticOrNotPassable:
+StaticRender:
   LDA #$00
   STA mvcounter     ; set animation counter to 0 when nothing is pressed
   STA framenum      ; frame number = 0

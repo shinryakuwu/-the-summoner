@@ -11,7 +11,7 @@ CheckActionDots:
 	BEQ DotsInactive
 	INC dotscounter
 	LDA dotscounter
-	CMP #$40            ; TODO: change to constant, add different values for PAL/NTSC
+	CMP #DELAYACTIONDOTS
 	BEQ RenewDotsCounter
 	JMP DefineCurrentDotsFrame
 DotsInactive:
@@ -74,23 +74,23 @@ SkipDrawDots:
 	RTS
 
 DrawOneDot:
-  LDX #HIGH(INITIALTEXTPPUADDR)
-  LDA #LOW(INITIALTEXTPPUADDR)
-  CLC
-  ADC dotsframe  ; use dotsframe value as a pointer to add to text ppu address
-  TAY
+	LDX #HIGH(INITIALTEXTPPUADDR)
+	LDA #LOW(INITIALTEXTPPUADDR)
+	CLC
+	ADC dotsframe  ; use dotsframe value as a pointer to add to text ppu address
+	TAY
 	JSR SetPPUAddrSubroutine
 	LDA #$54
-  STA $2007
+	STA $2007
 	RTS
 
 ClearDots:
 	LDX #HIGH(INITIALTEXTPPUADDR)
-  LDY #LOW(INITIALTEXTPPUADDR)
-  INY
+	LDY #LOW(INITIALTEXTPPUADDR)
+	INY
 	JSR SetPPUAddrSubroutine
 	LDA #$FF
-  STA $2007  ; clear three tiles in a row
-  STA $2007
-  STA $2007
+	STA $2007  ; clear three tiles in a row
+	STA $2007
+	STA $2007
 	RTS
