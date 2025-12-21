@@ -1,9 +1,13 @@
-# null-the-summoner
+# Null the Summoner
 Yes, a real NES game that will run on your NES.
 
 It's a little project to mess around with the assembly 6502.
 
 The game is finished now, I will be updating it for a while in case any critical issues are found.
+
+### Releases
+ - [Null the Summoner on Itch.io](https://shinryakuwu.itch.io/null-the-summoner)
+ - Might add Steam release someday, not sure yet
 
 ### Music
 The boss encounter theme is written by Xalins.
